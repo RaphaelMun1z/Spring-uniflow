@@ -93,7 +93,7 @@ public class GrupoService {
 //        }
 //    }
 //
-//    public List<GrupoResponseDTO> findGruposByAlunoId(String alunoId) {
-//        return repository.findByAlunos_Id(alunoId).stream().map(GrupoResponseDTO::new).collect(Collectors.toList());
-//    }
+    public List<GrupoResponseDTO> findGruposByAlunoId(String alunoId) {
+        return repository.findByInscritos_Id(alunoId).stream().map(GrupoResponseDTO::new).collect(Collectors.toList());
+    }
 }

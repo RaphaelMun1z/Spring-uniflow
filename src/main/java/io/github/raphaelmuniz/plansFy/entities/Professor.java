@@ -1,6 +1,8 @@
 package io.github.raphaelmuniz.plansFy.entities;
 
 import jakarta.persistence.Entity;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +16,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Professor extends Assinante implements Serializable {
+    @NotBlank
     private String areaAtuacao;
 
     public Professor(String id, String nome, String email, AssinaturaUsuario assinatura, List<AtividadeCopia> atividades, Set<InscricaoGrupo> grupos, String areaAtuacao) {

@@ -1,6 +1,8 @@
 package io.github.raphaelmuniz.plansFy.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,12 +22,17 @@ public class Grupo implements Serializable {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
+    @NotBlank
     private String titulo;
+
+    @NotBlank
     private String descricao;
 
+    @NotNull
     @OneToMany(mappedBy = "grupo", cascade = CascadeType.ALL)
     private List<AtividadeCopia> atividades = new ArrayList<>();
 
+    @NotNull
     @OneToMany(mappedBy = "grupo", cascade = CascadeType.ALL)
     private Set<InscricaoGrupo> inscritos = new HashSet<>();
 }

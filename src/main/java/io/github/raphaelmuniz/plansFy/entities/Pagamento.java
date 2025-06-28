@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,11 +22,21 @@ public class Pagamento implements Serializable {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
+    @NotNull
     private LocalDateTime dataPagamento;
+
+    @NotNull
     private Double valor;
+
+    @NotNull
     private Enum status;
+
+    @NotNull
     private Enum metodo;
+
+    @NotBlank
     private String protocolo;
-    
+
+    @NotNull
     private Assinante assinante;
 }

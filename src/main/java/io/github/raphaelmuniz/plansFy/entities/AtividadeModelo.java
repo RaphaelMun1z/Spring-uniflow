@@ -2,6 +2,7 @@ package io.github.raphaelmuniz.plansFy.entities;
 
 import io.github.raphaelmuniz.plansFy.entities.enums.DificuldadeEnum;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -19,6 +20,7 @@ public class AtividadeModelo extends Atividade implements Serializable {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
+    @NotNull
     private Boolean ativa = true;
 
     public AtividadeModelo(LocalDateTime dataLancamento, LocalDateTime prazoEntrega, String titulo, String descricao, DificuldadeEnum dificuldade, Disciplina disciplina, Boolean ativa) {

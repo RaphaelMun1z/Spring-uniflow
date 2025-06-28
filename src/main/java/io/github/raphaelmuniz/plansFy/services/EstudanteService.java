@@ -1,6 +1,7 @@
 package io.github.raphaelmuniz.plansFy.services;
 
 import io.github.raphaelmuniz.plansFy.dto.res.EstudanteResponseDTO;
+import io.github.raphaelmuniz.plansFy.dto.res.GrupoResponseDTO;
 import io.github.raphaelmuniz.plansFy.entities.Estudante;
 import io.github.raphaelmuniz.plansFy.dto.req.EstudanteRequestDTO;
 import io.github.raphaelmuniz.plansFy.exceptions.NotFoundException;
@@ -17,8 +18,8 @@ public class EstudanteService {
     @Autowired
     EstudanteRepository repository;
 
-    //@Autowired
-    //GrupoService grupoService;
+    @Autowired
+    GrupoService grupoService;
 
     @Transactional
     public EstudanteResponseDTO create(EstudanteRequestDTO data) {
@@ -31,7 +32,7 @@ public class EstudanteService {
     }
 
     public EstudanteResponseDTO findById(String id) {
-        Estudante created = repository.findById(id).orElseThrow(() -> new NotFoundException("Aluno não encontrado."));
+        Estudante created = repository.findById(id).orElseThrow(() -> new NotFoundException("Estudante não encontrado."));
         return new EstudanteResponseDTO(created);
     }
 
@@ -43,7 +44,10 @@ public class EstudanteService {
         repository.deleteById(id);
     }
 
-//    public List<GrupoResponseDTO> listarGruposInscritosPeloAluno(String alunoId){
-//        return grupoService.findGruposByAlunoId(alunoId);
-//    }
+    public List<GrupoResponseDTO> listarGruposInscritosPeloAluno(String alunoId){
+        if(repository.findById(alunoId).isEmpty()){
+            throw new NotFoundException("Estudante não encontrado.");
+        }
+        return grupoService.findGruposByAlunoId(alunoId);
+    }
 }

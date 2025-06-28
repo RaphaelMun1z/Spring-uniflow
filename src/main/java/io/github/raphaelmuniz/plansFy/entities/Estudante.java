@@ -1,6 +1,7 @@
 package io.github.raphaelmuniz.plansFy.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Estudante extends Assinante implements Serializable {
+    @NotNull
     private Integer periodo;
 
     public Estudante(String id, String nome, String email, AssinaturaUsuario assinatura, List<AtividadeCopia> atividades, Set<InscricaoGrupo> grupos, Integer periodo) {

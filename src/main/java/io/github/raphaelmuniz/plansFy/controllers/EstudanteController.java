@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/alunos")
-public class AlunoController {
+@RequestMapping("/estudantes")
+public class EstudanteController {
     @Autowired
     EstudanteService service;
 
@@ -38,8 +38,8 @@ public class AlunoController {
         return ResponseEntity.ok().build();
     }
 
-//    @GetMapping("/{id}/grupos")
-//    public ResponseEntity<List<GrupoResponseDTO>> listarGruposInscritosPeloAluno(@PathVariable String id) {
-//        return ResponseEntity.ok(service.listarGruposInscritosPeloAluno(id));
-//    }
+    @GetMapping("/{id}/grupos")
+    public ResponseEntity<List<GrupoResponseDTO>> listarGruposInscritosPeloAluno(@PathVariable String id) {
+        return ResponseEntity.ok(service.listarGruposInscritosPeloAluno(id));
+    }
 }

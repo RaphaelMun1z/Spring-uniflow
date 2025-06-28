@@ -1,6 +1,7 @@
 package io.github.raphaelmuniz.plansFy.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,11 +18,14 @@ import java.util.Set;
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Assinante extends Usuario implements Serializable {
+    @NotNull
     private AssinaturaUsuario assinatura;
 
+    @NotNull
     @OneToMany(mappedBy = "assinante", cascade = CascadeType.ALL)
     private List<AtividadeCopia> atividades = new ArrayList<>();
 
+    @NotNull
     @OneToMany(mappedBy = "inscrito", cascade = CascadeType.ALL)
     private Set<InscricaoGrupo> grupos = new HashSet<>();
 
