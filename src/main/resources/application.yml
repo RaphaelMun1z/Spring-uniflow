@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: plansFy
+  profiles:
+    active: "test"
+
+server:
+  port: 8080
