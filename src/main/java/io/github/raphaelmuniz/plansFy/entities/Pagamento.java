@@ -29,10 +29,10 @@ public class Pagamento implements Serializable {
     private Double valor;
 
     @NotNull
-    private Enum status;
+    private String status;
 
     @NotNull
-    private Enum metodo;
+    private String metodo;
 
     @NotBlank
     private String protocolo;
