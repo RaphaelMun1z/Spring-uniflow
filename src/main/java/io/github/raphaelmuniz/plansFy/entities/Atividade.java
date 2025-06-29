@@ -15,23 +15,23 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public abstract class Atividade implements Serializable {
-    @NotNull
+    @NotNull(message = "Data lançamento não pode ser nulo")
     private LocalDateTime dataLancamento;
 
-    @NotNull
+    @NotNull(message = "Prazo entrega não pode ser nulo")
     private LocalDateTime prazoEntrega;
 
-    @NotNull
+    @NotNull(message = "Título não pode ser nulo")
     private String titulo;
 
-    @NotNull
+    @NotNull(message = "Descrição não pode ser nulo")
     private String descricao;
 
-    @NotNull
+    @NotNull(message = "Dificuldade não pode ser nulo")
     @Enumerated(EnumType.STRING)
     private DificuldadeEnum dificuldade;
 
-    @NotNull
+    @NotNull(message = "Disciplina não pode ser nulo")
     @ManyToOne
     @JoinColumn(name = "disciplina_id")
     private Disciplina disciplina;

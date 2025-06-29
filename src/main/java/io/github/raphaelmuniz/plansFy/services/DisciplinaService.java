@@ -7,38 +7,24 @@ import io.github.raphaelmuniz.plansFy.entities.Disciplina;
 import io.github.raphaelmuniz.plansFy.repositories.DisciplinaRepository;
 import io.github.raphaelmuniz.plansFy.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
-public class DisciplinaService {
-    @Autowired
-    DisciplinaRepository repository;
+public class DisciplinaService extends GenericCrudServiceImpl<DisciplinaRequestDTO, DisciplinaResponseDTO, Disciplina, String> {
+    //@Autowired
+    //DisciplinaRepository repository;
 
-    @Autowired
-    AtividadeModeloService atividadeService;
+    //@Autowired
+    //AtividadeModeloService atividadeService;
 
-    @Transactional
-    public DisciplinaResponseDTO create(DisciplinaRequestDTO data) {
-        Disciplina saved = repository.save(data.toModel());
-        return new DisciplinaResponseDTO(saved);
-    }
-
-    public List<DisciplinaResponseDTO> findAll() {
-        return repository.findAll().stream().map(DisciplinaResponseDTO::new).collect(Collectors.toList());
-    }
-
-    public DisciplinaResponseDTO findById(String id) {
-        Disciplina found = repository.findById(id).orElseThrow(() -> new NotFoundException("Disciplina não encontrada."));
-        return new DisciplinaResponseDTO(found);
-    }
-
-    @Transactional
-    public void delete(String id) {
-        repository.deleteById(id);
+    protected DisciplinaService(DisciplinaRepository repository) {
+        super(repository, DisciplinaRequestDTO::toModel, DisciplinaResponseDTO::new);
     }
 
 //    public List<AtividadeModeloResponseDTO> listarAtividadesDisciplina(String disciplinaId){

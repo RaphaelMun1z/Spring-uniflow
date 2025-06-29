@@ -7,8 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -16,17 +14,14 @@ public abstract class GenericCrudServiceImpl<ReqDTO, ResDTO, E, ID extends Seria
     protected final JpaRepository<E, ID> repository;
     protected final Function<ReqDTO, E> toEntityMapper;
     protected final Function<E, ResDTO> toResponseMapper;
-    protected final Consumer<ReqDTO> preSaveHook;
 
     protected GenericCrudServiceImpl(
             JpaRepository<E, ID> repository,
             Function<ReqDTO, E> toEntityMapper,
-            Function<E, ResDTO> toResponseMapper,
-            Consumer<ReqDTO> preSaveHook) {
+            Function<E, ResDTO> toResponseMapper) {
         this.repository = repository;
         this.toEntityMapper = toEntityMapper;
         this.toResponseMapper = toResponseMapper;
-        this.preSaveHook = preSaveHook;
     }
 
     @Transactional
@@ -43,14 +38,14 @@ public abstract class GenericCrudServiceImpl<ReqDTO, ResDTO, E, ID extends Seria
                 .collect(Collectors.toList());
     }
 
-    public ResDTO findById(String id) {
+    public ResDTO findById(ID id) {
         E entity = repository.findById((ID) id)
                 .orElseThrow(() -> new NotFoundException("Entidade não encontrada."));
         return toResponseMapper.apply(entity);
     }
 
     @Transactional
-    public void delete(String id) {
+    public void delete(ID id) {
         if (repository.findById((ID) id).isEmpty()) {
             throw new NotFoundException("Entidade não encontrada.");
         }

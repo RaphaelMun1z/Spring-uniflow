@@ -4,25 +4,28 @@ import io.github.raphaelmuniz.plansFy.dto.req.GrupoRequestDTO;
 import io.github.raphaelmuniz.plansFy.dto.req.EstudanteEmGrupoRequestDTO;
 import io.github.raphaelmuniz.plansFy.dto.res.GrupoResponseDTO;
 import io.github.raphaelmuniz.plansFy.entities.*;
-import io.github.raphaelmuniz.plansFy.repositories.AssinanteRepository;
-import io.github.raphaelmuniz.plansFy.repositories.AtividadeModeloRepository;
-import io.github.raphaelmuniz.plansFy.repositories.GrupoRepository;
+import io.github.raphaelmuniz.plansFy.entities.enums.StatusEntregaEnum;
+import io.github.raphaelmuniz.plansFy.exceptions.BusinessException;
+import io.github.raphaelmuniz.plansFy.repositories.*;
 import io.github.raphaelmuniz.plansFy.exceptions.NotFoundException;
-import io.github.raphaelmuniz.plansFy.repositories.InscricaoGrupoRepository;
+import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
-public class GrupoService {
+public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoResponseDTO, Grupo, String> {
     @Autowired
     GrupoRepository repository;
 
@@ -33,43 +36,54 @@ public class GrupoService {
     AtividadeModeloRepository atividadeModeloRepository;
 
     @Autowired
+    AtividadeCopiaRepository atividadeCopiaRepository;
+
+    @Autowired
     InscricaoGrupoRepository inscricaoGrupoRepository;
 
-    @Transactional
+    protected GrupoService(GrupoRepository repository) {
+        super(repository, GrupoRequestDTO::toModel, GrupoResponseDTO::new);
+    }
+
     public GrupoResponseDTO create(GrupoRequestDTO data) {
-        // Declara o grupo
+        if (data.getInscritosId().isEmpty()) {
+            throw new ConstraintViolationException("É necessário ao menos um inscrito.", Set.of());
+        }
+
         Grupo grupo = new Grupo(null, data.getTitulo(), data.getDescricao(), null, null);
 
-        // Encontra os assinantes
         List<Assinante> assinantes = assinanteRepository.findAllById(data.getInscritosId());
+        if (assinantes.size() != data.getInscritosId().size()) {
+            throw new NotFoundException("Algum inscrito não encontrado.");
+        }
 
-        // Declara as inscrições
+        List<AtividadeModelo> atividadesModelo = atividadeModeloRepository.findAllById(data.getAtividadesId());
+        if (atividadesModelo.size() != data.getAtividadesId().size()) {
+            throw new NotFoundException("Alguma atividade não encontrada.");
+        }
+
+        Grupo grupoSalvo = repository.save(grupo);
+
         Set<InscricaoGrupo> inscricoes = new HashSet<>();
-
         assinantes.forEach(assinante -> {
-            InscricaoGrupo inscricaoGrupo = new InscricaoGrupo(null, grupo, assinante, LocalDateTime.now(), "Padrão");
-            inscricoes.add(inscricaoGrupo);
+            InscricaoGrupo inscricao = new InscricaoGrupo(null, grupoSalvo, assinante, LocalDateTime.now(), "Padrão");
+            InscricaoGrupo inscSalva = inscricaoGrupoRepository.save(inscricao);
+            inscricoes.add(inscSalva);
         });
+        grupoSalvo.setInscritos(inscricoes);
 
-        grupo.setInscritos(inscricoes);
+        List<AtividadeCopia> copias = new ArrayList<>();
+        atividadesModelo.forEach(modelo -> {
+            AtividadeCopia copia = new AtividadeCopia(LocalDateTime.now(), LocalDateTime.now(), modelo.getTitulo(), modelo.getDescricao(), modelo.getDificuldade(), modelo.getDisciplina(), null, StatusEntregaEnum.PENDENTE, grupoSalvo, null);
+            AtividadeCopia copiaSalva = atividadeCopiaRepository.save(copia);
+            copias.add(copiaSalva);
+        });
+        grupo.setAtividades(copias);
 
-        Grupo saved = repository.save(grupo);
-        return new GrupoResponseDTO(saved);
+        Grupo grupoAtualizado = repository.save(grupoSalvo);
+        return new GrupoResponseDTO(grupoAtualizado);
     }
 
-    public List<GrupoResponseDTO> findAll() {
-        return repository.findAll().stream().map(GrupoResponseDTO::new).collect(Collectors.toList());
-    }
-
-    public GrupoResponseDTO findById(String id) {
-        Grupo created = repository.findById(id).orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
-        return new GrupoResponseDTO(created);
-    }
-
-    @Transactional
-    public void delete(String id) {
-        repository.deleteById(id);
-    }
 
 //    @Transactional
 //    public void adicionarAluno(@RequestBody @Valid EstudanteEmGrupoRequestDTO data) {
@@ -93,7 +107,7 @@ public class GrupoService {
 //        }
 //    }
 //
-    public List<GrupoResponseDTO> findGruposByAlunoId(String alunoId) {
-        return repository.findByInscritos_Id(alunoId).stream().map(GrupoResponseDTO::new).collect(Collectors.toList());
-    }
+//    public List<GrupoResponseDTO> findGruposByAlunoId(String alunoId) {
+//        return repository.findByInscritos_Id(alunoId).stream().map(GrupoResponseDTO::new).collect(Collectors.toList());
+//    }
 }

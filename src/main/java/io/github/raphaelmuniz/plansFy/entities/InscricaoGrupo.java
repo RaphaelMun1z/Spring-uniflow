@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Data
@@ -33,4 +34,9 @@ public class InscricaoGrupo implements Serializable {
 
     @NotNull
     private String papelNoGrupo;
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }
