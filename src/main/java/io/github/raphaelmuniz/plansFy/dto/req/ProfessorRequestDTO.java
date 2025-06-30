@@ -1,9 +1,8 @@
 package io.github.raphaelmuniz.plansFy.dto.req;
 
-import io.github.raphaelmuniz.plansFy.entities.AssinaturaUsuario;
-import io.github.raphaelmuniz.plansFy.entities.AtividadeCopia;
-import io.github.raphaelmuniz.plansFy.entities.Grupo;
 import io.github.raphaelmuniz.plansFy.entities.Professor;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -17,6 +16,7 @@ public class ProfessorRequestDTO {
     private String areaAtuacao;
     private String assinaturaId;
     private List<String> atividadesId;
+    private List<String> gruposId;
 
     public Professor toModel() {
         return new Professor(null, nome, email, null, null, null, areaAtuacao);

@@ -2,41 +2,68 @@ package io.github.raphaelmuniz.plansFy.services;
 
 import io.github.raphaelmuniz.plansFy.dto.req.ProfessorRequestDTO;
 import io.github.raphaelmuniz.plansFy.dto.res.ProfessorResponseDTO;
-import io.github.raphaelmuniz.plansFy.entities.Professor;
+import io.github.raphaelmuniz.plansFy.entities.*;
+import io.github.raphaelmuniz.plansFy.exceptions.BusinessException;
 import io.github.raphaelmuniz.plansFy.exceptions.NotFoundException;
-import io.github.raphaelmuniz.plansFy.repositories.ProfessorRepository;
+import io.github.raphaelmuniz.plansFy.repositories.*;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
-public class ProfessorService {
+public class ProfessorService extends GenericCrudServiceImpl<ProfessorRequestDTO, ProfessorResponseDTO, Professor, String> {
     @Autowired
     ProfessorRepository repository;
 
-    @Transactional
+    @Autowired
+    AssinaturaUsuarioRepository assinaturaUsuarioRepository;
+
+    @Autowired
+    AtividadeModeloRepository atividadeModeloRepository;
+
+    @Autowired
+    GrupoRepository grupoRepository;
+
+    protected ProfessorService(ProfessorRepository repository) {
+        super(repository, ProfessorRequestDTO::toModel, ProfessorResponseDTO::new);
+    }
+
+    @Override
     public ProfessorResponseDTO create(ProfessorRequestDTO data) {
+        Optional<Professor> professorEncontrado = repository.findByEmail(data.getEmail());
+        if (professorEncontrado.isPresent()) {
+            throw new BusinessException("Professor já registrado.");
+        }
+
+        Professor professor = new Professor(null, data.getNome(), data.getEmail(), null, null, null, data.getAreaAtuacao());
+
+        // Assinatura
+        //AssinaturaUsuario assinaturaUsuarioEncontrada = assinaturaUsuarioRepository.findById(data.getAssinaturaId()).orElseThrow(() -> new NotFoundException("Assinatura usuário não encontrada."));
+        //professor.setAssinatura(assinaturaUsuarioEncontrada);
+        professor.setAssinatura(new AssinaturaUsuario());
+
+        // Atividades
+        List<AtividadeModelo> atividadesModeloEncontradas = atividadeModeloRepository.findAllById(data.getAtividadesId());
+        if (atividadesModeloEncontradas.size() != data.getAtividadesId().size()) {
+            throw new NotFoundException("Alguma atividade modelo não encontrada.");
+        }
+
+        // Criar as cópias de atividade
+
+        // Grupos
+        List<Grupo> gruposEncontrados = grupoRepository.findAllById(data.getGruposId());
+        if (gruposEncontrados.size() != data.getGruposId().size()) {
+            throw new NotFoundException("Algum grupo não encontrado.");
+        }
+
+        // Criar vinculo com grupos
+
         Professor saved = repository.save(data.toModel());
         return new ProfessorResponseDTO(saved);
-    }
-
-    public List<ProfessorResponseDTO> findAll() {
-        return repository.findAll().stream().map(ProfessorResponseDTO::new).collect(Collectors.toList());
-    }
-
-    public ProfessorResponseDTO findById(String id) {
-        Professor created = repository.findById(id).orElseThrow(() -> new NotFoundException("Aluno não encontrado."));
-        return new ProfessorResponseDTO(created);
-    }
-
-    @Transactional
-    public void delete(String id) {
-        if (repository.findById(id).isEmpty()) {
-            throw new NotFoundException("Professor não encontrado.");
-        }
-        repository.deleteById(id);
     }
 }

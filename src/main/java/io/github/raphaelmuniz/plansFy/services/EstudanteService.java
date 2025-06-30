@@ -52,7 +52,6 @@ public class EstudanteService extends GenericCrudServiceImpl<EstudanteRequestDTO
         Estudante estudante = new Estudante(null, data.getNome(), data.getEmail(), assinaturaUsuario, List.of(), Set.of(), data.getPeriodo());
 
         Estudante saved = repository.save(estudante);
-
         return new EstudanteResponseDTO(saved);
     }
 

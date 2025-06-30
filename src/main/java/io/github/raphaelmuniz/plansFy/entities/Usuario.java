@@ -19,10 +19,10 @@ public abstract class Usuario implements Serializable {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @NotBlank
+    @NotBlank(message = "Nome não pode ser vazio/nulo")
     private String nome;
 
-    @NotBlank
+    @NotBlank(message = "E-mail não pode ser vazio/nulo")
     @Column(nullable = false, unique = true)
     private String email;
 }

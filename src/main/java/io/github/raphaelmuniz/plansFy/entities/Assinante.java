@@ -18,14 +18,14 @@ import java.util.Set;
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Assinante extends Usuario implements Serializable {
-    @NotNull
+    @NotNull(message = "Assinatura não pode ser nulo")
     private AssinaturaUsuario assinatura;
 
-    @NotNull
+    @NotNull(message = "Atividades não pode ser nulo")
     @OneToMany(mappedBy = "assinante", cascade = CascadeType.ALL)
     private List<AtividadeCopia> atividades = new ArrayList<>();
 
-    @NotNull
+    @NotNull(message = "Grupos não pode ser nulo")
     @OneToMany(mappedBy = "inscrito", cascade = CascadeType.ALL)
     private Set<InscricaoGrupo> grupos = new HashSet<>();
 
