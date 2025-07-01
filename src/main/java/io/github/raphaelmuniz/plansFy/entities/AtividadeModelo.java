@@ -20,7 +20,7 @@ public class AtividadeModelo extends Atividade implements Serializable {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @NotNull
+    @NotNull(message = "Ativa não pode ser nulo")
     private Boolean ativa = true;
 
     public AtividadeModelo(LocalDateTime dataLancamento, LocalDateTime prazoEntrega, String titulo, String descricao, DificuldadeEnum dificuldade, Disciplina disciplina, Boolean ativa) {

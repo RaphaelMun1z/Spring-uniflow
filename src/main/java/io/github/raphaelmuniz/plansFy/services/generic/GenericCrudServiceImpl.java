@@ -1,4 +1,4 @@
-package io.github.raphaelmuniz.plansFy.services;
+package io.github.raphaelmuniz.plansFy.services.generic;
 
 import io.github.raphaelmuniz.plansFy.exceptions.NotFoundException;
 import io.github.raphaelmuniz.plansFy.services.interfaces.CrudService;

@@ -1,29 +1,20 @@
 package io.github.raphaelmuniz.plansFy.services;
 
-import io.github.raphaelmuniz.plansFy.dto.res.AssinaturaModeloResponseDTO;
 import io.github.raphaelmuniz.plansFy.dto.res.EstudanteResponseDTO;
-import io.github.raphaelmuniz.plansFy.dto.res.GrupoResponseDTO;
 import io.github.raphaelmuniz.plansFy.entities.AssinaturaModelo;
 import io.github.raphaelmuniz.plansFy.entities.AssinaturaUsuario;
 import io.github.raphaelmuniz.plansFy.entities.Estudante;
 import io.github.raphaelmuniz.plansFy.dto.req.EstudanteRequestDTO;
 import io.github.raphaelmuniz.plansFy.exceptions.BusinessException;
-import io.github.raphaelmuniz.plansFy.exceptions.NotFoundException;
-import io.github.raphaelmuniz.plansFy.repositories.AssinaturaModeloRepository;
 import io.github.raphaelmuniz.plansFy.repositories.EstudanteRepository;
-import io.github.raphaelmuniz.plansFy.services.interfaces.CrudService;
-import jakarta.validation.ConstraintViolationException;
+import io.github.raphaelmuniz.plansFy.services.generic.GenericCrudServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Service
 public class EstudanteService extends GenericCrudServiceImpl<EstudanteRequestDTO, EstudanteResponseDTO, Estudante, String> {

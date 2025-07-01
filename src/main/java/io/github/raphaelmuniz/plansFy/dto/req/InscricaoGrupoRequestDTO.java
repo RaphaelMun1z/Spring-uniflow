@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class EstudanteEmGrupoRequestDTO {
+public class InscricaoGrupoRequestDTO {
     @NotNull
     private String alunoId;
 

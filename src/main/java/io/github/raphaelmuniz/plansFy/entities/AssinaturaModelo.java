@@ -23,24 +23,24 @@ public class AssinaturaModelo implements Serializable {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @NotBlank
+    @NotBlank(message = "Nome não pode ser vazio/nulo")
     private String nome;
 
-    @NotBlank
+    @NotBlank(message = "Descrição não pode ser vazio/nulo")
     private String descricao;
 
-    @NotNull
+    @NotNull(message = "Preço não pode ser nulo")
     private BigDecimal preco;
 
-    @NotNull
+    @NotNull(message = "Duração em meses não pode ser nulo")
     private Integer duracaoEmMeses;
 
-    @NotNull
+    @NotNull(message = "Ativo não pode ser nulo")
     private Boolean ativo;
 
-    @NotNull
+    @NotNull(message = "Data criação não pode ser nulo")
     private LocalDateTime dataCriacao;
 
-    @NotNull
+    @NotNull(message = "Data atualização não pode ser nulo")
     private LocalDateTime dataAtualizacao;
 }

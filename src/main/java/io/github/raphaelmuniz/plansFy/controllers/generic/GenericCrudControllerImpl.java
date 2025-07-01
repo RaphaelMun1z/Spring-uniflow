@@ -1,8 +1,7 @@
-package io.github.raphaelmuniz.plansFy.controllers;
+package io.github.raphaelmuniz.plansFy.controllers.generic;
 
 import io.github.raphaelmuniz.plansFy.controllers.interfaces.CrudController;
 import io.github.raphaelmuniz.plansFy.services.interfaces.CrudService;
-import org.hibernate.service.Service;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;

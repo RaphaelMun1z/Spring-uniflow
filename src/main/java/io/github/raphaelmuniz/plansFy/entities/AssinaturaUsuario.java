@@ -21,15 +21,15 @@ public class AssinaturaUsuario implements Serializable {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @NotNull
+    @NotNull(message = "Assinatura não pode ser nulo")
     private AssinaturaModelo assinatura;
 
-    @NotNull
+    @NotNull(message = "Data início não pode ser nulo")
     private LocalDateTime dataInicio;
 
-    @NotNull
+    @NotNull(message = "Data expiração não pode ser nulo")
     private LocalDateTime dataExpiracao;
 
-    @NotNull
+    @NotNull(message = "Status não pode ser nulo")
     private Boolean status;
 }

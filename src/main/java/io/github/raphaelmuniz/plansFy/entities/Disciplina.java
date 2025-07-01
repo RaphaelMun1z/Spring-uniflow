@@ -20,17 +20,17 @@ public class Disciplina implements Serializable {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @NotBlank
+    @NotBlank(message = "Nome não pode ser vazio/nulo")
     private String nome;
 
-    @NotNull
+    @NotNull(message = "Período não pode ser nulo")
     private Integer periodo;
 
-    @NotNull
+    @NotNull(message = "Dificuldade não pode ser nulo")
     @Enumerated(EnumType.STRING)
     private DificuldadeEnum dificuldade;
 
-    @NotNull
+    @NotNull(message = "Período letivo não pode ser nulo")
     @Embedded
     private PeriodoLetivo periodoLetivo;
 }

@@ -22,25 +22,25 @@ public class Notificacao implements Serializable {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @NotBlank
+    @NotBlank(message = "Título não pode ser vazio/nulo")
     private String titulo;
 
-    @NotBlank
+    @NotBlank(message = "Descrição não pode ser vazio/nulo")
     private String descricao;
 
-    @NotNull
+    @NotNull(message = "Tipo não pode ser nulo")
     private CategoriaNotificacaoEnum tipo;
 
-    @NotNull
+    @NotBlank(message = "Status não pode ser vazio/nulo")
     private String status;
 
-    @NotNull
+    @NotNull(message = "Data de criação não pode ser nulo")
     private LocalDateTime dataDeCriacao;
 
-    @NotNull
+    @NotNull(message = "Data de leitura não pode ser nulo")
     private LocalDateTime dataDeLeitura;
 
-    @NotNull
+    @NotNull(message = "Tipo de remetente não pode ser nulo")
     private TipoRemetenteEnum remetenteTipo;
 
     @ManyToMany(mappedBy = "notificacoes")

@@ -16,7 +16,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Estudante extends Assinante implements Serializable {
-    @NotNull
+    @NotNull(message = "Período não pode ser nulo")
     private Integer periodo;
 
     public Estudante(String id, String nome, String email, AssinaturaUsuario assinatura, List<AtividadeCopia> atividades, Set<InscricaoGrupo> grupos, Integer periodo) {

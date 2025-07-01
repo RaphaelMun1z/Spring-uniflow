@@ -21,6 +21,6 @@ public class CaixaDeNotificacoes implements Serializable {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @NotNull
+    @NotNull(message = "Notificações não pode ser nulo")
     private List<Notificacao> notificacaos;
 }

@@ -1,28 +1,21 @@
 package io.github.raphaelmuniz.plansFy.services;
 
 import io.github.raphaelmuniz.plansFy.dto.req.GrupoRequestDTO;
-import io.github.raphaelmuniz.plansFy.dto.req.EstudanteEmGrupoRequestDTO;
 import io.github.raphaelmuniz.plansFy.dto.res.GrupoResponseDTO;
 import io.github.raphaelmuniz.plansFy.entities.*;
 import io.github.raphaelmuniz.plansFy.entities.enums.StatusEntregaEnum;
-import io.github.raphaelmuniz.plansFy.exceptions.BusinessException;
 import io.github.raphaelmuniz.plansFy.repositories.*;
 import io.github.raphaelmuniz.plansFy.exceptions.NotFoundException;
+import io.github.raphaelmuniz.plansFy.services.generic.GenericCrudServiceImpl;
 import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Service
 public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoResponseDTO, Grupo, String> {
@@ -45,6 +38,7 @@ public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoR
         super(repository, GrupoRequestDTO::toModel, GrupoResponseDTO::new);
     }
 
+    @Override
     public GrupoResponseDTO create(GrupoRequestDTO data) {
         if (data.getInscritosId().isEmpty()) {
             throw new ConstraintViolationException("É necessário ao menos um inscrito.", Set.of());

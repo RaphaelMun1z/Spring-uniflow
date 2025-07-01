@@ -7,6 +7,7 @@ import io.github.raphaelmuniz.plansFy.entities.Pagamento;
 import io.github.raphaelmuniz.plansFy.exceptions.NotFoundException;
 import io.github.raphaelmuniz.plansFy.repositories.AssinanteRepository;
 import io.github.raphaelmuniz.plansFy.repositories.PagamentoRepository;
+import io.github.raphaelmuniz.plansFy.services.generic.GenericCrudServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -22,21 +22,21 @@ public class Pagamento implements Serializable {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @NotNull
+    @NotNull(message = "Data de pagamento não pode ser nulo")
     private LocalDateTime dataPagamento;
 
-    @NotNull
+    @NotNull(message = "Valor não pode ser nulo")
     private Double valor;
 
-    @NotNull
+    @NotBlank(message = "Status não pode ser vazio/nulo")
     private String status;
 
-    @NotNull
+    @NotBlank(message = "Metodo não pode ser vazio/nulo")
     private String metodo;
 
-    @NotBlank
+    @NotBlank(message = "Protocolo não pode ser vazio/nulo")
     private String protocolo;
 
-    @NotNull
+    @NotNull(message = "Assinante não pode ser nulo")
     private Assinante assinante;
 }

@@ -1,5 +1,6 @@
 package io.github.raphaelmuniz.plansFy.controllers;
 
+import io.github.raphaelmuniz.plansFy.controllers.generic.GenericCrudControllerImpl;
 import io.github.raphaelmuniz.plansFy.dto.req.ProfessorRequestDTO;
 import io.github.raphaelmuniz.plansFy.dto.res.ProfessorResponseDTO;
 import io.github.raphaelmuniz.plansFy.services.ProfessorService;
