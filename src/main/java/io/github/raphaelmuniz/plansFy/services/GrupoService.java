@@ -95,7 +95,7 @@ public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoR
     public void removerIntegrantes(List<String> integrantesId, String grupoId) {
         Grupo grupo = repository.findById(grupoId).orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
         integrantesId.forEach(intId -> {
-            InscricaoGrupo inscricaoEncontrada = inscricaoGrupoRepository.findByGrupoIdAndAssinanteId(grupo.getId(), intId).orElseThrow(() -> new NotFoundException("Inscrição não encontrada."));
+            InscricaoGrupo inscricaoEncontrada = inscricaoGrupoRepository.findByGrupo_IdAndInscrito_Id(grupo.getId(), intId).orElseThrow(() -> new NotFoundException("Inscrição não encontrada."));
             inscricaoGrupoRepository.delete(inscricaoEncontrada);
         });
     }

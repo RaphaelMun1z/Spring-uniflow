@@ -12,10 +12,9 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 public class AssinanteRequestDTO {
-    private String id;
     private String nome;
     private String email;
-    private AssinaturaUsuario assinatura;
-    private List<AtividadeCopia> atividades;
-    private Set<InscricaoGrupo> grupos;
+    private String assinaturaModeloId;
+    private List<String> atividadesModeloId;
+    private List<String> gruposId;
 }
