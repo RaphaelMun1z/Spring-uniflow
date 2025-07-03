@@ -1,26 +1,35 @@
 package io.github.raphaelmuniz.plansFy.dto.res;
 
+import io.github.raphaelmuniz.plansFy.entities.Assinante;
 import io.github.raphaelmuniz.plansFy.entities.AssinaturaModelo;
 import io.github.raphaelmuniz.plansFy.entities.AssinaturaUsuario;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class AssinaturaUsuarioResponseDTO {
     private String id;
-    private AssinaturaModelo assinatura;
+    private String assinaturaModeloId;
     private LocalDateTime dataInicio;
     private LocalDateTime dataExpiracao;
     private Boolean status;
+    private String assinanteId;
 
     public AssinaturaUsuarioResponseDTO(AssinaturaUsuario data) {
         this.id = data.getId();
-        this.assinatura = data.getAssinatura();
+        this.assinaturaModeloId = data.getAssinatura().getId();
         this.dataInicio = data.getDataInicio();
         this.dataExpiracao = data.getDataExpiracao();
         this.status = data.getStatus();
+        this.assinanteId = data.getAssinante().getId();
     }
 
     public AssinaturaUsuario toModel() {
-        return new AssinaturaUsuario(id, assinatura, dataInicio, dataExpiracao, status);
+        return new AssinaturaUsuario(id, null, dataInicio, dataExpiracao, status, null);
     }
 }

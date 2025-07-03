@@ -21,12 +21,12 @@ public class AtividadeCopiaRequestDTO {
     private String titulo;
     private String descricao;
     private DificuldadeEnum dificuldade;
-    private Disciplina disciplina;
+    private String disciplinaId;
     private StatusEntregaEnum status;
-    private Grupo grupo;
-    private Assinante assinante;
+    private String grupoId;
+    private String assinanteId;
 
     public AtividadeCopia toModel() {
-        return new AtividadeCopia(dataLancamento, prazoEntrega, titulo, descricao, dificuldade, disciplina, null, status, grupo, assinante);
+        return new AtividadeCopia(dataLancamento, prazoEntrega, titulo, descricao, dificuldade, null, null, status, null, null);
     }
 }

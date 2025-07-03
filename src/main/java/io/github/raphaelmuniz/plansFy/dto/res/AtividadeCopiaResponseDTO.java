@@ -12,9 +12,15 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class AtividadeCopiaResponseDTO {
     private String id;
     private LocalDateTime dataLancamento;
@@ -22,19 +28,25 @@ public class AtividadeCopiaResponseDTO {
     private String titulo;
     private String descricao;
     private DificuldadeEnum dificuldade;
-    private Disciplina disciplina;
+    private String disciplinaId;
     private StatusEntregaEnum status;
-    private Grupo grupo;
-    private Assinante assinante;
+    private String grupoId;
+    private String assinanteId;
 
     public AtividadeCopiaResponseDTO(AtividadeCopia atividadeCopia) {
         this.id = atividadeCopia.getId();
+        this.dataLancamento = atividadeCopia.getDataLancamento();
+        this.prazoEntrega = atividadeCopia.getPrazoEntrega();
+        this.titulo = atividadeCopia.getTitulo();
+        this.descricao = atividadeCopia.getDescricao();
+        this.dificuldade = atividadeCopia.getDificuldade();
+        this.disciplinaId = atividadeCopia.getDisciplina().getId();
         this.status = atividadeCopia.getStatus();
-        this.grupo = atividadeCopia.getGrupo();
-        this.assinante = atividadeCopia.getAssinante();
+        this.grupoId = atividadeCopia.getGrupo().getId();
+        this.assinanteId = atividadeCopia.getAssinante().getId();
     }
 
     public AtividadeCopia toModel() {
-        return new AtividadeCopia(id, status, grupo, assinante);
+        return new AtividadeCopia(dataLancamento, prazoEntrega, titulo, descricao, dificuldade, null, id, status, null, null);
     }
 }

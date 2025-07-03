@@ -32,4 +32,7 @@ public class AssinaturaUsuario implements Serializable {
 
     @NotNull(message = "Status não pode ser nulo")
     private Boolean status;
+
+    @NotNull(message = "Assinante não pode ser nulo")
+    private Assinante assinante;
 }

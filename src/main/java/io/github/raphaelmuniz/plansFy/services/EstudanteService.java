@@ -39,7 +39,7 @@ public class EstudanteService extends GenericCrudServiceImpl<EstudanteRequestDTO
         }
 
         // Assinatura provisória
-        AssinaturaUsuario assinaturaUsuario = new AssinaturaUsuario(null, new AssinaturaModelo(), LocalDateTime.now(), LocalDateTime.now(), true);
+        AssinaturaUsuario assinaturaUsuario = new AssinaturaUsuario(null, new AssinaturaModelo(), LocalDateTime.now(), LocalDateTime.now(), true, null);
         Estudante estudante = new Estudante(null, data.getNome(), data.getEmail(), assinaturaUsuario, List.of(), Set.of(), data.getPeriodo());
 
         Estudante saved = repository.save(estudante);

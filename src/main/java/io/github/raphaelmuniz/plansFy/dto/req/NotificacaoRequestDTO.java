@@ -23,9 +23,9 @@ public class NotificacaoRequestDTO {
     private LocalDateTime dataDeCriacao;
     private LocalDateTime dataDeLeitura;
     private TipoRemetenteEnum remetenteTipo;
-    private List<TransmissaoDeNotificacao> transmissoesDeNotificacao;
+    private List<String> transmissoesDeNotificacaoId;
 
     public Notificacao toModel() {
-        return new Notificacao(null, titulo, descricao, tipo, status, dataDeCriacao, dataDeLeitura, remetenteTipo, transmissoesDeNotificacao);
+        return new Notificacao(null, titulo, descricao, tipo, status, dataDeCriacao, dataDeLeitura, remetenteTipo, null);
     }
 }
