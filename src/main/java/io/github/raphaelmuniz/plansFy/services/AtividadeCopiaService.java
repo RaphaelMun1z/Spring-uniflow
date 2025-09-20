@@ -42,6 +42,7 @@ public class AtividadeCopiaService extends GenericCrudServiceImpl<AtividadeCopia
             atividadeCopia.setGrupo(grupo);
         }
 
-        return new AtividadeCopiaResponseDTO(atividadeCopia);
+        AtividadeCopia saved = repository.save(atividadeCopia);
+        return new AtividadeCopiaResponseDTO(saved);
     }
 }

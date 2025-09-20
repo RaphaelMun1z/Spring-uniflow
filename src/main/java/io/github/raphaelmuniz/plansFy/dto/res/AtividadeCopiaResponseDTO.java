@@ -42,8 +42,11 @@ public class AtividadeCopiaResponseDTO {
         this.dificuldade = atividadeCopia.getDificuldade();
         this.disciplinaId = atividadeCopia.getDisciplina().getId();
         this.status = atividadeCopia.getStatus();
-        this.grupoId = atividadeCopia.getGrupo().getId();
-        this.assinanteId = atividadeCopia.getAssinante().getId();
+        if (atividadeCopia.getGrupo() != null)
+            this.grupoId = atividadeCopia.getGrupo().getId();
+
+        if (atividadeCopia.getAssinante() != null)
+            this.assinanteId = atividadeCopia.getAssinante().getId();
     }
 
     public AtividadeCopia toModel() {

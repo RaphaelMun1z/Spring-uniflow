@@ -12,9 +12,4 @@ public class EstudanteController extends GenericCrudControllerImpl<EstudanteRequ
     protected EstudanteController(EstudanteService service) {
         super(service);
     }
-
-//    @GetMapping("/{id}/grupos")
-//    public ResponseEntity<List<GrupoResponseDTO>> listarGruposInscritosPeloAluno(@PathVariable String id) {
-//        return ResponseEntity.ok(service.listarGruposInscritosPeloAluno(id));
-//    }
 }

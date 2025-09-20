@@ -1,9 +1,6 @@
 package io.github.raphaelmuniz.plansFy.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,7 +19,7 @@ public class AssinaturaUsuario implements Serializable {
     private String id;
 
     @NotNull(message = "Assinatura não pode ser nulo")
-    private AssinaturaModelo assinatura;
+    private AssinaturaModelo assinaturaModelo;
 
     @NotNull(message = "Data início não pode ser nulo")
     private LocalDateTime dataInicio;
@@ -34,5 +31,7 @@ public class AssinaturaUsuario implements Serializable {
     private Boolean status;
 
     @NotNull(message = "Assinante não pode ser nulo")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "assinante_id", referencedColumnName = "id")
     private Assinante assinante;
 }

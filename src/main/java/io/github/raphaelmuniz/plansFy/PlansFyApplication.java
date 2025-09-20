@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class PlansFyApplication {
 
     public static void main(String[] args) {
-        // Shift + Alt + Insert --> Shift + Seta
+        // Shift + Alt + Insert === Shift + Seta
         SpringApplication.run(PlansFyApplication.class, args);
     }
 

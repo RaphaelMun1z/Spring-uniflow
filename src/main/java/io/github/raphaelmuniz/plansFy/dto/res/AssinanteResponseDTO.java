@@ -26,7 +26,7 @@ public class AssinanteResponseDTO {
         this.id = assinante.getId();
         this.nome = assinante.getNome();
         this.email = assinante.getEmail();
-        this.assinaturaId = assinante.getAssinatura().getId();
+        this.assinaturaId = assinante.getAssinaturaUsuario().getId();
         this.atividadesId = assinante.getAtividades().stream().map(AtividadeCopia::getId).toList();
         this.gruposId = assinante.getGrupos().stream().map(g -> { return g.getGrupo().getId(); }).toList();
     }

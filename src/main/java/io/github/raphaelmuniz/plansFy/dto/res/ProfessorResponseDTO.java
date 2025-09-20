@@ -28,7 +28,7 @@ public class ProfessorResponseDTO {
         this.nome = professor.getNome();
         this.email = professor.getEmail();
         this.areaAtuacao = professor.getAreaAtuacao();
-        this.assinatura = professor.getAssinatura();
+        this.assinatura = professor.getAssinaturaUsuario();
         this.atividades = professor.getAtividades();
         this.grupos = professor.getGrupos();
     }

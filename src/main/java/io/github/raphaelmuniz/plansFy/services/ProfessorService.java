@@ -43,7 +43,7 @@ public class ProfessorService extends GenericCrudServiceImpl<ProfessorRequestDTO
         // Assinatura
         //AssinaturaUsuario assinaturaUsuarioEncontrada = assinaturaUsuarioRepository.findById(data.getAssinaturaId()).orElseThrow(() -> new NotFoundException("Assinatura usuário não encontrada."));
         //professor.setAssinatura(assinaturaUsuarioEncontrada);
-        professor.setAssinatura(new AssinaturaUsuario());
+        professor.setAssinaturaUsuario(new AssinaturaUsuario());
 
         // Atividades
         List<AtividadeModelo> atividadesModeloEncontradas = atividadeModeloRepository.findAllById(data.getAtividadesId());

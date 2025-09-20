@@ -19,7 +19,8 @@ import java.util.Set;
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Assinante extends Usuario implements Serializable {
     @NotNull(message = "Assinatura não pode ser nulo")
-    private AssinaturaUsuario assinatura;
+    @OneToOne(mappedBy = "assinante", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private AssinaturaUsuario assinaturaUsuario;
 
     @NotNull(message = "Atividades não pode ser nulo")
     @OneToMany(mappedBy = "assinante", cascade = CascadeType.ALL)
@@ -29,9 +30,9 @@ public abstract class Assinante extends Usuario implements Serializable {
     @OneToMany(mappedBy = "inscrito", cascade = CascadeType.ALL)
     private Set<InscricaoGrupo> grupos = new HashSet<>();
 
-    public Assinante(String id, String nome, String email, AssinaturaUsuario assinatura, List<AtividadeCopia> atividades, Set<InscricaoGrupo> grupos) {
+    public Assinante(String id, String nome, String email, AssinaturaUsuario assinaturaUsuario, List<AtividadeCopia> atividades, Set<InscricaoGrupo> grupos) {
         super(id, nome, email);
-        this.assinatura = assinatura;
+        this.assinaturaUsuario = assinaturaUsuario;
         this.atividades = atividades;
         this.grupos = grupos;
     }

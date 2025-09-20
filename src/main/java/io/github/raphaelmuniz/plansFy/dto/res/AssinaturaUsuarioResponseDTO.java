@@ -22,7 +22,7 @@ public class AssinaturaUsuarioResponseDTO {
 
     public AssinaturaUsuarioResponseDTO(AssinaturaUsuario data) {
         this.id = data.getId();
-        this.assinaturaModeloId = data.getAssinatura().getId();
+        this.assinaturaModeloId = data.getAssinaturaModelo().getId();
         this.dataInicio = data.getDataInicio();
         this.dataExpiracao = data.getDataExpiracao();
         this.status = data.getStatus();

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -19,20 +20,23 @@ public class EstudanteResponseDTO {
     private String nome;
     private String email;
     private Integer periodo;
-    private AssinaturaUsuario assinatura;
-    private List<AtividadeCopia> atividades;
-    private Set<InscricaoGrupo> grupos;
+    private String assinaturaId;
+    private List<String> atividadesId;
+    private List<String> gruposId;
 
     public EstudanteResponseDTO(Estudante estudante) {
         this.id = estudante.getId();
         this.nome = estudante.getNome();
         this.email = estudante.getEmail();
         this.periodo = estudante.getPeriodo();
-        this.assinatura = estudante.getAssinatura();
-        this.atividades = estudante.getAtividades();
+        this.assinaturaId = estudante.getAssinaturaUsuario().getId();
+        this.atividadesId = estudante.getAtividades().stream().map(AtividadeCopia::getId).toList();
+        this.gruposId = estudante.getGrupos().stream().map(InscricaoGrupo::getId).toList();
     }
 
     public Estudante toModel() {
-        return new Estudante(id, nome, email, assinatura, atividades, grupos, periodo);
+        return new Estudante(id, nome, email, null, null, null, periodo);
     }
+
+
 }
