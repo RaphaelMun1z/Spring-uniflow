@@ -17,6 +17,9 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "notificacao", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"titulo", "descricao"})
+})
 public class Notificacao implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -43,6 +46,6 @@ public class Notificacao implements Serializable {
     @NotNull(message = "Tipo de remetente não pode ser nulo")
     private TipoRemetenteEnum remetenteTipo;
 
-    @ManyToMany(mappedBy = "notificacoes")
-    private List<TransmissaoDeNotificacao> transmissoesDeNotificacao;
+    @OneToMany(mappedBy = "notificacao", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Transmissao> transmissoesDeNotificacao;
 }

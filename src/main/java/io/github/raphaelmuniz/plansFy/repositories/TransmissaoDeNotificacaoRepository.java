@@ -1,7 +1,7 @@
 package io.github.raphaelmuniz.plansFy.repositories;
 
-import io.github.raphaelmuniz.plansFy.entities.TransmissaoDeNotificacao;
+import io.github.raphaelmuniz.plansFy.entities.Transmissao;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface TransmissaoDeNotificacaoRepository extends JpaRepository<TransmissaoDeNotificacao, String> {
+public interface TransmissaoDeNotificacaoRepository extends JpaRepository<Transmissao, String> {
 }

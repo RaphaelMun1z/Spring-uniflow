@@ -1,13 +1,15 @@
 package io.github.raphaelmuniz.plansFy.dto.res;
 
 import io.github.raphaelmuniz.plansFy.entities.Notificacao;
-import io.github.raphaelmuniz.plansFy.entities.TransmissaoDeNotificacao;
 import io.github.raphaelmuniz.plansFy.entities.enums.CategoriaNotificacaoEnum;
 import io.github.raphaelmuniz.plansFy.entities.enums.TipoRemetenteEnum;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
+@Data
+@AllArgsConstructor
 public class NotificacaoResponseDTO {
     private String id;
     private String titulo;
@@ -17,7 +19,6 @@ public class NotificacaoResponseDTO {
     private LocalDateTime dataDeCriacao;
     private LocalDateTime dataDeLeitura;
     private TipoRemetenteEnum remetenteTipo;
-    private List<TransmissaoDeNotificacao> transmissoesDeNotificacao;
 
     public NotificacaoResponseDTO(Notificacao notificacao) {
         this.id = notificacao.getId();
@@ -28,6 +29,5 @@ public class NotificacaoResponseDTO {
         this.dataDeCriacao = notificacao.getDataDeCriacao();
         this.dataDeLeitura = notificacao.getDataDeLeitura();
         this.remetenteTipo = notificacao.getRemetenteTipo();
-        this.transmissoesDeNotificacao = notificacao.getTransmissoesDeNotificacao();
     }
 }

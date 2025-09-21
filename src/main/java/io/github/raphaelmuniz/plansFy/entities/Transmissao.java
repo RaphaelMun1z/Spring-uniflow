@@ -10,35 +10,34 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TransmissaoDeNotificacao implements Serializable {
+public class Transmissao implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "notificacao_id")
+    private Notificacao notificacao;
+
     @NotNull(message = "Tipo de remetente não pode ser nulo")
+    @Enumerated(EnumType.STRING)
     private TipoRemetenteEnum remetenteTipo;
 
-    @NotBlank(message = "Remetente Id não pode ser vazio/nulo")
-    private String remetenteId;
-
     @NotNull(message = "Tipo de destinatário não pode ser nulo")
+    @Enumerated(EnumType.STRING)
     private TipoDestinatarioEnum destinatarioTipo;
 
-    @NotBlank(message = "Destinatário Id não pode ser vazio/nulo")
-    private String destinatarioId;
+    private LocalDateTime dataDeLeitura;
 
-    @NotNull(message = "Notificações não pode ser nulo")
-    @ManyToMany
-    @JoinTable(
-            name = "transmissao_notificacao", // nome da tabela intermediária
-            joinColumns = @JoinColumn(name = "transmissao_id"),
-            inverseJoinColumns = @JoinColumn(name = "notificacao_id")
-    )
-    private List<Notificacao> notificacoes;
+    @NotNull
+    private String status;
+
 }
