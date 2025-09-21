@@ -19,21 +19,21 @@ public class ProfessorResponseDTO {
     private String nome;
     private String email;
     private String areaAtuacao;
-    private AssinaturaUsuario assinatura;
-    private List<AtividadeCopia> atividades;
-    private Set<InscricaoGrupo> grupos;
+    private String assinaturaId;
+    private List<String> atividadesId;
+    private List<String> gruposId;
 
     public ProfessorResponseDTO(Professor professor) {
         this.id = professor.getId();
         this.nome = professor.getNome();
         this.email = professor.getEmail();
         this.areaAtuacao = professor.getAreaAtuacao();
-        this.assinatura = professor.getAssinaturaUsuario();
-        this.atividades = professor.getAtividades();
-        this.grupos = professor.getGrupos();
+        this.assinaturaId = professor.getAssinaturaUsuario().getId();
+        this.atividadesId = professor.getAtividades().stream().map(AtividadeCopia::getId).toList();
+        this.gruposId = professor.getGrupos().stream().map(InscricaoGrupo::getId).toList();
     }
 
     public Professor toModel() {
-        return new Professor(id, nome, email, assinatura, atividades, grupos, areaAtuacao);
+        return new Professor(id, nome, email, null, null, null, areaAtuacao);
     }
 }

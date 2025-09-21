@@ -89,7 +89,6 @@ public class EstudanteService extends GenericCrudServiceImpl<EstudanteRequestDTO
                 .map(grupo -> new InscricaoGrupo(null, grupo, savedEstudante, LocalDateTime.now(), "Padrão"))
                 .collect(Collectors.toList());
         List<InscricaoGrupo> savedInscricoes = inscricaoGrupoRepository.saveAll(inscricoes);
-
         savedEstudante.setGrupos(new HashSet<>(savedInscricoes));
 
         return new EstudanteResponseDTO(savedEstudante);
