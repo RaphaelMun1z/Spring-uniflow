@@ -1,0 +1,46 @@
+package io.github.raphaelmuniz.uniflow.entities;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+@Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "assinatura_modelo", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"nome", "preco"})
+})
+public class AssinaturaModelo implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
+
+    @NotBlank(message = "Nome não pode ser vazio/nulo")
+    private String nome;
+
+    @NotBlank(message = "Descrição não pode ser vazio/nulo")
+    private String descricao;
+
+    @NotNull(message = "Preço não pode ser nulo")
+    private BigDecimal preco;
+
+    @NotNull(message = "Duração em meses não pode ser nulo")
+    private Integer duracaoEmMeses;
+
+    @NotNull(message = "Ativo não pode ser nulo")
+    private Boolean ativo;
+
+    @NotNull(message = "Data criação não pode ser nulo")
+    private LocalDateTime dataCriacao;
+
+    @NotNull(message = "Data atualização não pode ser nulo")
+    private LocalDateTime dataAtualizacao;
+}

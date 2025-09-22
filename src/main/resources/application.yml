@@ -1,6 +1,6 @@
 spring:
   application:
-    name: plansFy
+    name: uniflow
   profiles:
     active: "test"
 
