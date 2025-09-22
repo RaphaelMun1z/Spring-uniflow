@@ -174,6 +174,6 @@ public class DataInitializer implements CommandLineRunner {
         estudante1.setAssinaturaUsuario(assinaturaUsuario1);
         estudante2.setAssinaturaUsuario(assinaturaUsuario2);
 
-        estudanteRepository.saveAll(List.of(estudante1, estudante2));
+        //estudanteRepository.saveAll(List.of(estudante1, estudante2));
     }
 }

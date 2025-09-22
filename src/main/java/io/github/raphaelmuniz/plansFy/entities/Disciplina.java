@@ -15,6 +15,9 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "disciplina", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"nome", "periodo", "ano", "semestre"})
+})
 public class Disciplina implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

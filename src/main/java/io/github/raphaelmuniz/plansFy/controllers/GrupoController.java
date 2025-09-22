@@ -1,8 +1,9 @@
 package io.github.raphaelmuniz.plansFy.controllers;
 
 import io.github.raphaelmuniz.plansFy.controllers.generic.GenericCrudControllerImpl;
-import io.github.raphaelmuniz.plansFy.dto.req.AdicionarMembrosGrupoDTO;
+import io.github.raphaelmuniz.plansFy.dto.req.AdicionarMembroGrupoDTO;
 import io.github.raphaelmuniz.plansFy.dto.req.GrupoRequestDTO;
+import io.github.raphaelmuniz.plansFy.dto.res.AssinanteResponseDTO;
 import io.github.raphaelmuniz.plansFy.dto.res.GrupoResponseDTO;
 import io.github.raphaelmuniz.plansFy.services.GrupoService;
 import jakarta.validation.Valid;
@@ -22,15 +23,21 @@ public class GrupoController extends GenericCrudControllerImpl<GrupoRequestDTO, 
         super(service);
     }
 
-    @PostMapping("/adicionar/membros")
-    public ResponseEntity<Void> adicionarMembro(@RequestBody @Valid AdicionarMembrosGrupoDTO data) {
+    @PostMapping("/adicionar/membro")
+    public ResponseEntity<Void> adicionarMembro(@RequestBody @Valid AdicionarMembroGrupoDTO data) {
         service.adicionarIntegrantes(data);
         return ResponseEntity.ok().build();
     }
-//
-//    @DeleteMapping("/remover/aluno")
-//    public ResponseEntity<Void> removerAluno(@RequestBody @Valid EstudanteEmGrupoRequestDTO data) {
-//        service.removerAluno(data);
-//        return ResponseEntity.ok().build();
-//    }
+
+    @DeleteMapping("{grupoId}/remover/{membroId}")
+    public ResponseEntity<Void> removerMembro(@PathVariable String grupoId, @PathVariable String membroId) {
+        service.removerIntegrante(grupoId, membroId);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{grupoId}/membros")
+    public ResponseEntity<List<AssinanteResponseDTO>> listarMembros(@PathVariable String grupoId) {
+        List<AssinanteResponseDTO> membros = service.listarMembros(grupoId);
+        return ResponseEntity.ok(membros);
+    }
 }

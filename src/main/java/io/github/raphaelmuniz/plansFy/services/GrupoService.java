@@ -1,10 +1,10 @@
 package io.github.raphaelmuniz.plansFy.services;
 
-import io.github.raphaelmuniz.plansFy.dto.req.AdicionarMembrosGrupoDTO;
+import io.github.raphaelmuniz.plansFy.dto.req.AdicionarMembroGrupoDTO;
 import io.github.raphaelmuniz.plansFy.dto.req.GrupoRequestDTO;
+import io.github.raphaelmuniz.plansFy.dto.res.AssinanteResponseDTO;
 import io.github.raphaelmuniz.plansFy.dto.res.GrupoResponseDTO;
 import io.github.raphaelmuniz.plansFy.entities.*;
-import io.github.raphaelmuniz.plansFy.entities.enums.DificuldadeEnum;
 import io.github.raphaelmuniz.plansFy.entities.enums.StatusEntregaEnum;
 import io.github.raphaelmuniz.plansFy.repositories.*;
 import io.github.raphaelmuniz.plansFy.exceptions.NotFoundException;
@@ -82,42 +82,37 @@ public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoR
     }
 
     @Transactional
-    public void adicionarIntegrantes(AdicionarMembrosGrupoDTO data) {
+    public void adicionarIntegrantes(AdicionarMembroGrupoDTO data) {
         Grupo grupo = repository.findById(data.getGrupoId()).orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
-        data.getIntegrantesId().forEach(intId -> {
-            Assinante assinanteEncontrado = assinanteRepository.findById(intId).orElseThrow(() -> new NotFoundException("Integrante não encontrado."));
-            InscricaoGrupo inscricaoGrupo = new InscricaoGrupo(null, grupo, assinanteEncontrado, LocalDateTime.now(), "Padrão");
-            inscricaoGrupoRepository.save(inscricaoGrupo);
-        });
+        Assinante assinanteEncontrado = assinanteRepository.findById(data.getIntegranteId()).orElseThrow(() -> new NotFoundException("Assinante não encontrado."));
+        InscricaoGrupo inscricaoGrupo = new InscricaoGrupo(null, grupo, assinanteEncontrado, LocalDateTime.now(), data.getPapel());
+        inscricaoGrupoRepository.save(inscricaoGrupo);
     }
 
     @Transactional
-    public void removerIntegrantes(List<String> integrantesId, String grupoId) {
-        Grupo grupo = repository.findById(grupoId).orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
-        integrantesId.forEach(intId -> {
-            InscricaoGrupo inscricaoEncontrada = inscricaoGrupoRepository.findByGrupo_IdAndInscrito_Id(grupo.getId(), intId).orElseThrow(() -> new NotFoundException("Inscrição não encontrada."));
-            inscricaoGrupoRepository.delete(inscricaoEncontrada);
-        });
+    public void removerIntegrante(String grupoId, String membroId) {
+        InscricaoGrupo inscricaoEncontrada = inscricaoGrupoRepository.findByGrupo_IdAndInscrito_Id(grupoId, membroId).orElseThrow(() -> new NotFoundException("Inscrição não encontrada."));
+        inscricaoGrupoRepository.delete(inscricaoEncontrada);
     }
 
-    public List<Assinante> listarMembros(String grupoId) {
+    public List<AssinanteResponseDTO> listarMembros(String grupoId) {
         Grupo grupo = repository.findById(grupoId).orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
-        List<Assinante> membros = grupo.getInscritos().stream().map(InscricaoGrupo::getInscrito).toList();
+        List<AssinanteResponseDTO> membros = grupo.getInscritos().stream().map(InscricaoGrupo::getInscrito).map(AssinanteResponseDTO::new).toList();
         return membros;
     }
 
-    @Transactional
-    public void atribuirAtividadesAoGrupo(String grupoId, List<String> atividadesModeloId) {
-        Grupo grupo = repository.findById(grupoId).orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
-        atividadesModeloId.forEach(atvModeloId -> {
-            AtividadeModelo atividadeModelo = atividadeModeloRepository.findById(atvModeloId).orElseThrow(() -> new NotFoundException("Atividade modelo não encontrada."));
-            AtividadeCopia atividadeCopia = new AtividadeCopia(atividadeModelo.getDataLancamento(), atividadeModelo.getPrazoEntrega(), atividadeModelo.getTitulo(), atividadeModelo.getDescricao(), atividadeModelo.getDificuldade(), atividadeModelo.getDisciplina(), null, StatusEntregaEnum.PENDENTE, grupo, null);
-            atividadeCopiaRepository.save(atividadeCopia);
-        });
-    }
-
-    public List<AtividadeCopia> listarAtividadesDoGrupo(String grupoId) {
-        Grupo grupo = repository.findById(grupoId).orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
-        return grupo.getAtividades();
-    }
+//    @Transactional
+//    public void atribuirAtividadesAoGrupo(String grupoId, List<String> atividadesModeloId) {
+//        Grupo grupo = repository.findById(grupoId).orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
+//        atividadesModeloId.forEach(atvModeloId -> {
+//            AtividadeModelo atividadeModelo = atividadeModeloRepository.findById(atvModeloId).orElseThrow(() -> new NotFoundException("Atividade modelo não encontrada."));
+//            AtividadeCopia atividadeCopia = new AtividadeCopia(atividadeModelo.getDataLancamento(), atividadeModelo.getPrazoEntrega(), atividadeModelo.getTitulo(), atividadeModelo.getDescricao(), atividadeModelo.getDificuldade(), atividadeModelo.getDisciplina(), null, StatusEntregaEnum.PENDENTE, grupo, null);
+//            atividadeCopiaRepository.save(atividadeCopia);
+//        });
+//    }
+//
+//    public List<AtividadeCopia> listarAtividadesDoGrupo(String grupoId) {
+//        Grupo grupo = repository.findById(grupoId).orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
+//        return grupo.getAtividades();
+//    }
 }

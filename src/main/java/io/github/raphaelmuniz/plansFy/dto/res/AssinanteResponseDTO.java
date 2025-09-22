@@ -1,9 +1,6 @@
 package io.github.raphaelmuniz.plansFy.dto.res;
 
-import io.github.raphaelmuniz.plansFy.entities.Assinante;
-import io.github.raphaelmuniz.plansFy.entities.AssinaturaUsuario;
-import io.github.raphaelmuniz.plansFy.entities.AtividadeCopia;
-import io.github.raphaelmuniz.plansFy.entities.InscricaoGrupo;
+import io.github.raphaelmuniz.plansFy.entities.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,7 +25,8 @@ public class AssinanteResponseDTO {
         this.email = assinante.getEmail();
         this.assinaturaId = assinante.getAssinaturaUsuario().getId();
         this.atividadesId = assinante.getAtividades().stream().map(AtividadeCopia::getId).toList();
-        this.gruposId = assinante.getGrupos().stream().map(g -> { return g.getGrupo().getId(); }).toList();
+        this.gruposId = assinante.getGrupos().stream().map(g -> {
+            return g.getGrupo().getId();
+        }).toList();
     }
-
 }

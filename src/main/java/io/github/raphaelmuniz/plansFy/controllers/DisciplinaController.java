@@ -12,9 +12,4 @@ public class DisciplinaController extends GenericCrudControllerImpl<DisciplinaRe
     protected DisciplinaController(DisciplinaService service) {
         super(service);
     }
-
-//    @GetMapping("/{id}/atividades")
-//    public ResponseEntity<List<AtividadeModeloResponseDTO>> findAll(@PathVariable String id) {
-//        return ResponseEntity.ok(service.listarAtividadesDisciplina(id));
-//    }
 }

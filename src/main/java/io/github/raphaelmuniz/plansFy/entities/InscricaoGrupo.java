@@ -15,6 +15,9 @@ import java.util.Objects;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "inscricao_grupo", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"grupo_id", "inscrito_id"})
+})
 public class InscricaoGrupo implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
