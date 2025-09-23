@@ -24,7 +24,7 @@ public abstract class Assinante extends Usuario implements Serializable {
 
     @NotNull(message = "Atividades não pode ser nulo")
     @OneToMany(mappedBy = "assinante", cascade = CascadeType.ALL)
-    private List<AtividadeCopia> atividades = new ArrayList<>();
+    private List<AtividadeAssinante> atividadesAssinante = new ArrayList<>();
 
     @NotNull(message = "Grupos não pode ser nulo")
     @OneToMany(mappedBy = "inscrito", cascade = CascadeType.ALL)

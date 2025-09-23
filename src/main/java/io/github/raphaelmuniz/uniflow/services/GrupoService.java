@@ -3,6 +3,7 @@ package io.github.raphaelmuniz.uniflow.services;
 import io.github.raphaelmuniz.uniflow.dto.req.AdicionarMembroGrupoDTO;
 import io.github.raphaelmuniz.uniflow.dto.req.GrupoRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.AssinanteResponseDTO;
+import io.github.raphaelmuniz.uniflow.dto.res.AtividadeCopiaResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.GrupoResponseDTO;
 import io.github.raphaelmuniz.uniflow.entities.*;
 import io.github.raphaelmuniz.uniflow.entities.enums.StatusEntregaEnum;
@@ -101,18 +102,24 @@ public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoR
         return membros;
     }
 
-//    @Transactional
-//    public void atribuirAtividadesAoGrupo(String grupoId, List<String> atividadesModeloId) {
-//        Grupo grupo = repository.findById(grupoId).orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
-//        atividadesModeloId.forEach(atvModeloId -> {
-//            AtividadeModelo atividadeModelo = atividadeModeloRepository.findById(atvModeloId).orElseThrow(() -> new NotFoundException("Atividade modelo não encontrada."));
-//            AtividadeCopia atividadeCopia = new AtividadeCopia(atividadeModelo.getDataLancamento(), atividadeModelo.getPrazoEntrega(), atividadeModelo.getTitulo(), atividadeModelo.getDescricao(), atividadeModelo.getDificuldade(), atividadeModelo.getDisciplina(), null, StatusEntregaEnum.PENDENTE, grupo, null);
-//            atividadeCopiaRepository.save(atividadeCopia);
-//        });
-//    }
-//
-//    public List<AtividadeCopia> listarAtividadesDoGrupo(String grupoId) {
-//        Grupo grupo = repository.findById(grupoId).orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
-//        return grupo.getAtividades();
-//    }
+    public List<AtividadeCopiaResponseDTO> listarAtividades(String grupoId) {
+        Grupo grupo = repository.findById(grupoId).orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
+        List<AtividadeCopiaResponseDTO> atividades = grupo.getAtividades().stream().map(AtividadeCopiaResponseDTO::new).toList();
+        return atividades;
+    }
+
+    @Transactional
+    public void atribuirAtividadesAoGrupo(String grupoId, List<String> atividadesModeloId) {
+        Grupo grupo = repository.findById(grupoId).orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
+        atividadesModeloId.forEach(atvModeloId -> {
+            AtividadeModelo atividadeModelo = atividadeModeloRepository.findById(atvModeloId).orElseThrow(() -> new NotFoundException("Atividade modelo não encontrada."));
+            AtividadeCopia atividadeCopia = new AtividadeCopia(atividadeModelo.getDataLancamento(), atividadeModelo.getPrazoEntrega(), atividadeModelo.getTitulo(), atividadeModelo.getDescricao(), atividadeModelo.getDificuldade(), atividadeModelo.getDisciplina(), null, StatusEntregaEnum.PENDENTE, grupo, null);
+            atividadeCopiaRepository.save(atividadeCopia);
+        });
+    }
+
+    public List<AtividadeCopia> listarAtividadesDoGrupo(String grupoId) {
+        Grupo grupo = repository.findById(grupoId).orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
+        return grupo.getAtividades();
+    }
 }
