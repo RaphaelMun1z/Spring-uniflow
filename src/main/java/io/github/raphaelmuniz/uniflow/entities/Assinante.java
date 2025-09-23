@@ -18,22 +18,26 @@ import java.util.Set;
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Assinante extends Usuario implements Serializable {
-    @NotNull(message = "Assinatura não pode ser nulo")
-    @OneToOne(mappedBy = "assinante", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private AssinaturaUsuario assinaturaUsuario;
+    @NotNull(message = "Assinaturas não pode ser nulo")
+    @OneToMany(mappedBy = "assinante", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<AssinaturaUsuario> assinaturas;
+
+    @NotNull(message = "Pagamentos não pode ser nulo")
+    @OneToMany(mappedBy = "assinantePagador", cascade = CascadeType.ALL)
+    private List<Pagamento> pagamentos = new ArrayList<>();
 
     @NotNull(message = "Atividades não pode ser nulo")
-    @OneToMany(mappedBy = "assinante", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "assinanteDono", cascade = CascadeType.ALL)
     private List<AtividadeAssinante> atividadesAssinante = new ArrayList<>();
 
-    @NotNull(message = "Grupos não pode ser nulo")
-    @OneToMany(mappedBy = "inscrito", cascade = CascadeType.ALL)
-    private Set<InscricaoGrupo> grupos = new HashSet<>();
+    @NotNull(message = "Atividades Grupo não pode ser nulo")
+    @OneToMany(mappedBy = "criadorAtividade", cascade = CascadeType.ALL)
+    private List<AtividadeGrupo> atividadesGrupoPublicadas = new ArrayList<>();
 
-    public Assinante(String id, String nome, String email, AssinaturaUsuario assinaturaUsuario, List<AtividadeCopia> atividades, Set<InscricaoGrupo> grupos) {
-        super(id, nome, email);
-        this.assinaturaUsuario = assinaturaUsuario;
-        this.atividades = atividades;
-        this.grupos = grupos;
-    }
+    @NotNull(message = "Inscrições Grupos não pode ser nulo")
+    @OneToMany(mappedBy = "membro", cascade = CascadeType.ALL)
+    private Set<InscricaoGrupo> inscricoesGrupos = new HashSet<>();
+
+    @OneToMany(mappedBy = "assinante", cascade = CascadeType.ALL)
+    private Set<NotificacaoAssinante> notificacoes = new HashSet<>();
 }

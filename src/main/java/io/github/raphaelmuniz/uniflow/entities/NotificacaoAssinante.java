@@ -1,6 +1,5 @@
 package io.github.raphaelmuniz.uniflow.entities;
 
-import io.github.raphaelmuniz.uniflow.entities.enums.StatusEntregaEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -8,21 +7,27 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AtividadeAssinante extends Atividade implements Serializable {
+public class NotificacaoAssinante implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @NotNull(message = "Status não pode ser nulo")
-    @Enumerated(EnumType.STRING)
-    private StatusEntregaEnum statusEntrega;
+    @NotNull
+    private Boolean foiLido = false;
+
+    private LocalDateTime dataLeitura;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "assinante_dono_id", nullable = false)
-    private Assinante assinanteDono;
+    @JoinColumn(name = "assinante_id")
+    private Assinante assinante;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "notificacao_id")
+    private Notificacao notificacao;
 }

@@ -37,6 +37,6 @@ public class Pagamento implements Serializable {
     @NotBlank(message = "Protocolo não pode ser vazio/nulo")
     private String protocolo;
 
-    @NotNull(message = "Assinante não pode ser nulo")
-    private Assinante assinante;
+    @NotNull(message = "Assinante Pagador não pode ser nulo")
+    private Assinante assinantePagador;
 }

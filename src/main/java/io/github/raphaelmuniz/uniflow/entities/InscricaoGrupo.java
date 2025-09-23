@@ -1,5 +1,6 @@
 package io.github.raphaelmuniz.uniflow.entities;
 
+import io.github.raphaelmuniz.uniflow.entities.enums.PapelGrupoEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -23,24 +24,20 @@ public class InscricaoGrupo implements Serializable {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
+    @NotNull(message = "Data entrada não pode ser nulo")
+    private LocalDateTime dataEntrada;
+
+    @NotBlank(message = "Papel no grupo não pode ser vazio/nulo")
+    private PapelGrupoEnum papelNoGrupo;
+
     @NotNull(message = "Grupo não pode ser nulo")
     @ManyToOne
     @JoinColumn(name = "grupo_id")
     private Grupo grupo;
 
-    @NotNull(message = "Inscrito não pode ser nulo")
+    @NotNull(message = "Membro não pode ser nulo")
     @ManyToOne
-    @JoinColumn(name = "inscrito_id")
-    private Assinante inscrito;
+    @JoinColumn(name = "membro_id")
+    private Assinante membro;
 
-    @NotNull(message = "Data entrada não pode ser nulo")
-    private LocalDateTime dataEntrada;
-
-    @NotBlank(message = "Papel no grupo não pode ser vazio/nulo")
-    private String papelNoGrupo;
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 }

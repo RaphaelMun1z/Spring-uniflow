@@ -3,9 +3,10 @@ package io.github.raphaelmuniz.uniflow.services;
 import io.github.raphaelmuniz.uniflow.dto.req.AdicionarMembroGrupoDTO;
 import io.github.raphaelmuniz.uniflow.dto.req.GrupoRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.AssinanteResponseDTO;
-import io.github.raphaelmuniz.uniflow.dto.res.AtividadeCopiaResponseDTO;
+import io.github.raphaelmuniz.uniflow.dto.res.AtividadeGrupoResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.GrupoResponseDTO;
 import io.github.raphaelmuniz.uniflow.entities.*;
+import io.github.raphaelmuniz.uniflow.entities.enums.PapelGrupoEnum;
 import io.github.raphaelmuniz.uniflow.entities.enums.StatusEntregaEnum;
 import io.github.raphaelmuniz.uniflow.repositories.*;
 import io.github.raphaelmuniz.uniflow.exceptions.NotFoundException;
@@ -36,6 +37,9 @@ public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoR
     AtividadeCopiaRepository atividadeCopiaRepository;
 
     @Autowired
+    AtividadeGrupoRepository atividadeGrupoRepository;
+
+    @Autowired
     InscricaoGrupoRepository inscricaoGrupoRepository;
 
     protected GrupoService(GrupoRepository repository) {
@@ -55,28 +59,22 @@ public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoR
             throw new NotFoundException("Algum inscrito não encontrado.");
         }
 
-        List<AtividadeModelo> atividadesModelo = atividadeModeloRepository.findAllById(data.getAtividadesId());
-        if (atividadesModelo.size() != data.getAtividadesId().size()) {
-            throw new NotFoundException("Alguma atividade não encontrada.");
-        }
-
         Grupo grupoSalvo = repository.save(grupo);
 
-        Set<InscricaoGrupo> inscricoes = new HashSet<>();
+        Set<InscricaoGrupo> inscricoesGrupo = new HashSet<>();
         assinantes.forEach(assinante -> {
-            InscricaoGrupo inscricao = new InscricaoGrupo(null, grupoSalvo, assinante, LocalDateTime.now(), "Padrão");
+            InscricaoGrupo inscricao = new InscricaoGrupo(null, LocalDateTime.now(), PapelGrupoEnum.MEMBRO, grupoSalvo, assinante);
             InscricaoGrupo inscSalva = inscricaoGrupoRepository.save(inscricao);
-            inscricoes.add(inscSalva);
+            inscricoesGrupo.add(inscSalva);
         });
-        grupoSalvo.setInscritos(inscricoes);
+        grupoSalvo.setInscricoes(inscricoesGrupo);
 
-        List<AtividadeCopia> copias = new ArrayList<>();
-        atividadesModelo.forEach(modelo -> {
-            AtividadeCopia copia = new AtividadeCopia(LocalDateTime.now(), LocalDateTime.now(), modelo.getTitulo(), modelo.getDescricao(), modelo.getDificuldade(), modelo.getDisciplina(), null, StatusEntregaEnum.PENDENTE, grupoSalvo, null);
-            AtividadeCopia copiaSalva = atividadeCopiaRepository.save(copia);
-            copias.add(copiaSalva);
+        List<AtividadeGrupo> atividadesGrupo = new ArrayList<>();
+        data.getAtividadesGrupo().forEach(atvGrupo -> {
+            AtividadeGrupo atvGrupoSalvo = atividadeGrupoRepository.save(atvGrupo);
+            atividadesGrupo.add(atvGrupoSalvo);
         });
-        grupo.setAtividades(copias);
+        grupo.setAtividadesPublicadas(atividadesGrupo);
 
         Grupo grupoAtualizado = repository.save(grupoSalvo);
         return new GrupoResponseDTO(grupoAtualizado);
@@ -86,7 +84,7 @@ public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoR
     public void adicionarIntegrantes(AdicionarMembroGrupoDTO data) {
         Grupo grupo = repository.findById(data.getGrupoId()).orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
         Assinante assinanteEncontrado = assinanteRepository.findById(data.getIntegranteId()).orElseThrow(() -> new NotFoundException("Assinante não encontrado."));
-        InscricaoGrupo inscricaoGrupo = new InscricaoGrupo(null, grupo, assinanteEncontrado, LocalDateTime.now(), data.getPapel());
+        InscricaoGrupo inscricaoGrupo = new InscricaoGrupo(null, LocalDateTime.now(), data.getPapel(), grupo, assinanteEncontrado);
         inscricaoGrupoRepository.save(inscricaoGrupo);
     }
 
@@ -98,13 +96,13 @@ public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoR
 
     public List<AssinanteResponseDTO> listarMembros(String grupoId) {
         Grupo grupo = repository.findById(grupoId).orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
-        List<AssinanteResponseDTO> membros = grupo.getInscritos().stream().map(InscricaoGrupo::getInscrito).map(AssinanteResponseDTO::new).toList();
+        List<AssinanteResponseDTO> membros = grupo.getInscricoes().stream().map(InscricaoGrupo::getMembro).map(AssinanteResponseDTO::new).toList();
         return membros;
     }
 
-    public List<AtividadeCopiaResponseDTO> listarAtividades(String grupoId) {
+    public List<AtividadeGrupoResponseDTO> listarAtividades(String grupoId) {
         Grupo grupo = repository.findById(grupoId).orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
-        List<AtividadeCopiaResponseDTO> atividades = grupo.getAtividades().stream().map(AtividadeCopiaResponseDTO::new).toList();
+        List<AtividadeGrupoResponseDTO> atividades = grupo.getAtividadesPublicadas().stream().map(AtividadeGrupoResponseDTO::new).toList();
         return atividades;
     }
 
@@ -118,8 +116,8 @@ public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoR
         });
     }
 
-    public List<AtividadeCopia> listarAtividadesDoGrupo(String grupoId) {
+    public List<AtividadeGrupo> listarAtividadesDoGrupo(String grupoId) {
         Grupo grupo = repository.findById(grupoId).orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
-        return grupo.getAtividades();
+        return grupo.getAtividadesPublicadas();
     }
 }

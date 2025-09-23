@@ -23,16 +23,11 @@ public class Grupo implements Serializable {
     @NotBlank(message = "Descrição não pode ser vazio/nulo")
     private String descricao;
 
-    @NotNull(message = "Atividades não pode ser nulo")
-    @OneToMany(mappedBy = "grupo", cascade = CascadeType.ALL)
-    private List<AtividadeCopia> atividades = new ArrayList<>();
+    @NotNull(message = "Atividades Publicadas não pode ser nulo")
+    @OneToMany(mappedBy = "grupoPublicado", cascade = CascadeType.ALL)
+    private List<AtividadeGrupo> atividadesPublicadas = new ArrayList<>();
 
-    @NotNull(message = "Inscritos não pode ser nulo")
+    @NotNull(message = "Inscrições não pode ser nulo")
     @OneToMany(mappedBy = "grupo", cascade = CascadeType.ALL)
-    private Set<InscricaoGrupo> inscritos = new HashSet<>();
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
+    private Set<InscricaoGrupo> inscricoes = new HashSet<>();
 }

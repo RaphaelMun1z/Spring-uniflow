@@ -11,7 +11,9 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -48,4 +50,8 @@ public class Notificacao implements Serializable {
 
     @OneToMany(mappedBy = "notificacao", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transmissao> transmissoesDeNotificacao;
+
+    @OneToMany(mappedBy = "notificacao", cascade = CascadeType.ALL)
+    private Set<NotificacaoAssinante> destinatarios = new HashSet<>();
+
 }

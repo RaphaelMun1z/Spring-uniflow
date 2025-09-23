@@ -1,5 +1,6 @@
 package io.github.raphaelmuniz.uniflow.dto.req;
 
+import io.github.raphaelmuniz.uniflow.entities.enums.PapelGrupoEnum;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,5 +15,5 @@ public class AdicionarMembroGrupoDTO {
     private String grupoId;
 
     @NotNull(message = "O papel no grupo não pode ser nulo.")
-    private String papel;
+    private PapelGrupoEnum papel;
 }

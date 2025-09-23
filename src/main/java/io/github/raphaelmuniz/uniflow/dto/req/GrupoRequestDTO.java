@@ -1,5 +1,6 @@
 package io.github.raphaelmuniz.uniflow.dto.req;
 
+import io.github.raphaelmuniz.uniflow.entities.AtividadeGrupo;
 import io.github.raphaelmuniz.uniflow.entities.Grupo;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -18,7 +19,7 @@ public class GrupoRequestDTO {
     private String descricao;
 
     @NotNull
-    private List<String> atividadesId;
+    private List<AtividadeGrupo> atividadesGrupo;
 
     @NotNull
     private List<String> inscritosId;

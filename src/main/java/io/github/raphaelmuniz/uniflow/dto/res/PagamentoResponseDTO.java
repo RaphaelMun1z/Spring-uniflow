@@ -24,7 +24,7 @@ public class PagamentoResponseDTO {
         this.status = pagamento.getStatus();
         this.metodo = pagamento.getMetodo();
         this.protocolo = pagamento.getProtocolo();
-        this.assinanteId = pagamento.getAssinante().getId();
+        this.assinanteId = pagamento.getAssinantePagador().getId();
     }
 
     public Pagamento toModel() {
