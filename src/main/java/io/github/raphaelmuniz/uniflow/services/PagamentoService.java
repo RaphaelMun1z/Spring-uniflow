@@ -27,7 +27,7 @@ public class PagamentoService extends GenericCrudServiceImpl<PagamentoRequestDTO
                 .orElseThrow(() -> new NotFoundException("Assinante não encontrado"));
 
         Pagamento pagamento = data.toModel();
-        pagamento.setAssinante(assinante);
+        pagamento.setAssinantePagador(assinante);
 
         Pagamento saved = repository.save(pagamento);
 

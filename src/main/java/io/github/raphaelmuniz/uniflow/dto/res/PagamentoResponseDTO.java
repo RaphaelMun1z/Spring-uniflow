@@ -4,6 +4,7 @@ import io.github.raphaelmuniz.uniflow.entities.Pagamento;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 public class PagamentoResponseDTO {
     private String id;
     private LocalDateTime dataPagamento;
-    private Double valor;
+    private BigDecimal valor;
     private String status;
     private String metodo;
     private String protocolo;

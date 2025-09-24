@@ -1,8 +1,6 @@
 package io.github.raphaelmuniz.uniflow.dto.res;
 
-import io.github.raphaelmuniz.uniflow.entities.AtividadeCopia;
-import io.github.raphaelmuniz.uniflow.entities.Estudante;
-import io.github.raphaelmuniz.uniflow.entities.InscricaoGrupo;
+import io.github.raphaelmuniz.uniflow.entities.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -17,20 +15,20 @@ public class EstudanteResponseDTO {
     private Integer periodo;
     private String assinaturaId;
     private List<String> atividadesId;
-    private List<String> gruposId;
+    private List<String> inscricoesGrupoId;
 
     public EstudanteResponseDTO(Estudante estudante) {
         this.id = estudante.getId();
         this.nome = estudante.getNome();
         this.email = estudante.getEmail();
         this.periodo = estudante.getPeriodo();
-        this.assinaturaId = estudante.getAssinaturaUsuario().getId();
-        this.atividadesId = estudante.getAtividades().stream().map(AtividadeCopia::getId).toList();
-        this.gruposId = estudante.getGrupos().stream().map(InscricaoGrupo::getId).toList();
+        this.assinaturaId = estudante.getAssinaturaValida().map(AssinaturaUsuario::getId).orElse(null);
+        this.atividadesId = estudante.getAtividadesAssinante().stream().map(AtividadeAssinante::getId).toList();
+        this.inscricoesGrupoId = estudante.getInscricoesGrupos().stream().map(InscricaoGrupo::getId).toList();
     }
 
     public Estudante toModel() {
-        return new Estudante(id, nome, email, null, null, null, periodo);
+        return new Estudante(null, nome, email, null, null, null, null, null, null, this.periodo);
     }
 
 

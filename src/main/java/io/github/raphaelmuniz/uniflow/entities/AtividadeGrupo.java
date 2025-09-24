@@ -5,13 +5,13 @@ import io.github.raphaelmuniz.uniflow.entities.enums.VisivibilidadeAtividadeGrup
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
 @Data
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
 public class AtividadeGrupo extends Atividade implements Serializable {

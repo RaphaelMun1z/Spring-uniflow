@@ -27,12 +27,9 @@ public class EstudanteRequestDTO {
     private String assinaturaId;
 
     @NotNull
-    private List<String> atividadesId;
-
-    @NotNull
     private List<String> gruposId;
 
     public Estudante toModel() {
-        return new Estudante(null, nome, email, null, null, null, periodo);
+        return new Estudante(null, nome, email, null, null, null, null, null, null, this.periodo);
     }
 }

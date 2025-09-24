@@ -29,7 +29,7 @@ public class AssinanteService extends GenericCrudServiceImpl<AssinanteRequestDTO
     }
 
     public List<GrupoResponseDTO> findGruposByAssinante(String assinanteId) {
-        List<InscricaoGrupo> inscricoes = inscricaoGrupoRepository.findAllByInscrito_Id(assinanteId);
+        List<InscricaoGrupo> inscricoes = inscricaoGrupoRepository.findAllByMembro_Id(assinanteId);
         return inscricoes.stream()
                 .map(InscricaoGrupo::getGrupo)
                 .map(GrupoResponseDTO::new)

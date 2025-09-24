@@ -3,6 +3,7 @@ package io.github.raphaelmuniz.uniflow.services;
 import io.github.raphaelmuniz.uniflow.dto.res.EstudanteResponseDTO;
 import io.github.raphaelmuniz.uniflow.entities.*;
 import io.github.raphaelmuniz.uniflow.dto.req.EstudanteRequestDTO;
+import io.github.raphaelmuniz.uniflow.entities.enums.PapelGrupoEnum;
 import io.github.raphaelmuniz.uniflow.entities.enums.StatusEntregaEnum;
 import io.github.raphaelmuniz.uniflow.exceptions.BusinessException;
 import io.github.raphaelmuniz.uniflow.exceptions.NotFoundException;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,9 +25,6 @@ public class EstudanteService extends GenericCrudServiceImpl<EstudanteRequestDTO
 
     @Autowired
     AssinaturaModeloRepository assinaturaModeloRepository;
-
-    @Autowired
-    AtividadeModeloRepository atividadeModeloRepository;
 
     @Autowired
     InscricaoGrupoRepository inscricaoGrupoRepository;
@@ -46,11 +45,6 @@ public class EstudanteService extends GenericCrudServiceImpl<EstudanteRequestDTO
         AssinaturaModelo assinaturaModelo = assinaturaModeloRepository.findById(data.getAssinaturaId())
                 .orElseThrow(() -> new NotFoundException("Assinatura Modelo não encontrada."));
 
-        List<AtividadeModelo> atividadesModelo = atividadeModeloRepository.findAllById(data.getAtividadesId());
-        if (atividadesModelo.size() != data.getAtividadesId().size()) {
-            throw new NotFoundException("Uma ou mais Atividades Modelo não foram encontradas.");
-        }
-
         List<Grupo> grupos = grupoRepository.findAllById(data.getGruposId());
         if (grupos.size() != data.getGruposId().size()) {
             throw new NotFoundException("Um ou mais Grupos não foram encontrados.");
@@ -62,30 +56,16 @@ public class EstudanteService extends GenericCrudServiceImpl<EstudanteRequestDTO
         estudante.setPeriodo(data.getPeriodo());
 
         AssinaturaUsuario assinaturaUsuario = new AssinaturaUsuario(null, assinaturaModelo, LocalDateTime.now(), LocalDateTime.now(), true, estudante);
-        estudante.setAssinaturaUsuario(assinaturaUsuario);
-
-        List<AtividadeCopia> atividadesCopia = atividadesModelo.stream()
-                .map(modelo -> new AtividadeCopia(
-                        LocalDateTime.now(),
-                        LocalDateTime.now(),
-                        modelo.getTitulo(),
-                        modelo.getDescricao(),
-                        modelo.getDificuldade(),
-                        modelo.getDisciplina(),
-                        null,
-                        StatusEntregaEnum.PENDENTE,
-                        null,
-                        estudante))
-                .collect(Collectors.toList());
-        estudante.setAtividades(atividadesCopia);
+        estudante.getAssinaturas().add(assinaturaUsuario);
 
         Estudante savedEstudante = repository.save(estudante);
 
         List<InscricaoGrupo> inscricoes = grupos.stream()
-                .map(grupo -> new InscricaoGrupo(null, grupo, savedEstudante, LocalDateTime.now(), "Padrão"))
+                .map(grupo -> new InscricaoGrupo(null, LocalDateTime.now(), PapelGrupoEnum.MEMBRO, grupo, savedEstudante))
                 .collect(Collectors.toList());
-        List<InscricaoGrupo> savedInscricoes = inscricaoGrupoRepository.saveAll(inscricoes);
-        savedEstudante.setGrupos(new HashSet<>(savedInscricoes));
+        List<InscricaoGrupo> savedInscricoesList = inscricaoGrupoRepository.saveAll(inscricoes);
+        Set<InscricaoGrupo> savedInscricoes = new HashSet<>(savedInscricoesList);
+        savedEstudante.setInscricoesGrupos(savedInscricoes);
 
         return new EstudanteResponseDTO(savedEstudante);
     }

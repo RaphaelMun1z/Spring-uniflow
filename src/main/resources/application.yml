@@ -3,6 +3,7 @@ spring:
     name: uniflow
   profiles:
     active: "test"
-
+  jpa:
+    open-in-view: false
 server:
   port: 8080

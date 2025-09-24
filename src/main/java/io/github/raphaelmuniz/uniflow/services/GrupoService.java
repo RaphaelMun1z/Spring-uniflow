@@ -31,12 +31,6 @@ public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoR
     AssinanteRepository assinanteRepository;
 
     @Autowired
-    AtividadeModeloRepository atividadeModeloRepository;
-
-    @Autowired
-    AtividadeCopiaRepository atividadeCopiaRepository;
-
-    @Autowired
     AtividadeGrupoRepository atividadeGrupoRepository;
 
     @Autowired
@@ -90,7 +84,7 @@ public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoR
 
     @Transactional
     public void removerIntegrante(String grupoId, String membroId) {
-        InscricaoGrupo inscricaoEncontrada = inscricaoGrupoRepository.findByGrupo_IdAndInscrito_Id(grupoId, membroId).orElseThrow(() -> new NotFoundException("Inscrição não encontrada."));
+        InscricaoGrupo inscricaoEncontrada = inscricaoGrupoRepository.findByGrupo_IdAndMembro_Id(grupoId, membroId).orElseThrow(() -> new NotFoundException("Inscrição não encontrada."));
         inscricaoGrupoRepository.delete(inscricaoEncontrada);
     }
 
@@ -104,20 +98,5 @@ public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoR
         Grupo grupo = repository.findById(grupoId).orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
         List<AtividadeGrupoResponseDTO> atividades = grupo.getAtividadesPublicadas().stream().map(AtividadeGrupoResponseDTO::new).toList();
         return atividades;
-    }
-
-    @Transactional
-    public void atribuirAtividadesAoGrupo(String grupoId, List<String> atividadesModeloId) {
-        Grupo grupo = repository.findById(grupoId).orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
-        atividadesModeloId.forEach(atvModeloId -> {
-            AtividadeModelo atividadeModelo = atividadeModeloRepository.findById(atvModeloId).orElseThrow(() -> new NotFoundException("Atividade modelo não encontrada."));
-            AtividadeCopia atividadeCopia = new AtividadeCopia(atividadeModelo.getDataLancamento(), atividadeModelo.getPrazoEntrega(), atividadeModelo.getTitulo(), atividadeModelo.getDescricao(), atividadeModelo.getDificuldade(), atividadeModelo.getDisciplina(), null, StatusEntregaEnum.PENDENTE, grupo, null);
-            atividadeCopiaRepository.save(atividadeCopia);
-        });
-    }
-
-    public List<AtividadeGrupo> listarAtividadesDoGrupo(String grupoId) {
-        Grupo grupo = repository.findById(grupoId).orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
-        return grupo.getAtividadesPublicadas();
     }
 }

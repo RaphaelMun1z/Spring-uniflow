@@ -10,14 +10,13 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "inscricao_grupo", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"grupo_id", "inscrito_id"})
+        @UniqueConstraint(columnNames = {"grupo_id", "membro_id"})
 })
 public class InscricaoGrupo implements Serializable {
     @Id

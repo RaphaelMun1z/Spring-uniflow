@@ -13,10 +13,9 @@ public class ProfessorRequestDTO {
     private String email;
     private String areaAtuacao;
     private String assinaturaId;
-    private List<String> atividadesId;
     private List<String> gruposId;
 
     public Professor toModel() {
-        return new Professor(null, nome, email, null, null, null, areaAtuacao);
+        return new Professor(null, this.nome, this.email, null, null, null, null, null, null, this.areaAtuacao);
     }
 }

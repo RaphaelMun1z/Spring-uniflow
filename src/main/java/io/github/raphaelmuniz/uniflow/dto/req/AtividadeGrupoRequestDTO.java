@@ -1,9 +1,7 @@
 package io.github.raphaelmuniz.uniflow.dto.req;
 
-import io.github.raphaelmuniz.uniflow.entities.AtividadeCopia;
 import io.github.raphaelmuniz.uniflow.entities.AtividadeGrupo;
 import io.github.raphaelmuniz.uniflow.entities.enums.DificuldadeEnum;
-import io.github.raphaelmuniz.uniflow.entities.enums.StatusEntregaEnum;
 import io.github.raphaelmuniz.uniflow.entities.enums.VisivibilidadeAtividadeGrupoEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;

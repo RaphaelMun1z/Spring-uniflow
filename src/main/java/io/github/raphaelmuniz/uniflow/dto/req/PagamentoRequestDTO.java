@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -15,7 +16,7 @@ public class PagamentoRequestDTO {
     private LocalDateTime dataPagamento;
 
     @NotNull
-    private Double valor;
+    private BigDecimal valor;
 
     @NotNull
     private String status;

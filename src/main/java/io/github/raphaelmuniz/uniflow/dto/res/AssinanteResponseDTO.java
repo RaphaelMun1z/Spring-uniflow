@@ -16,16 +16,14 @@ public class AssinanteResponseDTO {
     private String email;
     private String assinaturaId;
     private List<String> atividadesId;
-    private List<String> gruposId;
+    private List<String> inscricoesGrupoId;
 
     public AssinanteResponseDTO(Assinante assinante) {
         this.id = assinante.getId();
         this.nome = assinante.getNome();
         this.email = assinante.getEmail();
-        this.assinaturaId = assinante.getAssinaturaUsuario().getId();
-        this.atividadesId = assinante.getAtividades().stream().map(AtividadeCopia::getId).toList();
-        this.gruposId = assinante.getGrupos().stream().map(g -> {
-            return g.getGrupo().getId();
-        }).toList();
+        this.assinaturaId = assinante.getAssinaturaValida().map(AssinaturaUsuario::getId).orElse(null);
+        this.atividadesId = assinante.getAtividadesAssinante().stream().map(AtividadeAssinante::getId).toList();
+        this.inscricoesGrupoId = assinante.getInscricoesGrupos().stream().map(InscricaoGrupo::getId).toList();
     }
 }

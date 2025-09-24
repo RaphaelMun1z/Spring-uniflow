@@ -7,6 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface InscricaoGrupoRepository extends JpaRepository<InscricaoGrupo, String> {
-    Optional<InscricaoGrupo> findByGrupo_IdAndInscrito_Id(String grupoId, String assinanteId);
-    List<InscricaoGrupo> findAllByInscrito_Id(String assinanteId);
+    Optional<InscricaoGrupo> findByGrupo_IdAndMembro_Id(String grupoId, String assinanteId);
+    List<InscricaoGrupo> findAllByMembro_Id(String membroId);
 }

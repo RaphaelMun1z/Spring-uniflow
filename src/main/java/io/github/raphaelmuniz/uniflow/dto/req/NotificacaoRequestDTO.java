@@ -35,6 +35,6 @@ public class NotificacaoRequestDTO {
     private TipoRemetenteEnum remetenteTipo;
 
     public Notificacao toModel() {
-        return new Notificacao(null, titulo, descricao, tipo, status, dataDeCriacao, dataDeLeitura, remetenteTipo, null);
+        return new Notificacao(null, titulo, descricao, tipo, status, dataDeCriacao, dataDeLeitura, remetenteTipo, null, null);
     }
 }

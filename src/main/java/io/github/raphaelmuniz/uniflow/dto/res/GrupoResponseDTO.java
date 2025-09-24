@@ -19,7 +19,9 @@ public class GrupoResponseDTO {
         this.id = grupo.getId();
         this.descricao = grupo.getDescricao();
         this.titulo = grupo.getTitulo();
-        this.atividadesId = grupo.getAtividades().stream().map(AtividadeCopia::getId).toList();
-        this.inscritosId = grupo.getInscritos().stream().map(ins -> { return ins.getInscrito().getId(); }).toList();
+        this.atividadesId = grupo.getAtividadesPublicadas().stream().map(AtividadeGrupo::getId).toList();
+        this.inscritosId = grupo.getInscricoes().stream().map(ig -> {
+            return ig.getMembro().getId();
+        }).toList();
     }
 }

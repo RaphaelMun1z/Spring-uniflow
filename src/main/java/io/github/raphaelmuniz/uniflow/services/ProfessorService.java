@@ -3,6 +3,7 @@ package io.github.raphaelmuniz.uniflow.services;
 import io.github.raphaelmuniz.uniflow.dto.req.ProfessorRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.ProfessorResponseDTO;
 import io.github.raphaelmuniz.uniflow.entities.*;
+import io.github.raphaelmuniz.uniflow.entities.enums.PapelGrupoEnum;
 import io.github.raphaelmuniz.uniflow.entities.enums.StatusEntregaEnum;
 import io.github.raphaelmuniz.uniflow.exceptions.BusinessException;
 import io.github.raphaelmuniz.uniflow.exceptions.NotFoundException;
@@ -25,9 +26,6 @@ public class ProfessorService extends GenericCrudServiceImpl<ProfessorRequestDTO
     AssinaturaModeloRepository assinaturaModeloRepository;
 
     @Autowired
-    AtividadeModeloRepository atividadeModeloRepository;
-
-    @Autowired
     InscricaoGrupoRepository inscricaoGrupoRepository;
 
     @Autowired
@@ -46,11 +44,6 @@ public class ProfessorService extends GenericCrudServiceImpl<ProfessorRequestDTO
         AssinaturaModelo assinaturaModelo = assinaturaModeloRepository.findById(data.getAssinaturaId())
                 .orElseThrow(() -> new NotFoundException("Assinatura Modelo não encontrada."));
 
-        List<AtividadeModelo> atividadesModelo = atividadeModeloRepository.findAllById(data.getAtividadesId());
-        if (atividadesModelo.size() != data.getAtividadesId().size()) {
-            throw new NotFoundException("Uma ou mais Atividades Modelo não foram encontradas.");
-        }
-
         List<Grupo> grupos = grupoRepository.findAllById(data.getGruposId());
         if (grupos.size() != data.getGruposId().size()) {
             throw new NotFoundException("Um ou mais Grupos não foram encontrados.");
@@ -62,30 +55,15 @@ public class ProfessorService extends GenericCrudServiceImpl<ProfessorRequestDTO
         professor.setAreaAtuacao(data.getAreaAtuacao());
 
         AssinaturaUsuario assinaturaUsuario = new AssinaturaUsuario(null, assinaturaModelo, LocalDateTime.now(), LocalDateTime.now(), true, professor);
-        professor.setAssinaturaUsuario(assinaturaUsuario);
-
-        List<AtividadeCopia> atividadesCopia = atividadesModelo.stream()
-                .map(modelo -> new AtividadeCopia(
-                        LocalDateTime.now(),
-                        LocalDateTime.now(),
-                        modelo.getTitulo(),
-                        modelo.getDescricao(),
-                        modelo.getDificuldade(),
-                        modelo.getDisciplina(),
-                        null,
-                        StatusEntregaEnum.PENDENTE,
-                        null,
-                        professor))
-                .collect(Collectors.toList());
-        professor.setAtividades(atividadesCopia);
+        professor.getAssinaturas().add(assinaturaUsuario);
 
         Professor savedProfessor = repository.save(professor);
 
         List<InscricaoGrupo> inscricoes = grupos.stream()
-                .map(grupo -> new InscricaoGrupo(null, grupo, savedProfessor, LocalDateTime.now(), "Padrão"))
+                .map(grupo -> new InscricaoGrupo(null, LocalDateTime.now(), PapelGrupoEnum.MEMBRO, grupo, savedProfessor))
                 .collect(Collectors.toList());
         List<InscricaoGrupo> savedInscricoes = inscricaoGrupoRepository.saveAll(inscricoes);
-        savedProfessor.setGrupos(new HashSet<>(savedInscricoes));
+        savedProfessor.setInscricoesGrupos(new HashSet<>(savedInscricoes));
 
         return new ProfessorResponseDTO(savedProfessor);
     }

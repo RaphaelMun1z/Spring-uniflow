@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
@@ -12,14 +13,15 @@ import java.util.Set;
 
 @Entity
 @Data
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
 public class Professor extends Assinante implements Serializable {
     @NotBlank(message = "Área de atuação não pode ser vazio/nulo")
     private String areaAtuacao;
 
-    public Professor(String id, String nome, String email, AssinaturaUsuario assinatura, List<AtividadeCopia> atividades, Set<InscricaoGrupo> grupos, String areaAtuacao) {
-        super(id, nome, email, assinatura, atividades, grupos);
+    public Professor(String id, String nome, String email, Set<AssinaturaUsuario> assinaturas, List<Pagamento> pagamentos, Set<AtividadeAssinante> atividadesAssinante, List<AtividadeGrupo> atividadesGrupoPublicadas, Set<InscricaoGrupo> inscricoesGrupos, Set<NotificacaoAssinante> notificacoes, String areaAtuacao) {
+        super(id, nome, email, assinaturas, pagamentos, atividadesAssinante, atividadesGrupoPublicadas, inscricoesGrupos, notificacoes);
         this.areaAtuacao = areaAtuacao;
     }
 }
