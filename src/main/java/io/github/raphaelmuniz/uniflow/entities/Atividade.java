@@ -12,9 +12,17 @@ import java.time.LocalDateTime;
 
 @MappedSuperclass
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public abstract class Atividade implements Serializable {
+    public Atividade(LocalDateTime dataLancamento, LocalDateTime prazoEntrega, String titulo, String descricao, DificuldadeEnum dificuldade, Disciplina disciplina) {
+        this.dataLancamento = dataLancamento;
+        this.prazoEntrega = prazoEntrega;
+        this.titulo = titulo;
+        this.descricao = descricao;
+        this.dificuldade = dificuldade;
+        this.disciplina = disciplina;
+    }
+
     @NotNull(message = "Data lançamento não pode ser nulo")
     private LocalDateTime dataLancamento;
 

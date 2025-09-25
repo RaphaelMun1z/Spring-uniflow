@@ -36,6 +36,6 @@ public class AtividadeGrupoResponseDTO {
     }
 
     public AtividadeGrupo toModel() {
-        return new AtividadeGrupo(null, visivibilidade, null, null);
+        return new AtividadeGrupo(dataLancamento, prazoEntrega, titulo, descricao, dificuldade, null, id, visivibilidade, null, null);
     }
 }

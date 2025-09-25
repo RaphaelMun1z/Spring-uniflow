@@ -1,5 +1,6 @@
 package io.github.raphaelmuniz.uniflow.entities;
 
+import io.github.raphaelmuniz.uniflow.entities.enums.DificuldadeEnum;
 import io.github.raphaelmuniz.uniflow.entities.enums.StatusEntregaEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -9,13 +10,23 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
-@AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "atividade_assinante", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"titulo", "disciplina_id"})
+})
 public class AtividadeAssinante extends Atividade implements Serializable {
+    public AtividadeAssinante(LocalDateTime dataLancamento, LocalDateTime prazoEntrega, String titulo, String descricao, DificuldadeEnum dificuldade, Disciplina disciplina, String id, StatusEntregaEnum statusEntrega, Assinante assinanteDono) {
+        super(dataLancamento, prazoEntrega, titulo, descricao, dificuldade, disciplina);
+        this.id = id;
+        this.statusEntrega = statusEntrega;
+        this.assinanteDono = assinanteDono;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;

@@ -12,8 +12,10 @@ import java.time.LocalDateTime;
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
-@AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "atividade_grupo", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"titulo", "grupo_publicado_id"})
+})
 public class AtividadeGrupo extends Atividade implements Serializable {
     public AtividadeGrupo(LocalDateTime dataLancamento, LocalDateTime prazoEntrega, String titulo, String descricao, DificuldadeEnum dificuldade, Disciplina disciplina, String id, VisivibilidadeAtividadeGrupoEnum visivibilidadeAtividade, Grupo grupoPublicado, Assinante criadorAtividade) {
         super(dataLancamento, prazoEntrega, titulo, descricao, dificuldade, disciplina);

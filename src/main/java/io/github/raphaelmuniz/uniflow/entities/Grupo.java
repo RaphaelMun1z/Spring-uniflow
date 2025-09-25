@@ -9,7 +9,9 @@ import java.io.Serializable;
 import java.util.*;
 
 @Entity
-@Data
+@ToString
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Grupo implements Serializable {
@@ -25,9 +27,34 @@ public class Grupo implements Serializable {
 
     @NotNull(message = "Atividades Publicadas não pode ser nulo")
     @OneToMany(mappedBy = "grupoPublicado", cascade = CascadeType.ALL)
-    private List<AtividadeGrupo> atividadesPublicadas = new ArrayList<>();
+    private Set<AtividadeGrupo> atividadesPublicadas = new HashSet<>();
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @NotNull(message = "Inscrições não pode ser nulo")
     @OneToMany(mappedBy = "grupo", cascade = CascadeType.ALL)
     private Set<InscricaoGrupo> inscricoes = new HashSet<>();
+
+    public void addInscricao(InscricaoGrupo inscricao) {
+        this.inscricoes.add(inscricao);
+        inscricao.setGrupo(this);
+    }
+
+    public void removeInscricao(InscricaoGrupo inscricao) {
+        this.inscricoes.remove(inscricao);
+        inscricao.setGrupo(null);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Grupo grupo = (Grupo) o;
+        return id != null && id.equals(grupo.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }
