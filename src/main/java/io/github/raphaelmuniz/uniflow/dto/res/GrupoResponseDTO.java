@@ -14,6 +14,7 @@ public class GrupoResponseDTO {
     private String titulo;
     private List<String> atividadesId;
     private List<String> inscritosId;
+    private String criadorId;
 
     public GrupoResponseDTO(Grupo grupo) {
         this.id = grupo.getId();
@@ -23,5 +24,6 @@ public class GrupoResponseDTO {
         this.inscritosId = grupo.getInscricoes().stream().map(ig -> {
             return ig.getMembro().getId();
         }).toList();
+        this.criadorId = grupo.getCriador().getId();
     }
 }

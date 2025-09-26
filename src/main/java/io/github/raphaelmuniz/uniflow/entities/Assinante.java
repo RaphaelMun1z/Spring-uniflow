@@ -49,6 +49,9 @@ public abstract class Assinante extends Usuario implements Serializable {
     @OneToMany(mappedBy = "assinante", cascade = CascadeType.ALL)
     private Set<NotificacaoAssinante> notificacoes = new HashSet<>();
 
+    @OneToMany(mappedBy = "criador", cascade = CascadeType.ALL)
+    private List<Grupo> gruposCriados;
+
     public Optional<AssinaturaUsuario> getAssinaturaValida() {
         return assinaturas.stream()
                 .filter(AssinaturaUsuario::getStatus)

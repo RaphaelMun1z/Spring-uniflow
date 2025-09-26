@@ -23,7 +23,7 @@ public class AssinaturaUsuarioResponseDTO {
         this.assinaturaModeloId = data.getAssinaturaModelo().getId();
         this.dataInicio = data.getDataInicio();
         this.dataExpiracao = data.getDataExpiracao();
-        this.status = data.getStatus();
+        this.status = data.isVigente();
         this.assinanteId = data.getAssinante().getId();
     }
 

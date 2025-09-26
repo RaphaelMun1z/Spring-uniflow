@@ -24,7 +24,10 @@ public class GrupoRequestDTO {
     @NotNull
     private List<String> inscritosId;
 
+    @NotNull
+    private String criadorId;
+
     public Grupo toModel(){
-        return new Grupo(null, titulo, descricao, null, null);
+        return new Grupo(null, titulo, descricao, null, null, null);
     }
 }

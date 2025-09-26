@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -55,7 +56,7 @@ public class EstudanteService extends GenericCrudServiceImpl<EstudanteRequestDTO
         estudante.setEmail(data.getEmail());
         estudante.setPeriodo(data.getPeriodo());
 
-        AssinaturaUsuario assinaturaUsuario = new AssinaturaUsuario(null, assinaturaModelo, LocalDateTime.now(), LocalDateTime.now(), true, estudante);
+        AssinaturaUsuario assinaturaUsuario = new AssinaturaUsuario(null, assinaturaModelo, LocalDateTime.now(), LocalDateTime.now().plusMonths(1), true, estudante);
         estudante.getAssinaturas().add(assinaturaUsuario);
 
         Estudante savedEstudante = repository.save(estudante);

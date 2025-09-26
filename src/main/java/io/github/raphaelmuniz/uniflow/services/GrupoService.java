@@ -53,22 +53,27 @@ public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoR
             throw new NotFoundException("Algum inscrito não encontrado.");
         }
 
-        Grupo grupo = new Grupo(null, data.getTitulo(), data.getDescricao(), null, null);
-        Grupo grupoSalvo = repository.save(grupo);
+        Assinante criador = assinanteRepository.findById(data.getCriadorId()).orElseThrow(() -> new NotFoundException("Assinante não encontrado."));
 
-        Set<InscricaoGrupo> inscricoes = assinantes.stream()
-                .map(assinante -> new InscricaoGrupo(null, LocalDateTime.now(), PapelGrupoEnum.MEMBRO, grupoSalvo, assinante))
-                .collect(Collectors.toSet());
-        inscricaoGrupoRepository.saveAll(inscricoes);
-        grupoSalvo.setInscricoes(inscricoes);
+        Grupo novoGrupo = new Grupo();
+        novoGrupo.setTitulo(data.getTitulo());
+        novoGrupo.setDescricao(data.getDescricao());
+        novoGrupo.setCriador(criador);
+
+        assinantes.forEach(assinante -> {
+            InscricaoGrupo inscricao = new InscricaoGrupo(null, LocalDateTime.now(), PapelGrupoEnum.MEMBRO, null, assinante);
+            novoGrupo.addInscricao(inscricao);
+        });
 
         if (data.getAtividadesGrupo() != null && !data.getAtividadesGrupo().isEmpty()) {
             data.getAtividadesGrupo().forEach(atividade -> {
-                atividade.setGrupoPublicado(grupoSalvo);
+                atividade.setGrupoPublicado(novoGrupo);
+                atividade.setCriadorAtividade(criador);
+                novoGrupo.getAtividadesPublicadas().add(atividade);
             });
-            List<AtividadeGrupo> atividadesSalvas = atividadeGrupoRepository.saveAll(data.getAtividadesGrupo());
-            grupoSalvo.setAtividadesPublicadas(new HashSet<>(atividadesSalvas));
         }
+
+        Grupo grupoSalvo = repository.save(novoGrupo);
 
         return new GrupoResponseDTO(grupoSalvo);
     }

@@ -8,6 +8,8 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Data
@@ -41,4 +43,8 @@ public class AtividadeGrupo extends Atividade implements Serializable {
     @JoinColumn(name = "criador_atividade_id", nullable = false)
     private Assinante criadorAtividade;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "atividadeGrupoOrigem")
+    private Set<AtividadeAssinante> copiasDosAssinantes = new HashSet<>();
 }

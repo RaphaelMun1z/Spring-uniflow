@@ -36,6 +36,6 @@ public class AtividadeAssinanteResponseDTO {
     }
 
     public AtividadeAssinante toModel() {
-        return new AtividadeAssinante(dataLancamento, prazoEntrega, titulo, descricao, dificuldade, null, null, statusEntrega, null);
+        return new AtividadeAssinante(dataLancamento, prazoEntrega, titulo, descricao, dificuldade, null, null, statusEntrega, null, null);
     }
 }

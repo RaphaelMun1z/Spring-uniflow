@@ -36,4 +36,8 @@ public class AssinaturaUsuario implements Serializable {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "assinante_id", referencedColumnName = "id")
     private Assinante assinante;
+
+    public boolean isVigente() {
+        return this.status && this.dataExpiracao.isAfter(LocalDateTime.now());
+    }
 }

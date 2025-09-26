@@ -35,6 +35,11 @@ public class Grupo implements Serializable {
     @OneToMany(mappedBy = "grupo", cascade = CascadeType.ALL)
     private Set<InscricaoGrupo> inscricoes = new HashSet<>();
 
+    @NotNull(message = "Criador do grupo não pode ser nulo")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "criador_id", nullable = false)
+    private Assinante criador;
+
     public void addInscricao(InscricaoGrupo inscricao) {
         this.inscricoes.add(inscricao);
         inscricao.setGrupo(this);

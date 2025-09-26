@@ -4,10 +4,7 @@ import io.github.raphaelmuniz.uniflow.entities.enums.DificuldadeEnum;
 import io.github.raphaelmuniz.uniflow.entities.enums.StatusEntregaEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -20,11 +17,12 @@ import java.time.LocalDateTime;
         @UniqueConstraint(columnNames = {"titulo", "disciplina_id"})
 })
 public class AtividadeAssinante extends Atividade implements Serializable {
-    public AtividadeAssinante(LocalDateTime dataLancamento, LocalDateTime prazoEntrega, String titulo, String descricao, DificuldadeEnum dificuldade, Disciplina disciplina, String id, StatusEntregaEnum statusEntrega, Assinante assinanteDono) {
+    public AtividadeAssinante(LocalDateTime dataLancamento, LocalDateTime prazoEntrega, String titulo, String descricao, DificuldadeEnum dificuldade, Disciplina disciplina, String id, StatusEntregaEnum statusEntrega, Assinante assinanteDono, AtividadeGrupo atividadeGrupoOrigem) {
         super(dataLancamento, prazoEntrega, titulo, descricao, dificuldade, disciplina);
         this.id = id;
         this.statusEntrega = statusEntrega;
         this.assinanteDono = assinanteDono;
+        this.atividadeGrupoOrigem = atividadeGrupoOrigem;
     }
 
     @Id
@@ -38,4 +36,9 @@ public class AtividadeAssinante extends Atividade implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "assinante_dono_id", nullable = false)
     private Assinante assinanteDono;
+
+    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "atividade_grupo_origem_id", nullable = true)
+    private AtividadeGrupo atividadeGrupoOrigem;
 }

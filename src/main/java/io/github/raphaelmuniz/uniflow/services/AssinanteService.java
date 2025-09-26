@@ -2,15 +2,21 @@ package io.github.raphaelmuniz.uniflow.services;
 
 import io.github.raphaelmuniz.uniflow.dto.req.AssinanteRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.AssinanteResponseDTO;
+import io.github.raphaelmuniz.uniflow.dto.res.AssinaturaUsuarioResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.GrupoResponseDTO;
 import io.github.raphaelmuniz.uniflow.entities.Assinante;
+import io.github.raphaelmuniz.uniflow.entities.AssinaturaUsuario;
 import io.github.raphaelmuniz.uniflow.entities.InscricaoGrupo;
+import io.github.raphaelmuniz.uniflow.entities.Pagamento;
+import io.github.raphaelmuniz.uniflow.exceptions.NotFoundException;
 import io.github.raphaelmuniz.uniflow.repositories.AssinanteRepository;
+import io.github.raphaelmuniz.uniflow.repositories.AssinaturaUsuarioRepository;
 import io.github.raphaelmuniz.uniflow.repositories.InscricaoGrupoRepository;
 import io.github.raphaelmuniz.uniflow.services.generic.GenericCrudServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,6 +24,9 @@ import java.util.stream.Collectors;
 public class AssinanteService extends GenericCrudServiceImpl<AssinanteRequestDTO, AssinanteResponseDTO, Assinante, String> {
     @Autowired
     InscricaoGrupoRepository inscricaoGrupoRepository;
+
+    @Autowired
+    AssinaturaUsuarioRepository assinaturaUsuarioRepository;
 
     protected AssinanteService(AssinanteRepository repository) {
         super(repository, null, AssinanteResponseDTO::new);
@@ -34,5 +43,17 @@ public class AssinanteService extends GenericCrudServiceImpl<AssinanteRequestDTO
                 .map(InscricaoGrupo::getGrupo)
                 .map(GrupoResponseDTO::new)
                 .collect(Collectors.toList());
+    }
+
+    public AssinaturaUsuarioResponseDTO getAssinaturaVigente(String assinanteId) {
+        if (!repository.existsById(assinanteId)) {
+            throw new NotFoundException("Assinante não encontrado.");
+        }
+
+        AssinaturaUsuario assinaturaVigente = assinaturaUsuarioRepository
+                .findFirstByAssinanteIdAndStatusIsTrueAndDataExpiracaoAfter(assinanteId, LocalDateTime.now())
+                .orElseThrow(() -> new NotFoundException("Nenhuma assinatura vigente encontrada para este assinante."));
+
+        return new AssinaturaUsuarioResponseDTO(assinaturaVigente);
     }
 }
