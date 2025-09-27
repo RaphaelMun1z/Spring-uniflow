@@ -1,5 +1,7 @@
 package io.github.raphaelmuniz.uniflow.config;
 
+import io.github.raphaelmuniz.uniflow.security.jwt.CustomAccessDeniedHandler;
+import io.github.raphaelmuniz.uniflow.security.jwt.CustomAuthenticationEntryPoint;
 import io.github.raphaelmuniz.uniflow.security.jwt.JwtTokenFilter;
 import io.github.raphaelmuniz.uniflow.security.jwt.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +49,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain securityFilterChain(HttpSecurity http, CustomAuthenticationEntryPoint entryPoint, CustomAccessDeniedHandler accessDeniedHandler) throws Exception {
         JwtTokenFilter filter = new JwtTokenFilter(tokenProvider);
         // @formatter:off
         return http
@@ -70,7 +72,10 @@ authorizeHttpRequests -> authorizeHttpRequests
                     .requestMatchers("/usuarios").denyAll()
                 )
                 .cors(cors -> {})
-            .build();
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(entryPoint)
+                        .accessDeniedHandler(accessDeniedHandler)
+                )            .build();
         // @formatter:on
     }
 }

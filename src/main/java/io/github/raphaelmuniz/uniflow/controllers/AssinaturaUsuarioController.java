@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/assinaturas-usuario")
+@RequestMapping("/api/assinaturas-usuario")
 public class AssinaturaUsuarioController extends GenericCrudControllerImpl<AssinaturaUsuarioRequestDTO, AssinaturaUsuarioResponseDTO> {
     protected AssinaturaUsuarioController(AssinaturaUsuarioService service) {
         super(service);

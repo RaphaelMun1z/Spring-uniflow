@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/notificacoes")
+@RequestMapping("/api/notificacoes")
 public class NotificacaoController extends GenericCrudControllerImpl<NotificacaoRequestDTO, NotificacaoResponseDTO> {
     protected NotificacaoController(NotificacaoService service) {
         super(service);

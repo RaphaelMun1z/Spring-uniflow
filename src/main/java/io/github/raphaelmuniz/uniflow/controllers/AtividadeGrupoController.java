@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/atividades-grupo")
+@RequestMapping("/api/atividades-grupo")
 public class AtividadeGrupoController extends GenericCrudControllerImpl<AtividadeGrupoRequestDTO, AtividadeGrupoResponseDTO> {
     @Autowired
     AtividadeAssinanteService atividadeAssinanteService;

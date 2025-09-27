@@ -7,7 +7,7 @@ import io.github.raphaelmuniz.uniflow.services.EstudanteService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/estudantes")
+@RequestMapping("/api/estudantes")
 public class EstudanteController extends GenericCrudControllerImpl<EstudanteRequestDTO, EstudanteResponseDTO> {
     protected EstudanteController(EstudanteService service) {
         super(service);

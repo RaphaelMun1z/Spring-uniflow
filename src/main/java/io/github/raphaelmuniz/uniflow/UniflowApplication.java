@@ -15,7 +15,7 @@ public class UniflowApplication {
     public static void main(String[] args) {
         SpringApplication.run(UniflowApplication.class, args);
 
-        generateHashedPassword();
+        //generateHashedPassword();
     }
 
     private static void generateHashedPassword() {

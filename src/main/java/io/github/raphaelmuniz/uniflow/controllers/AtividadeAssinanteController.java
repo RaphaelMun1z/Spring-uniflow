@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/atividades-assinante")
+@RequestMapping("/api/atividades-assinante")
 public class AtividadeAssinanteController extends GenericCrudControllerImpl<AtividadeAssinanteRequestDTO, AtividadeAssinanteResponseDTO> {
     private final AtividadeAssinanteService atividadeAssinanteService;
 

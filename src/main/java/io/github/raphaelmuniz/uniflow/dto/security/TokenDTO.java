@@ -15,6 +15,6 @@ public class TokenDTO implements Serializable {
     private Boolean authenticated;
     private Date created;
     private Date expiration;
-    private String acessToken;
+    private String accessToken;
     private String refreshToken;
 }

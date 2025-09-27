@@ -76,7 +76,7 @@ public abstract class Usuario implements UserDetails, Serializable {
 
     @Override
     public String getUsername() {
-        return this.nome;
+        return this.email;
     }
 
     @Override

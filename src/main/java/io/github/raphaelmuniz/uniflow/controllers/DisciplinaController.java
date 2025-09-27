@@ -7,7 +7,7 @@ import io.github.raphaelmuniz.uniflow.services.DisciplinaService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/disciplinas")
+@RequestMapping("/api/disciplinas")
 public class DisciplinaController extends GenericCrudControllerImpl<DisciplinaRequestDTO, DisciplinaResponseDTO> {
     protected DisciplinaController(DisciplinaService service) {
         super(service);

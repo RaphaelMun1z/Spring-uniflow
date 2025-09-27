@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/assinaturas-modelo")
+@RequestMapping("/api/assinaturas-modelo")
 public class AssinaturaModeloController extends GenericCrudControllerImpl<AssinaturaModeloRequestDTO, AssinaturaModeloResponseDTO> {
     protected AssinaturaModeloController(AssinaturaModeloService service) {
         super(service);

@@ -7,7 +7,7 @@ import io.github.raphaelmuniz.uniflow.services.TransmissaoService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/transmissao-notificacao")
+@RequestMapping("/api/transmissao-notificacao")
 public class TransmissaoController extends GenericCrudControllerImpl<TransmissaoRequestDTO, TransmissaoResponseDTO> {
     protected TransmissaoController(TransmissaoService service) {
         super(service);

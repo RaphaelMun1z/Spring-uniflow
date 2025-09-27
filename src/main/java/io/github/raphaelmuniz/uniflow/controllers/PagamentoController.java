@@ -14,7 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 
 @RestController
-@RequestMapping("/pagamentos")
+@RequestMapping("/api/pagamentos")
 public class PagamentoController extends GenericCrudControllerImpl<PagamentoRequestDTO, PagamentoResponseDTO> {
     @Autowired
     PagamentoService pagamentoService;

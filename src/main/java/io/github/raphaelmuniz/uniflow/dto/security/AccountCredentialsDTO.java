@@ -1,17 +1,19 @@
 package io.github.raphaelmuniz.uniflow.dto.security;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import lombok.*;
 
 import java.io.Serializable;
 
+@Data
+@AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode
 public class AccountCredentialsDTO implements Serializable {
-    private String username;
+    @NotBlank(message = "O email não pode ser vazio")
+    @Email(message = "Formato de email inválido")
+    private String email;
+
+    @NotBlank(message = "A senha não pode ser vazia")
     private String password;
 }

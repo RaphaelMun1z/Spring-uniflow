@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/professores")
+@RequestMapping("/api/professores")
 public class ProfessorController extends GenericCrudControllerImpl<ProfessorRequestDTO, ProfessorResponseDTO> {
     protected ProfessorController(ProfessorService service) {
         super(service);
