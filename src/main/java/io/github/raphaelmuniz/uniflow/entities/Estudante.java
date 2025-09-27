@@ -20,14 +20,8 @@ public class Estudante extends Assinante implements Serializable {
     @NotNull(message = "Período não pode ser nulo")
     private Integer periodo;
 
-    public Estudante(String id, String nome, String email,
-                     Set<AssinaturaUsuario> assinaturas, List<Pagamento> pagamentos,
-                     Set<AtividadeAssinante> atividadesAssinante,
-                     List<AtividadeGrupo> atividadesGrupoPublicadas,
-                     Set<InscricaoGrupo> inscricoesGrupos,
-                     Set<NotificacaoAssinante> notificacoes,
-                     Integer periodo) {
-        super(id, nome, email, assinaturas, pagamentos, atividadesAssinante, atividadesGrupoPublicadas, inscricoesGrupos, notificacoes);
+    public Estudante(String id, String nome, String email, String senha, Set<AssinaturaUsuario> assinaturas, List<Pagamento> pagamentos, Set<AtividadeAssinante> atividadesAssinante, List<AtividadeGrupo> atividadesGrupoPublicadas, Set<InscricaoGrupo> inscricoesGrupos, Set<NotificacaoAssinante> notificacoes, List<Grupo> gruposCriados, Integer periodo) {
+        super(id, nome, email, senha, assinaturas, pagamentos, atividadesAssinante, atividadesGrupoPublicadas, inscricoesGrupos, notificacoes, gruposCriados);
         this.periodo = periodo;
     }
 }

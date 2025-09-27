@@ -30,6 +30,6 @@ public class EstudanteRequestDTO {
     private List<String> gruposId;
 
     public Estudante toModel() {
-        return new Estudante(null, nome, email, null, null, null, null, null, null, this.periodo);
+        return new Estudante(null, nome, email, null, null, null, null, null, null, null, null, this.periodo);
     }
 }

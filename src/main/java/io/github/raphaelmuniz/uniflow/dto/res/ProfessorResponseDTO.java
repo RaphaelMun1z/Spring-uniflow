@@ -28,6 +28,6 @@ public class ProfessorResponseDTO {
     }
 
     public Professor toModel() {
-        return new Professor(this.id, this.nome, this.email, null, null, null, null, null, null, this.areaAtuacao);
+        return new Professor(this.id, this.nome, this.email, null, null, null, null, null, null, null, null, this.areaAtuacao);
     }
 }

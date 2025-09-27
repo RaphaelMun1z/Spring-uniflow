@@ -12,7 +12,7 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 public class Admin extends Usuario implements Serializable {
-    public Admin(String id, String nome, String email) {
-        super(id, nome, email);
+    public Admin(String id, String nome, String email, String senha) {
+        super(id, nome, email, senha);
     }
 }

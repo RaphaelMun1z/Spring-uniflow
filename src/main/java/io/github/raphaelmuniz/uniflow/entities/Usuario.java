@@ -16,11 +16,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "usuario", uniqueConstraints = {@UniqueConstraint(columnNames = "email")})
 public abstract class Usuario implements UserDetails, Serializable {
+    public Usuario(String id, String nome, String email, String senha) {
+        this.id = id;
+        this.nome = nome;
+        this.email = email;
+        this.senha = senha;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;

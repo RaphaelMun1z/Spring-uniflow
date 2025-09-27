@@ -12,18 +12,18 @@ import java.util.*;
 @Setter
 @ToString
 @EqualsAndHashCode(callSuper = true, exclude = {"assinaturas", "atividadesAssinante", "atividadesGrupoPublicadas", "inscricoesGrupos", "notificacoes"})
-@AllArgsConstructor
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Assinante extends Usuario implements Serializable {
-    public Assinante(String id, String nome, String email, Set<AssinaturaUsuario> assinaturas, List<Pagamento> pagamentos, Set<AtividadeAssinante> atividadesAssinante, List<AtividadeGrupo> atividadesGrupoPublicadas, Set<InscricaoGrupo> inscricoesGrupos, Set<NotificacaoAssinante> notificacoes) {
-        super(id, nome, email);
+    public Assinante(String id, String nome, String email, String senha, Set<AssinaturaUsuario> assinaturas, List<Pagamento> pagamentos, Set<AtividadeAssinante> atividadesAssinante, List<AtividadeGrupo> atividadesGrupoPublicadas, Set<InscricaoGrupo> inscricoesGrupos, Set<NotificacaoAssinante> notificacoes, List<Grupo> gruposCriados) {
+        super(id, nome, email, senha);
         this.assinaturas = assinaturas;
         this.pagamentos = pagamentos;
         this.atividadesAssinante = atividadesAssinante;
         this.atividadesGrupoPublicadas = atividadesGrupoPublicadas;
         this.inscricoesGrupos = inscricoesGrupos;
         this.notificacoes = notificacoes;
+        this.gruposCriados = gruposCriados;
     }
 
     @NotNull(message = "Assinaturas não pode ser nulo")

@@ -9,8 +9,9 @@ import lombok.Data;
 public class AdminRequestDTO {
     private String nome;
     private String email;
+    private String senha;
 
     public Admin toModel(){
-        return new Admin(null, nome, email);
+        return new Admin(null, nome, email, senha);
     }
 }

@@ -20,8 +20,8 @@ public class Professor extends Assinante implements Serializable {
     @NotBlank(message = "Área de atuação não pode ser vazio/nulo")
     private String areaAtuacao;
 
-    public Professor(String id, String nome, String email, Set<AssinaturaUsuario> assinaturas, List<Pagamento> pagamentos, Set<AtividadeAssinante> atividadesAssinante, List<AtividadeGrupo> atividadesGrupoPublicadas, Set<InscricaoGrupo> inscricoesGrupos, Set<NotificacaoAssinante> notificacoes, String areaAtuacao) {
-        super(id, nome, email, assinaturas, pagamentos, atividadesAssinante, atividadesGrupoPublicadas, inscricoesGrupos, notificacoes);
+    public Professor(String id, String nome, String email, String senha, Set<AssinaturaUsuario> assinaturas, List<Pagamento> pagamentos, Set<AtividadeAssinante> atividadesAssinante, List<AtividadeGrupo> atividadesGrupoPublicadas, Set<InscricaoGrupo> inscricoesGrupos, Set<NotificacaoAssinante> notificacoes, List<Grupo> gruposCriados, String areaAtuacao) {
+        super(id, nome, email, senha, assinaturas, pagamentos, atividadesAssinante, atividadesGrupoPublicadas, inscricoesGrupos, notificacoes, gruposCriados);
         this.areaAtuacao = areaAtuacao;
     }
 }

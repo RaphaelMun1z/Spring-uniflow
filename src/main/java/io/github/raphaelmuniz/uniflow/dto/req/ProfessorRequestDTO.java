@@ -11,11 +11,12 @@ import java.util.List;
 public class ProfessorRequestDTO {
     private String nome;
     private String email;
+    private String senha;
     private String areaAtuacao;
     private String assinaturaId;
     private List<String> gruposId;
 
     public Professor toModel() {
-        return new Professor(null, this.nome, this.email, null, null, null, null, null, null, this.areaAtuacao);
+        return new Professor(null, this.nome, this.email, this.senha, null, null, null, null, null, null, null, this.areaAtuacao);
     }
 }
