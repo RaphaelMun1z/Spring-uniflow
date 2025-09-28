@@ -1,14 +1,23 @@
 spring:
   application:
     name: uniflow
+
   profiles:
     active: "test"
+
   jpa:
     open-in-view: false
-  security:
     jwt:
       token:
         secret-key: 53cr37
         expire-length: 3600000
+
+security:
+  password:
+    encoder:
+      secret: SuaChaveSecretaSuperForteParaOPbkdf2Encoder
+      iterations: 185000
+      salt-length: 16
+
 server:
   port: 8080

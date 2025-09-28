@@ -1,5 +1,6 @@
 package io.github.raphaelmuniz.uniflow.entities;
 
+import io.github.raphaelmuniz.uniflow.entities.enums.UserRoleEnum;
 import jakarta.persistence.Entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,7 +13,7 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 public class Admin extends Usuario implements Serializable {
-    public Admin(String id, String nome, String email, String senha) {
-        super(id, nome, email, senha);
+    public Admin(String nome, String email, String senha, Papel papel) {
+        super(nome, email, senha, papel);
     }
 }

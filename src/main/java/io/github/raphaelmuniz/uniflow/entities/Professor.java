@@ -1,5 +1,6 @@
 package io.github.raphaelmuniz.uniflow.entities;
 
+import io.github.raphaelmuniz.uniflow.entities.enums.UserRoleEnum;
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -20,8 +21,8 @@ public class Professor extends Assinante implements Serializable {
     @NotBlank(message = "Área de atuação não pode ser vazio/nulo")
     private String areaAtuacao;
 
-    public Professor(String id, String nome, String email, String senha, Set<AssinaturaUsuario> assinaturas, List<Pagamento> pagamentos, Set<AtividadeAssinante> atividadesAssinante, List<AtividadeGrupo> atividadesGrupoPublicadas, Set<InscricaoGrupo> inscricoesGrupos, Set<NotificacaoAssinante> notificacoes, List<Grupo> gruposCriados, String areaAtuacao) {
-        super(id, nome, email, senha, assinaturas, pagamentos, atividadesAssinante, atividadesGrupoPublicadas, inscricoesGrupos, notificacoes, gruposCriados);
+    public Professor(String nome, String email, String senha, Set<AssinaturaUsuario> assinaturas, List<Pagamento> pagamentos, Set<AtividadeAssinante> atividadesAssinante, List<AtividadeGrupo> atividadesGrupoPublicadas, Set<InscricaoGrupo> inscricoesGrupos, Set<NotificacaoAssinante> notificacoes, List<Grupo> gruposCriados, String areaAtuacao, Papel papel) {
+        super(nome, email, senha, assinaturas, pagamentos, atividadesAssinante, atividadesGrupoPublicadas, inscricoesGrupos, notificacoes, gruposCriados, papel);
         this.areaAtuacao = areaAtuacao;
     }
 }

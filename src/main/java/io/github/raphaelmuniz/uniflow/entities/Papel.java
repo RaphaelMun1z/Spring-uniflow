@@ -2,7 +2,8 @@ package io.github.raphaelmuniz.uniflow.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
+
+import java.util.Set;
 
 @Entity
 @Getter
@@ -11,8 +12,9 @@ import org.springframework.security.core.GrantedAuthority;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "permissao")
-public class Permissao implements GrantedAuthority {
+@Table(name = "papel")
+public class Papel {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
@@ -20,8 +22,9 @@ public class Permissao implements GrantedAuthority {
     @Column(nullable = false, unique = true)
     private String nome;
 
-    @Override
-    public String getAuthority() {
-        return this.nome;
-    }
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "papel_permissao",
+            joinColumns = @JoinColumn(name = "papel_id"),
+            inverseJoinColumns = @JoinColumn(name = "permissao_id"))
+    private Set<Permissao> permissoes;
 }

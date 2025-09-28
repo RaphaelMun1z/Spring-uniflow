@@ -13,12 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.Base64;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -41,15 +43,32 @@ public class JwtTokenProvider {
         algorithm = Algorithm.HMAC256(secretKey.getBytes());
     }
 
-    public TokenDTO createAcessToken(String username, List<String> roles) {
+    public TokenDTO createAccessToken(String username, Collection<? extends GrantedAuthority> authorities) {
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
 
-        String accessToken = getAccessToken(username, roles, now, validity);
-        String refreshToken = getRefreshToken(username, roles, now);
+        List<String> permissions = authorities.stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList();
+
+        String accessToken = getAccessToken(username, permissions, now, validity);
+        String refreshToken = getRefreshToken(username, permissions, now);
 
         return new TokenDTO(username, true, now, validity, accessToken, refreshToken);
+    }
 
+    public TokenDTO refreshToken(String refreshToken) {
+        if (refreshToken.startsWith("Bearer ")) {
+            refreshToken = refreshToken.substring("Bearer ".length());
+        }
+
+        JWTVerifier verifier = JWT.require(algorithm).build();
+        DecodedJWT decodedJWT = verifier.verify(refreshToken);
+        String username = decodedJWT.getSubject();
+
+        UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+
+        return createAccessToken(username, userDetails.getAuthorities());
     }
 
     private String getRefreshToken(String username, List<String> roles, Date now) {
@@ -88,7 +107,7 @@ public class JwtTokenProvider {
 
     public String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
-        if(refreshTokenContainsBearer(bearerToken)) {
+        if (refreshTokenContainsBearer(bearerToken)) {
             return bearerToken.substring("Bearer ".length());
         }
 

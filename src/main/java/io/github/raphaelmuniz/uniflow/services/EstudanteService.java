@@ -10,6 +10,7 @@ import io.github.raphaelmuniz.uniflow.exceptions.NotFoundException;
 import io.github.raphaelmuniz.uniflow.repositories.*;
 import io.github.raphaelmuniz.uniflow.services.generic.GenericCrudServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -33,6 +34,9 @@ public class EstudanteService extends GenericCrudServiceImpl<EstudanteRequestDTO
     @Autowired
     GrupoRepository grupoRepository;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     protected EstudanteService(EstudanteRepository repository) {
         super(repository, EstudanteRequestDTO::toModel, EstudanteResponseDTO::new);
     }
@@ -54,6 +58,7 @@ public class EstudanteService extends GenericCrudServiceImpl<EstudanteRequestDTO
         Estudante estudante = new Estudante();
         estudante.setNome(data.getNome());
         estudante.setEmail(data.getEmail());
+        estudante.setSenha(passwordEncoder.encode(data.getSenha()));
         estudante.setPeriodo(data.getPeriodo());
 
         AssinaturaUsuario assinaturaUsuario = new AssinaturaUsuario(null, assinaturaModelo, LocalDateTime.now(), LocalDateTime.now().plusMonths(1), true, estudante);

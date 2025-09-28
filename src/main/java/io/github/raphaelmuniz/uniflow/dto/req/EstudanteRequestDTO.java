@@ -20,6 +20,9 @@ public class EstudanteRequestDTO {
     @NotBlank
     private String email;
 
+    @NotBlank
+    private String senha;
+
     @NotNull
     private Integer periodo;
 
@@ -30,6 +33,6 @@ public class EstudanteRequestDTO {
     private List<String> gruposId;
 
     public Estudante toModel() {
-        return new Estudante(null, nome, email, null, null, null, null, null, null, null, null, this.periodo);
+        return new Estudante(nome, email, senha, null, null, null, null, null, null, null, this.periodo, null);
     }
 }

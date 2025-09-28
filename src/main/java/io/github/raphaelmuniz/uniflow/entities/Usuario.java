@@ -1,32 +1,29 @@
 package io.github.raphaelmuniz.uniflow.entities;
 
+import io.github.raphaelmuniz.uniflow.entities.enums.UserRoleEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
-@Data
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "usuario", uniqueConstraints = {@UniqueConstraint(columnNames = "email")})
 public abstract class Usuario implements UserDetails, Serializable {
-    public Usuario(String id, String nome, String email, String senha) {
-        this.id = id;
-        this.nome = nome;
-        this.email = email;
-        this.senha = senha;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
@@ -41,32 +38,32 @@ public abstract class Usuario implements UserDetails, Serializable {
     @NotBlank(message = "Senha não pode ser vazio/nulo")
     private String senha;
 
+    @ManyToOne
+    @JoinColumn(name = "papel_id")
+    private Papel papel;
+
     private Boolean isAccountNonExpired;
-
     private Boolean isAccountNonLocked;
-
     private Boolean isCredentialsNonExpired;
-
     private Boolean isEnabled;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "permissao_usuario",
-            joinColumns = {@JoinColumn(name = "id_usuario")},
-            inverseJoinColumns = {@JoinColumn(name = "id_permissao")}
-    )
-    private List<Permissao> permissoes;
-
-    public List<String> getRoles() {
-        List<String> roles = new ArrayList<>();
-        for (Permissao permissao : permissoes) {
-            roles.add(permissao.getDescricao());
-        }
-        return roles;
+    public Usuario(String nome, String email, String senha, Papel papel) {
+        this.nome = nome;
+        this.email = email;
+        this.senha = senha;
+        this.papel = papel;
+        this.isAccountNonExpired = true;
+        this.isAccountNonLocked = true;
+        this.isCredentialsNonExpired = true;
+        this.isEnabled = true;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.permissoes;
+        if (this.papel != null) {
+            return this.papel.getPermissoes();
+        }
+        return Set.of();
     }
 
     @Override

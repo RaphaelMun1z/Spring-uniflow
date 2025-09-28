@@ -1,0 +1,24 @@
+package io.github.raphaelmuniz.uniflow.dto.res;
+
+import io.github.raphaelmuniz.uniflow.entities.Papel;
+import io.github.raphaelmuniz.uniflow.entities.Permissao;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+import java.util.Set;
+
+@Data
+@AllArgsConstructor
+public class PermissaoResponseDTO {
+    private String id;
+    private String nome;
+
+    public PermissaoResponseDTO(Permissao permissao) {
+        this.id = permissao.getId();
+        this.nome = permissao.getNome();
+    }
+
+    public Permissao toModel() {
+        return new Permissao(id, nome);
+    }
+}

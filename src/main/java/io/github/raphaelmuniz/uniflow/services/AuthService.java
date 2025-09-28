@@ -13,7 +13,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class AuthService {
@@ -23,20 +30,33 @@ public class AuthService {
     @Autowired
     private JwtTokenProvider tokenProvider;
 
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
     public TokenDTO signin(AccountCredentialsDTO credentials) {
         try {
             var usernamePassword = new UsernamePasswordAuthenticationToken(credentials.getEmail(), credentials.getPassword());
             var auth = this.authenticationManager.authenticate(usernamePassword);
             var user = (Usuario) auth.getPrincipal();
 
-            TokenDTO token = tokenProvider.createAcessToken(
+            TokenDTO token = tokenProvider.createAccessToken(
                     user.getEmail(),
-                    user.getRoles()
+                    user.getAuthorities()
             );
 
             return token;
         } catch (Exception e) {
             throw new BadCredentialsException("Invalid username/password supplied!");
         }
+    }
+
+    public TokenDTO signin(String email, String refreshToken) {
+        Optional<Usuario> usuario = usuarioRepository.findByEmail(email);
+        if (usuario.isEmpty()) {
+            throw new UsernameNotFoundException("E-mail " + email + " não encontrado!");
+        }
+
+        TokenDTO token = tokenProvider.refreshToken(refreshToken);
+        return token;
     }
 }
