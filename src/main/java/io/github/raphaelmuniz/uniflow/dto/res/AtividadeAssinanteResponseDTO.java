@@ -22,6 +22,8 @@ public class AtividadeAssinanteResponseDTO {
     private String disciplinaId;
     private StatusEntregaEnum statusEntrega;
     private String assinanteDonoId;
+    private Double nota;
+    private String feedback;
 
     public AtividadeAssinanteResponseDTO(AtividadeAssinante atividadeAssinante) {
         this.id = atividadeAssinante.getId();
@@ -33,6 +35,8 @@ public class AtividadeAssinanteResponseDTO {
         this.disciplinaId = atividadeAssinante.getDisciplina().getId();
         this.statusEntrega = atividadeAssinante.getStatusEntrega();
         this.assinanteDonoId = atividadeAssinante.getAssinanteDono().getId();
+        this.nota = atividadeAssinante.getNota();
+        this.feedback = atividadeAssinante.getFeedback();
     }
 
     public AtividadeAssinante toModel() {

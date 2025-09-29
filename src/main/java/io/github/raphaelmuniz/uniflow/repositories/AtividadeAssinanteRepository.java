@@ -34,5 +34,12 @@ public interface AtividadeAssinanteRepository extends JpaRepository<AtividadeAss
     @EntityGraph(attributePaths = {"atividadeGrupoOrigem"})
     List<AtividadeAssinante> findByAssinanteDonoId(String assinanteId);
 
+    @Query("SELECT COUNT(a) > 0 FROM AtividadeAssinante a " +
+            "WHERE a.id = :atividadeId " +
+            "AND a.atividadeGrupoOrigem.grupoPublicado.criador.id = :professorId")
+    boolean isProfessorCriadorDoGrupoDaAtividade(
+            @Param("atividadeId") String atividadeId,
+            @Param("professorId") String professorId);
+
     boolean existsByAssinanteDonoIdAndAtividadeGrupoOrigemId(String assinanteId, String atividadeGrupoId);
 }

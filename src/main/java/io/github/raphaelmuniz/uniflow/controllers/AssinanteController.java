@@ -5,6 +5,7 @@ import io.github.raphaelmuniz.uniflow.dto.req.AssinanteRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.AssinanteResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.AssinaturaUsuarioResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.GrupoResponseDTO;
+import io.github.raphaelmuniz.uniflow.dto.res.profile.GruposProfileResponseDTO;
 import io.github.raphaelmuniz.uniflow.services.AssinanteService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +26,7 @@ public class AssinanteController extends GenericCrudControllerImpl<AssinanteRequ
     }
 
     @GetMapping("/{assinanteId}/grupos")
-    public ResponseEntity<List<GrupoResponseDTO>> listarGruposInscritosPeloAssinante(@PathVariable String assinanteId) {
+    public ResponseEntity<List<GruposProfileResponseDTO>> listarGruposInscritosPeloAssinante(@PathVariable String assinanteId) {
         return ResponseEntity.ok(assinanteService.findGruposByAssinante(assinanteId));
     }
 

@@ -4,5 +4,6 @@ public enum StatusEntregaEnum {
     PENDENTE,
     ENTREGUE,
     ATRASADO,
-    ENTREGUE_COM_ATRASO
+    ENTREGUE_COM_ATRASO,
+    AVALIADO;
 }

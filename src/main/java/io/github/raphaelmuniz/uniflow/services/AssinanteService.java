@@ -4,6 +4,7 @@ import io.github.raphaelmuniz.uniflow.dto.req.AssinanteRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.AssinanteResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.AssinaturaUsuarioResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.GrupoResponseDTO;
+import io.github.raphaelmuniz.uniflow.dto.res.profile.GruposProfileResponseDTO;
 import io.github.raphaelmuniz.uniflow.entities.Assinante;
 import io.github.raphaelmuniz.uniflow.entities.AssinaturaUsuario;
 import io.github.raphaelmuniz.uniflow.entities.InscricaoGrupo;
@@ -37,12 +38,9 @@ public class AssinanteService extends GenericCrudServiceImpl<AssinanteRequestDTO
         throw new IllegalArgumentException();
     }
 
-    public List<GrupoResponseDTO> findGruposByAssinante(String assinanteId) {
+    public List<GruposProfileResponseDTO> findGruposByAssinante(String assinanteId) {
         List<InscricaoGrupo> inscricoes = inscricaoGrupoRepository.findAllByMembro_Id(assinanteId);
-        return inscricoes.stream()
-                .map(InscricaoGrupo::getGrupo)
-                .map(GrupoResponseDTO::new)
-                .collect(Collectors.toList());
+        return inscricoes.stream().map(GruposProfileResponseDTO::new).toList();
     }
 
     public AssinaturaUsuarioResponseDTO getAssinaturaVigente(String assinanteId) {

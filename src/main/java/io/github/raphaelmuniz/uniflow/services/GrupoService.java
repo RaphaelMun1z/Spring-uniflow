@@ -58,6 +58,7 @@ public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoR
         Grupo novoGrupo = new Grupo();
         novoGrupo.setTitulo(data.getTitulo());
         novoGrupo.setDescricao(data.getDescricao());
+        novoGrupo.setTipoGrupo(data.getTipoGrupo());
         novoGrupo.setCriador(criador);
 
         assinantes.forEach(assinante -> {
