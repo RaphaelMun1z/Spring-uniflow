@@ -1,5 +1,6 @@
 package io.github.raphaelmuniz.uniflow.entities;
 
+import io.github.raphaelmuniz.uniflow.entities.enums.TipoGrupoEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -24,6 +25,9 @@ public class Grupo implements Serializable {
 
     @NotBlank(message = "Descrição não pode ser vazio/nulo")
     private String descricao;
+
+    @NotNull(message = "Tipo de Grupo não pode ser nulo")
+    private TipoGrupoEnum tipoGrupo;
 
     @NotNull(message = "Atividades Publicadas não pode ser nulo")
     @OneToMany(mappedBy = "grupoPublicado", cascade = CascadeType.ALL)

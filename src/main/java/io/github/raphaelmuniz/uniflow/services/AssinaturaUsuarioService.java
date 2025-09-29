@@ -1,6 +1,8 @@
 package io.github.raphaelmuniz.uniflow.services;
 
 import io.github.raphaelmuniz.uniflow.dto.req.AssinaturaUsuarioRequestDTO;
+import io.github.raphaelmuniz.uniflow.dto.res.profile.AssinaturaProfileResponseDTO;
+import io.github.raphaelmuniz.uniflow.dto.res.AssinaturaModeloResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.AssinaturaUsuarioResponseDTO;
 import io.github.raphaelmuniz.uniflow.entities.Assinante;
 import io.github.raphaelmuniz.uniflow.entities.AssinaturaModelo;
@@ -17,6 +19,9 @@ import java.time.LocalDateTime;
 
 @Service
 public class AssinaturaUsuarioService extends GenericCrudServiceImpl<AssinaturaUsuarioRequestDTO, AssinaturaUsuarioResponseDTO, AssinaturaUsuario, String> {
+    @Autowired
+    AssinaturaUsuarioRepository assinaturaUsuarioRepository;
+
     @Autowired
     AssinaturaModeloRepository assinaturaModeloRepository;
 
@@ -35,5 +40,16 @@ public class AssinaturaUsuarioService extends GenericCrudServiceImpl<AssinaturaU
 
         AssinaturaUsuario saved = repository.save(assinaturaUsuario);
         return new AssinaturaUsuarioResponseDTO(saved);
+    }
+
+    public AssinaturaProfileResponseDTO findByAssinanteId(String assinanteId){
+        AssinaturaUsuario assinaturaUsuario = assinaturaUsuarioRepository.findByAssinanteId(assinanteId).orElseThrow(() -> new NotFoundException("Assinatura usuário não encontrada"));
+        AssinaturaProfileResponseDTO responseDTO = new AssinaturaProfileResponseDTO();
+        responseDTO.setAssinaturaId(assinaturaUsuario.getId());
+        responseDTO.setDataInicio(assinaturaUsuario.getDataInicio());
+        responseDTO.setDataExpiracao(assinaturaUsuario.getDataExpiracao());
+        responseDTO.setStatus(assinaturaUsuario.getStatus());
+        responseDTO.setAssinaturaModelo(new AssinaturaModeloResponseDTO(assinaturaUsuario.getAssinaturaModelo()));
+        return responseDTO;
     }
 }

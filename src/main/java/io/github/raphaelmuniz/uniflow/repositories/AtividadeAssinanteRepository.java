@@ -31,5 +31,8 @@ public interface AtividadeAssinanteRepository extends JpaRepository<AtividadeAss
             @Param("status") StatusEntregaEnum status
     );
 
+    @EntityGraph(attributePaths = {"atividadeGrupoOrigem"})
+    List<AtividadeAssinante> findByAssinanteDonoId(String assinanteId);
+
     boolean existsByAssinanteDonoIdAndAtividadeGrupoOrigemId(String assinanteId, String atividadeGrupoId);
 }

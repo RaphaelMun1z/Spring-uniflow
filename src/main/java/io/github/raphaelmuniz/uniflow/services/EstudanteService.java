@@ -37,6 +37,9 @@ public class EstudanteService extends GenericCrudServiceImpl<EstudanteRequestDTO
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    @Autowired
+    PapelService papelService;
+
     protected EstudanteService(EstudanteRepository repository) {
         super(repository, EstudanteRequestDTO::toModel, EstudanteResponseDTO::new);
     }
@@ -60,6 +63,12 @@ public class EstudanteService extends GenericCrudServiceImpl<EstudanteRequestDTO
         estudante.setEmail(data.getEmail());
         estudante.setSenha(passwordEncoder.encode(data.getSenha()));
         estudante.setPeriodo(data.getPeriodo());
+        estudante.setIsEnabled(true);
+        estudante.setIsCredentialsNonExpired(true);
+        estudante.setIsAccountNonLocked(true);
+        estudante.setIsAccountNonExpired(true);
+        Papel papelEstudante = papelService.findByNome("ESTUDANTE");
+        estudante.setPapel(papelEstudante);
 
         AssinaturaUsuario assinaturaUsuario = new AssinaturaUsuario(null, assinaturaModelo, LocalDateTime.now(), LocalDateTime.now().plusMonths(1), true, estudante);
         estudante.getAssinaturas().add(assinaturaUsuario);

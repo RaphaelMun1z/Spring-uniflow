@@ -84,4 +84,9 @@ public class AtividadeAssinanteService extends GenericCrudServiceImpl<AtividadeA
         AtividadeAssinante copiaSalva = repository.save(copia);
         return new AtividadeAssinanteResponseDTO(copiaSalva);
     }
+
+    public List<AtividadeAssinanteResponseDTO> findByAssinanteDonoId(String assinanteId) {
+        return repository.findByAssinanteDonoId(assinanteId).stream().map(AtividadeAssinanteResponseDTO::new).toList();
+    }
+
 }

@@ -4,6 +4,7 @@ import io.github.raphaelmuniz.uniflow.security.jwt.CustomAccessDeniedHandler;
 import io.github.raphaelmuniz.uniflow.security.jwt.CustomAuthenticationEntryPoint;
 import io.github.raphaelmuniz.uniflow.security.jwt.JwtTokenFilter;
 import io.github.raphaelmuniz.uniflow.security.jwt.JwtTokenProvider;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -89,7 +90,8 @@ authorizeHttpRequests -> authorizeHttpRequests
                             "/swagger-ui/**",
                             "/v3/api-docs/**"
                     ).permitAll()
-                    .requestMatchers("/api/papeis/**").hasAuthority("ADMIN_GERENCIAR_PAPEIS")
+                    //.requestMatchers("/api/papeis/**").hasAuthority("ADMIN_GERENCIAR_PAPEIS")
+                    .requestMatchers("/**").permitAll()
                     .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex

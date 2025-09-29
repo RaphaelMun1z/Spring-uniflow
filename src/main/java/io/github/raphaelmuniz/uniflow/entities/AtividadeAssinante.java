@@ -33,6 +33,10 @@ public class AtividadeAssinante extends Atividade implements Serializable {
     @Enumerated(EnumType.STRING)
     private StatusEntregaEnum statusEntrega;
 
+    private Double nota;
+
+    private String feedback;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "assinante_dono_id", nullable = false)
     private Assinante assinanteDono;

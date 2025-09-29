@@ -66,6 +66,13 @@ public abstract class Usuario implements UserDetails, Serializable {
         return Set.of();
     }
 
+    public boolean hasRole(String nomeDoPapel) {
+        if (this.papel == null || nomeDoPapel == null) {
+            return false;
+        }
+        return this.papel.getNome().equalsIgnoreCase(nomeDoPapel);
+    }
+
     @Override
     public String getPassword() {
         return this.senha;

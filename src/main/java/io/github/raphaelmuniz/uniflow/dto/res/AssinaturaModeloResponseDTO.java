@@ -29,6 +29,18 @@ public class AssinaturaModeloResponseDTO {
     private Integer duracaoEmMeses;
 
     @NotNull
+    private Integer limiteDeGrupos;
+
+    @NotNull
+    private Integer limiteMembrosPorGrupo;
+
+    @NotNull
+    private Boolean permiteAnalytics;
+
+    @NotNull
+    private Boolean permiteTemplatesDeAtividade;
+
+    @NotNull
     private Boolean ativo;
 
     @NotNull
@@ -41,6 +53,10 @@ public class AssinaturaModeloResponseDTO {
         this.id = assinaturaModelo.getId();
         this.nome = assinaturaModelo.getNome();
         this.descricao = assinaturaModelo.getDescricao();
+        this.limiteDeGrupos = assinaturaModelo.getLimiteDeGrupos();
+        this.limiteMembrosPorGrupo = assinaturaModelo.getLimiteMembrosPorGrupo();
+        this.permiteAnalytics = assinaturaModelo.getPermiteAnalytics();
+        this.permiteTemplatesDeAtividade = assinaturaModelo.getPermiteTemplatesDeAtividade();
         this.preco = assinaturaModelo.getPreco();
         this.duracaoEmMeses = assinaturaModelo.getDuracaoEmMeses();
         this.ativo = assinaturaModelo.getAtivo();
@@ -49,6 +65,6 @@ public class AssinaturaModeloResponseDTO {
     }
 
     public AssinaturaModelo toModel() {
-        return new AssinaturaModelo(id, nome, descricao, preco, duracaoEmMeses, ativo, dataCriacao, dataAtualizacao);
+        return new AssinaturaModelo(id, nome, descricao, preco, duracaoEmMeses, limiteDeGrupos, limiteMembrosPorGrupo, permiteAnalytics, permiteTemplatesDeAtividade, ativo, dataCriacao, dataAtualizacao);
     }
 }

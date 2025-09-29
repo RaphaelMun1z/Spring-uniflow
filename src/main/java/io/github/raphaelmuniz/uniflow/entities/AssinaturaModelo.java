@@ -35,6 +35,18 @@ public class AssinaturaModelo implements Serializable {
     @NotNull(message = "Duração em meses não pode ser nulo")
     private Integer duracaoEmMeses;
 
+    @NotNull(message = "Limite de Grupos não pode ser nulo")
+    private Integer limiteDeGrupos;
+
+    @NotNull(message = "Limite de Membros por Grupo não pode ser nulo")
+    private Integer limiteMembrosPorGrupo;
+
+    @NotNull(message = "Permite Analytics não pode ser nulo")
+    private Boolean permiteAnalytics;
+
+    @NotNull(message = "Permite Templates de Atividade não pode ser nulo")
+    private Boolean permiteTemplatesDeAtividade;
+
     @NotNull(message = "Ativo não pode ser nulo")
     private Boolean ativo;
 

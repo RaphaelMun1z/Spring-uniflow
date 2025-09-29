@@ -11,4 +11,6 @@ public interface AssinaturaUsuarioRepository extends JpaRepository<AssinaturaUsu
             String assinanteId,
             LocalDateTime agora
     );
+
+    Optional<AssinaturaUsuario> findByAssinanteId(String assinanteId);
 }
