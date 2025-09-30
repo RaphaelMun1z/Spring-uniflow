@@ -24,4 +24,6 @@ public interface GrupoRepository extends JpaRepository<Grupo, String> {
     @EntityGraph(attributePaths = {"inscricoes", "inscricoes.estudanteMembro"})
     @Query("SELECT g FROM Grupo g WHERE g.id = :id")
     Optional<Grupo> findByIdWithMembros(@Param("id") String id);
+
+    long countByAssinanteCriadorGrupoId(String assinanteId);
 }

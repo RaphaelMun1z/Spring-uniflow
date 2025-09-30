@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface AssinaturaModeloRepository extends JpaRepository<AssinaturaModelo, String> {
     List<AssinaturaModelo> findByAtivo(Boolean status);
+
 }
