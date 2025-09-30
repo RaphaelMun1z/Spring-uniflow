@@ -16,29 +16,6 @@ import java.util.*;
 @ControllerAdvice
 @RestController
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
-
-//    @ExceptionHandler(Exception.class)
-//    public final ResponseEntity<ExceptionResponse> handleAllExceptions(Exception ex, WebRequest request) {
-//        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), List.of(ex.getMessage()), request.getDescription(false));
-//        return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
-//
-//    @ExceptionHandler(RuntimeException.class)
-//    public final ResponseEntity<ExceptionResponse> runtimeException(Exception ex, WebRequest request) {
-//        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), List.of(ex.getClass().toString()), request.getDescription(false));
-//        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
-//    }
-
-//    @ExceptionHandler(TransactionSystemException.class)
-//    public final ResponseEntity<ExceptionResponse> transactionSystemException(Exception ex, WebRequest request) {
-//        ExceptionResponse exceptionResponse = new ExceptionResponse(
-//                new Date(),
-//                List.of("Erro de transação. Verifique se os dados estão corretos ou se há conflitos de integridade."),
-//                request.getDescription(false)
-//        );
-//        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
-//    }
-
     @ExceptionHandler(NotFoundException.class)
     public final ResponseEntity<ExceptionResponse> notFoundException(Exception ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), List.of(ex.getMessage()), request.getDescription(false));

@@ -1,6 +1,7 @@
 package io.github.raphaelmuniz.uniflow.dto.res;
 
-import io.github.raphaelmuniz.uniflow.entities.*;
+import io.github.raphaelmuniz.uniflow.entities.atividade.AtividadeAvaliativa;
+import io.github.raphaelmuniz.uniflow.entities.grupo.Grupo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -20,8 +21,8 @@ public class GrupoResponseDTO {
         this.id = grupo.getId();
         this.descricao = grupo.getDescricao();
         this.titulo = grupo.getTitulo();
-        this.atividadesId = grupo.getAtividadesPublicadas().stream().map(AtividadeGrupo::getId).toList();
+        this.atividadesId = grupo.getAtividadesPublicadas().stream().map(AtividadeAvaliativa::getId).toList();
         this.estudantesMembrosId = grupo.getInscricoes().stream().map(ig -> ig.getEstudanteMembro().getId()).toList();
-        this.criadorId = grupo.getCriador().getId();
+        this.criadorId = grupo.getAssinanteCriadorGrupo().getId();
     }
 }

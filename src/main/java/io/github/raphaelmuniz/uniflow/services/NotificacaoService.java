@@ -3,8 +3,8 @@ package io.github.raphaelmuniz.uniflow.services;
 import io.github.raphaelmuniz.uniflow.dto.req.NotificacaoRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.NotificacaoResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.profile.NotificacoesListResponse;
-import io.github.raphaelmuniz.uniflow.entities.Notificacao;
-import io.github.raphaelmuniz.uniflow.entities.NotificacaoAssinante;
+import io.github.raphaelmuniz.uniflow.entities.notificacao.Notificacao;
+import io.github.raphaelmuniz.uniflow.entities.notificacao.NotificacaoAssinante;
 import io.github.raphaelmuniz.uniflow.exceptions.NotFoundException;
 import io.github.raphaelmuniz.uniflow.repositories.NotificacaoAssinanteRepository;
 import io.github.raphaelmuniz.uniflow.repositories.NotificacaoRepository;
@@ -26,17 +26,16 @@ public class NotificacaoService extends GenericCrudServiceImpl<NotificacaoReques
     }
 
     public NotificacoesListResponse getNotificacoesByAssinanteId(String assinanteId) {
-        long totalElementos = notificacaoAssinanteRepository.countAllByAssinante_Id(assinanteId);
+        long totalElementos = notificacaoAssinanteRepository.countAllByAssinanteNotificadoId(assinanteId);
 
         List<NotificacaoAssinante> notificacoesAssinante =
-                notificacaoAssinanteRepository.findByAssinanteId(assinanteId);
+                notificacaoAssinanteRepository.findByAssinanteNotificadoId(assinanteId);
 
         List<NotificacaoResponseDTO> list = notificacoesAssinante.stream()
                 .map(NotificacaoResponseDTO::new)
                 .toList();
 
-        NotificacoesListResponse notificacoesListResponse = new NotificacoesListResponse(list, totalElementos);
-        return notificacoesListResponse;
+        return new NotificacoesListResponse(list, totalElementos);
     }
 
     @Transactional

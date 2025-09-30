@@ -8,14 +8,14 @@ import java.util.List;
 
 public interface CrudController<ReqDTO, ResDTO> {
     @PostMapping
-    public ResponseEntity<ResDTO> create(@RequestBody @Valid ReqDTO data);
+    ResponseEntity<ResDTO> create(@RequestBody @Valid ReqDTO data);
 
     @GetMapping
-    public ResponseEntity<List<ResDTO>> findAll();
+    ResponseEntity<List<ResDTO>> findAll();
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResDTO> findById(@PathVariable String id);
+    ResponseEntity<ResDTO> findById(@PathVariable String id);
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable String id);
+    ResponseEntity<Void> delete(@PathVariable String id);
 }

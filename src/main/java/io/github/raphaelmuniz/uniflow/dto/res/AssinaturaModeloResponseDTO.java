@@ -1,6 +1,6 @@
 package io.github.raphaelmuniz.uniflow.dto.res;
 
-import io.github.raphaelmuniz.uniflow.entities.AssinaturaModelo;
+import io.github.raphaelmuniz.uniflow.entities.assinatura.AssinaturaModelo;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

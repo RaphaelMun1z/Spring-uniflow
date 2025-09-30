@@ -3,10 +3,13 @@ package io.github.raphaelmuniz.uniflow.services;
 import io.github.raphaelmuniz.uniflow.dto.req.AdicionarMembroGrupoDTO;
 import io.github.raphaelmuniz.uniflow.dto.req.GrupoRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.AssinanteResumeResponseDTO;
-import io.github.raphaelmuniz.uniflow.dto.res.AtividadeGrupoResponseDTO;
+import io.github.raphaelmuniz.uniflow.dto.res.AtividadeAvaliativaResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.GrupoResponseDTO;
-import io.github.raphaelmuniz.uniflow.entities.*;
 import io.github.raphaelmuniz.uniflow.entities.enums.PapelGrupoEnum;
+import io.github.raphaelmuniz.uniflow.entities.grupo.Grupo;
+import io.github.raphaelmuniz.uniflow.entities.grupo.InscricaoGrupo;
+import io.github.raphaelmuniz.uniflow.entities.usuario.Assinante;
+import io.github.raphaelmuniz.uniflow.entities.usuario.Estudante;
 import io.github.raphaelmuniz.uniflow.repositories.*;
 import io.github.raphaelmuniz.uniflow.exceptions.NotFoundException;
 import io.github.raphaelmuniz.uniflow.services.generic.GenericCrudServiceImpl;
@@ -54,7 +57,7 @@ public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoR
         novoGrupo.setTitulo(data.getTitulo());
         novoGrupo.setDescricao(data.getDescricao());
         novoGrupo.setTipoGrupo(data.getTipoGrupo());
-        novoGrupo.setCriador(criador);
+        novoGrupo.setAssinanteCriadorGrupo(criador);
 
         estudantesInscritos.forEach(estudante -> {
             InscricaoGrupo inscricao = new InscricaoGrupo(null, LocalDateTime.now(), PapelGrupoEnum.MEMBRO, null, estudante);
@@ -64,7 +67,7 @@ public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoR
         if (data.getAtividadesGrupo() != null && !data.getAtividadesGrupo().isEmpty()) {
             data.getAtividadesGrupo().forEach(atividade -> {
                 atividade.setGrupoPublicado(novoGrupo);
-                atividade.setCriadorAtividade(criador);
+                atividade.setAssinanteCriadorAtividade(criador);
                 novoGrupo.getAtividadesPublicadas().add(atividade);
             });
         }
@@ -97,8 +100,8 @@ public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoR
                 .toList();
     }
 
-    public List<AtividadeGrupoResponseDTO> listarAtividades(String grupoId) {
+    public List<AtividadeAvaliativaResponseDTO> listarAtividades(String grupoId) {
         Grupo grupo = repository.findById(grupoId).orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
-        return grupo.getAtividadesPublicadas().stream().map(AtividadeGrupoResponseDTO::new).toList();
+        return grupo.getAtividadesPublicadas().stream().map(AtividadeAvaliativaResponseDTO::new).toList();
     }
 }

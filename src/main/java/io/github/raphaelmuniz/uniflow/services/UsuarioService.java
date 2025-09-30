@@ -1,6 +1,5 @@
 package io.github.raphaelmuniz.uniflow.services;
 
-import io.github.raphaelmuniz.uniflow.entities.Usuario;
 import io.github.raphaelmuniz.uniflow.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,8 +18,7 @@ public class UsuarioService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Usuario usuario = repository.findByEmail(email)
+        return repository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + email));
-        return usuario;
     }
 }

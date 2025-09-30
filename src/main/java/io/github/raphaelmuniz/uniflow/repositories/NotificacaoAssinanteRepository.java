@@ -1,6 +1,6 @@
 package io.github.raphaelmuniz.uniflow.repositories;
 
-import io.github.raphaelmuniz.uniflow.entities.NotificacaoAssinante;
+import io.github.raphaelmuniz.uniflow.entities.notificacao.NotificacaoAssinante;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -13,19 +13,19 @@ import java.util.List;
 
 public interface NotificacaoAssinanteRepository extends JpaRepository<NotificacaoAssinante, String> {
     @EntityGraph(attributePaths = {"notificacao"})
-    List<NotificacaoAssinante> findByAssinanteId(String assinanteId);
+    List<NotificacaoAssinante> findByAssinanteNotificadoId(String assinanteNotificadoId);
 
     @Modifying
     @Transactional
     @Query("UPDATE NotificacaoAssinante na SET na.foiLido = true, na.dataLeitura = :dataAtual " +
             "WHERE na.id = :notificacaoId " +
-            "AND na.assinante.id = :assinanteId " +
+            "AND na.assinanteNotificado.id = :assinanteNotificadoId " +
             "AND na.foiLido = false")
     int marcarComoLida(
             @Param("notificacaoId") String notificacaoId,
-            @Param("assinanteId") String assinanteId,
+            @Param("assinanteNotificadoId") String assinanteNotificadoId,
             @Param("dataAtual") LocalDateTime dataAtual
     );
 
-    long countAllByAssinante_Id(String assinanteId);
+    long countAllByAssinanteNotificadoId(String assinanteNotificadoId);
 }

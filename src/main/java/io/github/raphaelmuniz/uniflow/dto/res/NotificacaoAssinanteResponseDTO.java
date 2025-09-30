@@ -1,6 +1,6 @@
 package io.github.raphaelmuniz.uniflow.dto.res;
 
-import io.github.raphaelmuniz.uniflow.entities.NotificacaoAssinante;
+import io.github.raphaelmuniz.uniflow.entities.notificacao.NotificacaoAssinante;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

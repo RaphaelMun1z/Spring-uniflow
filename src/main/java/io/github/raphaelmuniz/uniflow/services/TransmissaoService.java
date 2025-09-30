@@ -2,8 +2,8 @@ package io.github.raphaelmuniz.uniflow.services;
 
 import io.github.raphaelmuniz.uniflow.dto.req.TransmissaoRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.TransmissaoResponseDTO;
-import io.github.raphaelmuniz.uniflow.entities.Notificacao;
-import io.github.raphaelmuniz.uniflow.entities.Transmissao;
+import io.github.raphaelmuniz.uniflow.entities.notificacao.Notificacao;
+import io.github.raphaelmuniz.uniflow.entities.notificacao.Transmissao;
 import io.github.raphaelmuniz.uniflow.exceptions.NotFoundException;
 import io.github.raphaelmuniz.uniflow.repositories.NotificacaoRepository;
 import io.github.raphaelmuniz.uniflow.repositories.TransmissaoDeNotificacaoRepository;
@@ -45,9 +45,6 @@ public class TransmissaoService extends GenericCrudServiceImpl<TransmissaoReques
                 .collect(Collectors.toList());
 
         List<Transmissao> transmissoesSaved = repository.saveAll(novasTransmissoes);
-        //return transmissoesSaved.stream()
-        //        .map(TransmissaoResponseDTO::new)
-        //        .collect(Collectors.toList());
         return new TransmissaoResponseDTO(transmissoesSaved.getFirst());
     }
 }

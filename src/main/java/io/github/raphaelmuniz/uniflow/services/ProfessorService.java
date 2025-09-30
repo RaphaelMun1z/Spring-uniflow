@@ -2,7 +2,9 @@ package io.github.raphaelmuniz.uniflow.services;
 
 import io.github.raphaelmuniz.uniflow.dto.req.ProfessorRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.ProfessorResponseDTO;
-import io.github.raphaelmuniz.uniflow.entities.*;
+import io.github.raphaelmuniz.uniflow.entities.assinatura.AssinaturaModelo;
+import io.github.raphaelmuniz.uniflow.entities.assinatura.AssinaturaUsuario;
+import io.github.raphaelmuniz.uniflow.entities.usuario.Professor;
 import io.github.raphaelmuniz.uniflow.exceptions.BusinessException;
 import io.github.raphaelmuniz.uniflow.exceptions.NotFoundException;
 import io.github.raphaelmuniz.uniflow.repositories.*;

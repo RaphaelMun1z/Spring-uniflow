@@ -4,7 +4,7 @@ import io.github.raphaelmuniz.uniflow.controllers.generic.GenericCrudControllerI
 import io.github.raphaelmuniz.uniflow.dto.req.AdicionarMembroGrupoDTO;
 import io.github.raphaelmuniz.uniflow.dto.req.GrupoRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.AssinanteResumeResponseDTO;
-import io.github.raphaelmuniz.uniflow.dto.res.AtividadeGrupoResponseDTO;
+import io.github.raphaelmuniz.uniflow.dto.res.AtividadeAvaliativaResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.GrupoResponseDTO;
 import io.github.raphaelmuniz.uniflow.services.GrupoService;
 import jakarta.validation.Valid;
@@ -43,8 +43,8 @@ public class GrupoController extends GenericCrudControllerImpl<GrupoRequestDTO, 
     }
 
     @GetMapping("/{grupoId}/atividades")
-    public ResponseEntity<List<AtividadeGrupoResponseDTO>> listarAtividades(@PathVariable String grupoId) {
-        List<AtividadeGrupoResponseDTO> atividades = service.listarAtividades(grupoId);
+    public ResponseEntity<List<AtividadeAvaliativaResponseDTO>> listarAtividades(@PathVariable String grupoId) {
+        List<AtividadeAvaliativaResponseDTO> atividades = service.listarAtividades(grupoId);
         return ResponseEntity.ok(atividades);
     }
 }

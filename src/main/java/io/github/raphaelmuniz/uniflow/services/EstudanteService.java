@@ -1,9 +1,14 @@
 package io.github.raphaelmuniz.uniflow.services;
 
 import io.github.raphaelmuniz.uniflow.dto.res.EstudanteResponseDTO;
-import io.github.raphaelmuniz.uniflow.entities.*;
 import io.github.raphaelmuniz.uniflow.dto.req.EstudanteRequestDTO;
+import io.github.raphaelmuniz.uniflow.entities.assinatura.AssinaturaModelo;
+import io.github.raphaelmuniz.uniflow.entities.assinatura.AssinaturaUsuario;
 import io.github.raphaelmuniz.uniflow.entities.enums.PapelGrupoEnum;
+import io.github.raphaelmuniz.uniflow.entities.grupo.Grupo;
+import io.github.raphaelmuniz.uniflow.entities.grupo.InscricaoGrupo;
+import io.github.raphaelmuniz.uniflow.entities.autorizacao.Papel;
+import io.github.raphaelmuniz.uniflow.entities.usuario.Estudante;
 import io.github.raphaelmuniz.uniflow.exceptions.BusinessException;
 import io.github.raphaelmuniz.uniflow.exceptions.NotFoundException;
 import io.github.raphaelmuniz.uniflow.repositories.*;

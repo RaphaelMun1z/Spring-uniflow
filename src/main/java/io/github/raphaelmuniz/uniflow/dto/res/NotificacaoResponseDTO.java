@@ -1,7 +1,7 @@
 package io.github.raphaelmuniz.uniflow.dto.res;
 
-import io.github.raphaelmuniz.uniflow.entities.Notificacao;
-import io.github.raphaelmuniz.uniflow.entities.NotificacaoAssinante;
+import io.github.raphaelmuniz.uniflow.entities.notificacao.Notificacao;
+import io.github.raphaelmuniz.uniflow.entities.notificacao.NotificacaoAssinante;
 import io.github.raphaelmuniz.uniflow.entities.enums.CategoriaNotificacaoEnum;
 import io.github.raphaelmuniz.uniflow.entities.enums.TipoRemetenteEnum;
 import lombok.AllArgsConstructor;

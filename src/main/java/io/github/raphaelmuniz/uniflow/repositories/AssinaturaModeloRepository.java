@@ -1,6 +1,6 @@
 package io.github.raphaelmuniz.uniflow.repositories;
 
-import io.github.raphaelmuniz.uniflow.entities.AssinaturaModelo;
+import io.github.raphaelmuniz.uniflow.entities.assinatura.AssinaturaModelo;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

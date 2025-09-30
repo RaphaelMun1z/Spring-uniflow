@@ -1,6 +1,6 @@
 package io.github.raphaelmuniz.uniflow.dto.req;
 
-import io.github.raphaelmuniz.uniflow.entities.Admin;
+import io.github.raphaelmuniz.uniflow.entities.usuario.Admin;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;

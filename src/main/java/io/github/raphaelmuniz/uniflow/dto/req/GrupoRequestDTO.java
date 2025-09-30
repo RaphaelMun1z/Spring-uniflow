@@ -1,7 +1,7 @@
 package io.github.raphaelmuniz.uniflow.dto.req;
 
-import io.github.raphaelmuniz.uniflow.entities.AtividadeGrupo;
-import io.github.raphaelmuniz.uniflow.entities.Grupo;
+import io.github.raphaelmuniz.uniflow.entities.atividade.AtividadeAvaliativa;
+import io.github.raphaelmuniz.uniflow.entities.grupo.Grupo;
 import io.github.raphaelmuniz.uniflow.entities.enums.TipoGrupoEnum;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -23,7 +23,7 @@ public class GrupoRequestDTO {
     private TipoGrupoEnum tipoGrupo;
 
     @NotNull
-    private List<AtividadeGrupo> atividadesGrupo;
+    private List<AtividadeAvaliativa> atividadesGrupo;
 
     @NotNull
     private List<String> estudantesInscritosId;

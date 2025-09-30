@@ -1,5 +1,6 @@
 package io.github.raphaelmuniz.uniflow.entities;
 
+import io.github.raphaelmuniz.uniflow.entities.usuario.Assinante;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -44,4 +45,6 @@ public class Pagamento implements Serializable {
     @ManyToOne
     @JoinColumn(name = "assinante_pagador_id")
     private Assinante assinantePagador;
+
+
 }

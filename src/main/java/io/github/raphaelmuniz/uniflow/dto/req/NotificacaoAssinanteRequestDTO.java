@@ -1,6 +1,6 @@
 package io.github.raphaelmuniz.uniflow.dto.req;
 
-import io.github.raphaelmuniz.uniflow.entities.NotificacaoAssinante;
+import io.github.raphaelmuniz.uniflow.entities.notificacao.NotificacaoAssinante;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;

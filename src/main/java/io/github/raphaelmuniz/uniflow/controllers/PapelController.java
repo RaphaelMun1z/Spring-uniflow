@@ -13,23 +13,4 @@ public class PapelController extends GenericCrudControllerImpl<PapelRequestDTO, 
     protected PapelController(PapelService service) {
         super(service);
     }
-
-//    @GetMapping("/whoami")
-//    @PreAuthorize("isAuthenticated()")
-//    public ResponseEntity<String> whoAmI() {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//
-//        if (authentication == null) {
-//            return ResponseEntity.status(401).body("Nenhum usuário autenticado.");
-//        }
-//
-//        String username = authentication.getName();
-//        String authorities = authentication.getAuthorities().stream()
-//                .map(grantedAuthority -> grantedAuthority.getAuthority())
-//                .collect(Collectors.joining(", "));
-//
-//        String response = "Usuário: " + username + " | Permissões: [" + authorities + "]";
-//
-//        return ResponseEntity.ok(response);
-//    }
 }

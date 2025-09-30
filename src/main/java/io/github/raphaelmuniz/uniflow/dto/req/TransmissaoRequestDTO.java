@@ -1,6 +1,6 @@
 package io.github.raphaelmuniz.uniflow.dto.req;
 
-import io.github.raphaelmuniz.uniflow.entities.Transmissao;
+import io.github.raphaelmuniz.uniflow.entities.notificacao.Transmissao;
 import io.github.raphaelmuniz.uniflow.entities.enums.TipoDestinatarioEnum;
 import io.github.raphaelmuniz.uniflow.entities.enums.TipoRemetenteEnum;
 import jakarta.validation.constraints.NotEmpty;

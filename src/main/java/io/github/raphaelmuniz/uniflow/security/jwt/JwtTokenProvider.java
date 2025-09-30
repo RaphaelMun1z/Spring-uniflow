@@ -101,8 +101,7 @@ public class JwtTokenProvider {
     private DecodedJWT decodedToken(String token) {
         Algorithm alg = Algorithm.HMAC256(secretKey.getBytes());
         JWTVerifier verifier = JWT.require(alg).build();
-        DecodedJWT decodedJWT = verifier.verify(token);
-        return decodedJWT;
+        return verifier.verify(token);
     }
 
     public String resolveToken(HttpServletRequest request) {
@@ -121,11 +120,7 @@ public class JwtTokenProvider {
     public boolean validateToken(String token) {
         try {
             DecodedJWT decodedJWT = decodedToken(token);
-            if (decodedJWT.getExpiresAt().before(new Date())) {
-                return false;
-            }
-
-            return true;
+            return !decodedJWT.getExpiresAt().before(new Date());
         } catch (Exception e) {
             throw new InvalidJwtAuthenticationException("Expired or Invalid JWT Token!");
         }

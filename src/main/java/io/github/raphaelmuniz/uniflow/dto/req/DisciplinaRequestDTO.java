@@ -1,6 +1,6 @@
 package io.github.raphaelmuniz.uniflow.dto.req;
 
-import io.github.raphaelmuniz.uniflow.entities.Disciplina;
+import io.github.raphaelmuniz.uniflow.entities.atividade.Disciplina;
 import io.github.raphaelmuniz.uniflow.entities.embeddables.PeriodoLetivo;
 import io.github.raphaelmuniz.uniflow.entities.enums.DificuldadeEnum;
 import jakarta.persistence.Embedded;

@@ -5,7 +5,7 @@ import io.github.raphaelmuniz.uniflow.dto.res.*;
 import io.github.raphaelmuniz.uniflow.dto.res.profile.AssinaturaProfileResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.profile.GruposProfileResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.profile.NotificacoesListResponse;
-import io.github.raphaelmuniz.uniflow.entities.Usuario;
+import io.github.raphaelmuniz.uniflow.entities.usuario.Usuario;
 import io.github.raphaelmuniz.uniflow.services.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +15,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -30,13 +33,32 @@ public class ProfileController {
     PagamentoService pagamentoService;
 
     @Autowired
-    AtividadeEstudanteService atividadeEstudanteService;
+    AtividadeEntregaService atividadeEntregaService;
 
     @Autowired
     AssinanteService assinanteService;
 
     @Autowired
     NotificacaoService notificacaoService;
+
+    @GetMapping("/me")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<String> whoAmI() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null) {
+            return ResponseEntity.status(401).body("Nenhum usuário autenticado.");
+        }
+
+        String username = authentication.getName();
+        String authorities = authentication.getAuthorities().stream()
+                .map(grantedAuthority -> grantedAuthority.getAuthority())
+                .collect(Collectors.joining(", "));
+
+        String response = "Usuário: " + username + " | Permissões: [" + authorities + "]";
+
+        return ResponseEntity.ok(response);
+    }
 
     @GetMapping("/me/assinatura")
     @PreAuthorize("isAuthenticated() and (authentication.principal.hasRole('ESTUDANTE') or authentication.principal.hasRole('PROFESSOR'))")
@@ -66,7 +88,7 @@ public class ProfileController {
     public ResponseEntity<List<AtividadeEstudanteResponseDTO>> getMinhasAtividades(
             @AuthenticationPrincipal Usuario usuarioLogado
     ) {
-        List<AtividadeEstudanteResponseDTO> atividades = atividadeEstudanteService.findByEstudanteDonoId(usuarioLogado.getId());
+        List<AtividadeEstudanteResponseDTO> atividades = atividadeEntregaService.findByEstudanteDonoId(usuarioLogado.getId());
         return ResponseEntity.ok(atividades);
     }
 
@@ -77,7 +99,7 @@ public class ProfileController {
             @PathVariable String atividadeId,
             @RequestBody @Valid AtividadeAssinanteStatusPatchRequestDTO requestDTO
     ) {
-        atividadeEstudanteService.atualizarStatus(
+        atividadeEntregaService.atualizarStatus(
                 usuarioLogado,
                 atividadeId,
                 requestDTO.getStatus()

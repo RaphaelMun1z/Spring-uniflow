@@ -2,9 +2,9 @@ package io.github.raphaelmuniz.uniflow.services;
 
 import io.github.raphaelmuniz.uniflow.dto.req.NotificacaoAssinanteRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.NotificacaoAssinanteResponseDTO;
-import io.github.raphaelmuniz.uniflow.entities.Assinante;
-import io.github.raphaelmuniz.uniflow.entities.Notificacao;
-import io.github.raphaelmuniz.uniflow.entities.NotificacaoAssinante;
+import io.github.raphaelmuniz.uniflow.entities.usuario.Assinante;
+import io.github.raphaelmuniz.uniflow.entities.notificacao.Notificacao;
+import io.github.raphaelmuniz.uniflow.entities.notificacao.NotificacaoAssinante;
 import io.github.raphaelmuniz.uniflow.exceptions.NotFoundException;
 import io.github.raphaelmuniz.uniflow.repositories.AssinanteRepository;
 import io.github.raphaelmuniz.uniflow.repositories.NotificacaoAssinanteRepository;

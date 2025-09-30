@@ -1,7 +1,7 @@
 package io.github.raphaelmuniz.uniflow.dto.res;
 
-import io.github.raphaelmuniz.uniflow.entities.Papel;
-import io.github.raphaelmuniz.uniflow.entities.Permissao;
+import io.github.raphaelmuniz.uniflow.entities.autorizacao.Papel;
+import io.github.raphaelmuniz.uniflow.entities.autorizacao.Permissao;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

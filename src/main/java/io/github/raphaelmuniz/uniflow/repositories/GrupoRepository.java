@@ -1,6 +1,6 @@
 package io.github.raphaelmuniz.uniflow.repositories;
 
-import io.github.raphaelmuniz.uniflow.entities.Grupo;
+import io.github.raphaelmuniz.uniflow.entities.grupo.Grupo;
 import lombok.NonNull;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;

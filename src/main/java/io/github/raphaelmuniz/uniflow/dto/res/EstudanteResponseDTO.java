@@ -1,6 +1,9 @@
 package io.github.raphaelmuniz.uniflow.dto.res;
 
-import io.github.raphaelmuniz.uniflow.entities.*;
+import io.github.raphaelmuniz.uniflow.entities.assinatura.AssinaturaUsuario;
+import io.github.raphaelmuniz.uniflow.entities.atividade.AtividadeEntrega;
+import io.github.raphaelmuniz.uniflow.entities.grupo.InscricaoGrupo;
+import io.github.raphaelmuniz.uniflow.entities.usuario.Estudante;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -23,7 +26,7 @@ public class EstudanteResponseDTO {
         this.email = estudante.getEmail();
         this.periodo = estudante.getPeriodo();
         this.assinaturaId = estudante.getAssinaturaValida().map(AssinaturaUsuario::getId).orElse(null);
-        this.atividadesId = estudante.getAtividadesEstudante().stream().map(AtividadeEstudante::getId).toList();
+        this.atividadesId = estudante.getAtividadesEstudante().stream().map(AtividadeEntrega::getId).toList();
         this.inscricoesGrupoId = estudante.getInscricoesGrupos().stream().map(InscricaoGrupo::getId).toList();
     }
 

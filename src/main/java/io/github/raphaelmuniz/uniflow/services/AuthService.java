@@ -2,7 +2,7 @@ package io.github.raphaelmuniz.uniflow.services;
 
 import io.github.raphaelmuniz.uniflow.dto.security.AccountCredentialsDTO;
 import io.github.raphaelmuniz.uniflow.dto.security.TokenDTO;
-import io.github.raphaelmuniz.uniflow.entities.Usuario;
+import io.github.raphaelmuniz.uniflow.entities.usuario.Usuario;
 import io.github.raphaelmuniz.uniflow.repositories.UsuarioRepository;
 import io.github.raphaelmuniz.uniflow.security.jwt.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +31,10 @@ public class AuthService {
             var auth = this.authenticationManager.authenticate(usernamePassword);
             var user = (Usuario) auth.getPrincipal();
 
-            TokenDTO token = tokenProvider.createAccessToken(
+            return tokenProvider.createAccessToken(
                     user.getEmail(),
                     user.getAuthorities()
             );
-
-            return token;
         } catch (Exception e) {
             throw new BadCredentialsException("Invalid username/password supplied!");
         }
@@ -48,7 +46,6 @@ public class AuthService {
             throw new UsernameNotFoundException("E-mail " + email + " não encontrado!");
         }
 
-        TokenDTO token = tokenProvider.refreshToken(refreshToken);
-        return token;
+        return tokenProvider.refreshToken(refreshToken);
     }
 }

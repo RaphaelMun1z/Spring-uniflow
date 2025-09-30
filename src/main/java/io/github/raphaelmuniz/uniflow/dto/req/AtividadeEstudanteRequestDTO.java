@@ -1,6 +1,6 @@
 package io.github.raphaelmuniz.uniflow.dto.req;
 
-import io.github.raphaelmuniz.uniflow.entities.AtividadeEstudante;
+import io.github.raphaelmuniz.uniflow.entities.atividade.AtividadeEntrega;
 import io.github.raphaelmuniz.uniflow.entities.enums.DificuldadeEnum;
 import io.github.raphaelmuniz.uniflow.entities.enums.StatusEntregaEnum;
 import lombok.AllArgsConstructor;
@@ -20,7 +20,7 @@ public class AtividadeEstudanteRequestDTO {
     private StatusEntregaEnum statusEntrega;
     private String estudanteDonoId;
 
-    public AtividadeEstudante toModel() {
-        return new AtividadeEstudante(dataLancamento, prazoEntrega, titulo, descricao, dificuldade, null, null, statusEntrega, null, null);
+    public AtividadeEntrega toModel() {
+        return new AtividadeEntrega(dataLancamento, prazoEntrega, titulo, descricao, dificuldade, null, null, statusEntrega, null, null);
     }
 }

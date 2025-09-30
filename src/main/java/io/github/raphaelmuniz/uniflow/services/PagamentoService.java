@@ -2,7 +2,7 @@ package io.github.raphaelmuniz.uniflow.services;
 
 import io.github.raphaelmuniz.uniflow.dto.req.PagamentoRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.PagamentoResponseDTO;
-import io.github.raphaelmuniz.uniflow.entities.Assinante;
+import io.github.raphaelmuniz.uniflow.entities.usuario.Assinante;
 import io.github.raphaelmuniz.uniflow.entities.Pagamento;
 import io.github.raphaelmuniz.uniflow.exceptions.NotFoundException;
 import io.github.raphaelmuniz.uniflow.repositories.AssinanteRepository;

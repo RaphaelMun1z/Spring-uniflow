@@ -1,6 +1,6 @@
 package io.github.raphaelmuniz.uniflow.dto.res.profile;
 
-import io.github.raphaelmuniz.uniflow.entities.InscricaoGrupo;
+import io.github.raphaelmuniz.uniflow.entities.grupo.InscricaoGrupo;
 import io.github.raphaelmuniz.uniflow.entities.enums.PapelGrupoEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,8 +22,8 @@ public class GruposProfileResponseDTO {
         this.grupoId = inscricao.getGrupo().getId();
         this.descricao = inscricao.getGrupo().getDescricao();
         this.titulo = inscricao.getGrupo().getTitulo();
-        this.criadorNome = inscricao.getGrupo().getCriador().getNome();
-        this.criadorId = inscricao.getGrupo().getCriador().getId();
+        this.criadorNome = inscricao.getGrupo().getAssinanteCriadorGrupo().getNome();
+        this.criadorId = inscricao.getGrupo().getAssinanteCriadorGrupo().getId();
         this.dataIngresso = inscricao.getDataEntrada();
         this.papelNoGrupo = inscricao.getPapelNoGrupo();
     }

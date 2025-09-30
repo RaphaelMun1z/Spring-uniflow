@@ -1,6 +1,10 @@
 package io.github.raphaelmuniz.uniflow.config;
 
-import io.github.raphaelmuniz.uniflow.entities.*;
+import io.github.raphaelmuniz.uniflow.entities.autorizacao.Papel;
+import io.github.raphaelmuniz.uniflow.entities.autorizacao.Permissao;
+import io.github.raphaelmuniz.uniflow.entities.usuario.Admin;
+import io.github.raphaelmuniz.uniflow.entities.usuario.Estudante;
+import io.github.raphaelmuniz.uniflow.entities.usuario.Professor;
 import io.github.raphaelmuniz.uniflow.repositories.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;

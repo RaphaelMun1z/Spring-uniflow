@@ -2,7 +2,7 @@ package io.github.raphaelmuniz.uniflow.services;
 
 import io.github.raphaelmuniz.uniflow.dto.req.AssinaturaModeloRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.AssinaturaModeloResponseDTO;
-import io.github.raphaelmuniz.uniflow.entities.AssinaturaModelo;
+import io.github.raphaelmuniz.uniflow.entities.assinatura.AssinaturaModelo;
 import io.github.raphaelmuniz.uniflow.exceptions.NotFoundException;
 import io.github.raphaelmuniz.uniflow.repositories.AssinaturaModeloRepository;
 import io.github.raphaelmuniz.uniflow.services.generic.GenericCrudServiceImpl;
@@ -29,8 +29,7 @@ public class AssinaturaModeloService extends GenericCrudServiceImpl<AssinaturaMo
     }
 
     public List<AssinaturaModelo> listarAssinaturasAtivas() {
-        List<AssinaturaModelo> ativos = repository.findByAtivo(true);
-        return ativos;
+        return repository.findByAtivo(true);
     }
 
 }
