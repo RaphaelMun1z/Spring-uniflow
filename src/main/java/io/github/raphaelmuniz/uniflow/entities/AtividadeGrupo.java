@@ -46,5 +46,5 @@ public class AtividadeGrupo extends Atividade implements Serializable {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "atividadeGrupoOrigem")
-    private Set<AtividadeAssinante> copiasDosAssinantes = new HashSet<>();
+    private Set<AtividadeEstudante> copiasDosAssinantes = new HashSet<>();
 }

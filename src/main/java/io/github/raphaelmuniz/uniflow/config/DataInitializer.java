@@ -73,14 +73,12 @@ public class DataInitializer implements CommandLineRunner {
                 "Professor Teste",
                 "professor@email.com",
                 defaultPassword,
-                new HashSet<>(), // assinaturas
-                new ArrayList<>(), // pagamentos
-                new HashSet<>(), // atividadesAssinante
-                new ArrayList<>(), // atividadesGrupoPublicadas
-                new HashSet<>(), // inscricoesGrupos
-                new HashSet<>(), // notificacoes
-                new ArrayList<>(), // gruposCriados
-                "Ciência da Computação", // areaAtuacao
+                new HashSet<>(),
+                new ArrayList<>(),
+                new ArrayList<>(),
+                new HashSet<>(),
+                new ArrayList<>(),
+                "Ciência da Computação",
                 papelProfessor
         );
 
@@ -88,15 +86,15 @@ public class DataInitializer implements CommandLineRunner {
                 "Estudante Teste",
                 "estudante@email.com",
                 defaultPassword,
-                new HashSet<>(), // assinaturas
-                new ArrayList<>(), // pagamentos
-                new HashSet<>(), // atividadesAssinante
-                new ArrayList<>(), // atividadesGrupoPublicadas
-                new HashSet<>(), // inscricoesGrupos
-                new HashSet<>(), // notificacoes
-                new ArrayList<>(), // gruposCriados
-                5, // periodo
-                papelEstudante
+                new HashSet<>(),
+                new ArrayList<>(),
+                new HashSet<>(),
+                new ArrayList<>(),
+                new HashSet<>(),
+                new ArrayList<>(),
+                papelEstudante,
+                5,
+                new HashSet<>()
         );
 
         usuarioRepository.saveAll(List.of(admin, professor, estudante));

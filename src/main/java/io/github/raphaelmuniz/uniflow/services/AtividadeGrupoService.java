@@ -9,8 +9,6 @@ import io.github.raphaelmuniz.uniflow.services.generic.GenericCrudServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 @Service
 public class AtividadeGrupoService extends GenericCrudServiceImpl<AtividadeGrupoRequestDTO, AtividadeGrupoResponseDTO, AtividadeGrupo, String> {
     @Autowired

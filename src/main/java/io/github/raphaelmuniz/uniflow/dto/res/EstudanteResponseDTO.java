@@ -23,7 +23,7 @@ public class EstudanteResponseDTO {
         this.email = estudante.getEmail();
         this.periodo = estudante.getPeriodo();
         this.assinaturaId = estudante.getAssinaturaValida().map(AssinaturaUsuario::getId).orElse(null);
-        this.atividadesId = estudante.getAtividadesAssinante().stream().map(AtividadeAssinante::getId).toList();
+        this.atividadesId = estudante.getAtividadesEstudante().stream().map(AtividadeEstudante::getId).toList();
         this.inscricoesGrupoId = estudante.getInscricoesGrupos().stream().map(InscricaoGrupo::getId).toList();
     }
 

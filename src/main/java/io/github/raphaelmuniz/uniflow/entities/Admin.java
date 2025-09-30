@@ -1,6 +1,5 @@
 package io.github.raphaelmuniz.uniflow.entities;
 
-import io.github.raphaelmuniz.uniflow.entities.enums.UserRoleEnum;
 import jakarta.persistence.Entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

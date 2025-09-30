@@ -2,13 +2,11 @@ package io.github.raphaelmuniz.uniflow.services;
 
 import io.github.raphaelmuniz.uniflow.dto.req.AdicionarMembroGrupoDTO;
 import io.github.raphaelmuniz.uniflow.dto.req.GrupoRequestDTO;
-import io.github.raphaelmuniz.uniflow.dto.res.AssinanteResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.AssinanteResumeResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.AtividadeGrupoResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.GrupoResponseDTO;
 import io.github.raphaelmuniz.uniflow.entities.*;
 import io.github.raphaelmuniz.uniflow.entities.enums.PapelGrupoEnum;
-import io.github.raphaelmuniz.uniflow.entities.enums.StatusEntregaEnum;
 import io.github.raphaelmuniz.uniflow.repositories.*;
 import io.github.raphaelmuniz.uniflow.exceptions.NotFoundException;
 import io.github.raphaelmuniz.uniflow.services.generic.GenericCrudServiceImpl;
@@ -18,11 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoResponseDTO, Grupo, String> {
@@ -33,6 +28,9 @@ public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoR
     AssinanteRepository assinanteRepository;
 
     @Autowired
+    EstudanteRepository estudanteRepository;
+
+    @Autowired
     InscricaoGrupoRepository inscricaoGrupoRepository;
 
     protected GrupoService(GrupoRepository repository) {
@@ -41,13 +39,13 @@ public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoR
 
     @Override
     public GrupoResponseDTO create(GrupoRequestDTO data) {
-        if (data.getInscritosId().isEmpty()) {
-            throw new ConstraintViolationException("É necessário ao menos um inscrito.", Set.of());
+        if (data.getEstudantesInscritosId().isEmpty()) {
+            throw new ConstraintViolationException("É necessário ao menos um estudante inscrito.", Set.of());
         }
 
-        List<Assinante> assinantes = assinanteRepository.findAllById(data.getInscritosId());
-        if (assinantes.size() != data.getInscritosId().size()) {
-            throw new NotFoundException("Algum inscrito não encontrado.");
+        List<Estudante> estudantesInscritos = estudanteRepository.findAllById(data.getEstudantesInscritosId());
+        if (estudantesInscritos.size() != data.getEstudantesInscritosId().size()) {
+            throw new NotFoundException("Algum estudante inscrito não encontrado.");
         }
 
         Assinante criador = assinanteRepository.findById(data.getCriadorId()).orElseThrow(() -> new NotFoundException("Assinante não encontrado."));
@@ -58,8 +56,8 @@ public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoR
         novoGrupo.setTipoGrupo(data.getTipoGrupo());
         novoGrupo.setCriador(criador);
 
-        assinantes.forEach(assinante -> {
-            InscricaoGrupo inscricao = new InscricaoGrupo(null, LocalDateTime.now(), PapelGrupoEnum.MEMBRO, null, assinante);
+        estudantesInscritos.forEach(estudante -> {
+            InscricaoGrupo inscricao = new InscricaoGrupo(null, LocalDateTime.now(), PapelGrupoEnum.MEMBRO, null, estudante);
             novoGrupo.addInscricao(inscricao);
         });
 
@@ -79,29 +77,28 @@ public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoR
     @Transactional
     public void adicionarIntegrantes(AdicionarMembroGrupoDTO data) {
         Grupo grupo = repository.findById(data.getGrupoId()).orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
-        Assinante assinanteEncontrado = assinanteRepository.findById(data.getIntegranteId()).orElseThrow(() -> new NotFoundException("Assinante não encontrado."));
-        InscricaoGrupo inscricaoGrupo = new InscricaoGrupo(null, LocalDateTime.now(), data.getPapel(), grupo, assinanteEncontrado);
+        Estudante estudanteEncontrado = estudanteRepository.findById(data.getEstudanteId()).orElseThrow(() -> new NotFoundException("Estudante não encontrado."));
+        InscricaoGrupo inscricaoGrupo = new InscricaoGrupo(null, LocalDateTime.now(), data.getPapel(), grupo, estudanteEncontrado);
         grupo.addInscricao(inscricaoGrupo);
     }
 
     @Transactional
     public void removerIntegrante(String grupoId, String membroId) {
         Grupo grupo = repository.findById(grupoId).orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
-        InscricaoGrupo inscricaoEncontrada = inscricaoGrupoRepository.findByGrupo_IdAndMembro_Id(grupoId, membroId).orElseThrow(() -> new NotFoundException("Inscrição não encontrada."));
+        InscricaoGrupo inscricaoEncontrada = inscricaoGrupoRepository.findByGrupo_IdAndEstudanteMembro_Id(grupoId, membroId).orElseThrow(() -> new NotFoundException("Inscrição não encontrada."));
         grupo.removeInscricao(inscricaoEncontrada);
     }
 
     public List<AssinanteResumeResponseDTO> listarMembros(String grupoId) {
-        Grupo grupo = repository.findByIdComMembros(grupoId).orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
+        Grupo grupo = repository.findByIdWithMembros(grupoId).orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
         return grupo.getInscricoes().stream()
-                .map(InscricaoGrupo::getMembro)
+                .map(InscricaoGrupo::getEstudanteMembro)
                 .map(AssinanteResumeResponseDTO::new)
                 .toList();
     }
 
     public List<AtividadeGrupoResponseDTO> listarAtividades(String grupoId) {
         Grupo grupo = repository.findById(grupoId).orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
-        List<AtividadeGrupoResponseDTO> atividades = grupo.getAtividadesPublicadas().stream().map(AtividadeGrupoResponseDTO::new).toList();
-        return atividades;
+        return grupo.getAtividadesPublicadas().stream().map(AtividadeGrupoResponseDTO::new).toList();
     }
 }

@@ -3,7 +3,6 @@ package io.github.raphaelmuniz.uniflow.entities;
 import io.github.raphaelmuniz.uniflow.entities.enums.DificuldadeEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

@@ -13,7 +13,7 @@ public class GrupoResponseDTO {
     private String descricao;
     private String titulo;
     private List<String> atividadesId;
-    private List<String> inscritosId;
+    private List<String> estudantesMembrosId;
     private String criadorId;
 
     public GrupoResponseDTO(Grupo grupo) {
@@ -21,9 +21,7 @@ public class GrupoResponseDTO {
         this.descricao = grupo.getDescricao();
         this.titulo = grupo.getTitulo();
         this.atividadesId = grupo.getAtividadesPublicadas().stream().map(AtividadeGrupo::getId).toList();
-        this.inscritosId = grupo.getInscricoes().stream().map(ig -> {
-            return ig.getMembro().getId();
-        }).toList();
+        this.estudantesMembrosId = grupo.getInscricoes().stream().map(ig -> ig.getEstudanteMembro().getId()).toList();
         this.criadorId = grupo.getCriador().getId();
     }
 }

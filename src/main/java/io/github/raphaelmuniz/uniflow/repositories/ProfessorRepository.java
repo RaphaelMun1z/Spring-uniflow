@@ -1,6 +1,5 @@
 package io.github.raphaelmuniz.uniflow.repositories;
 
-import io.github.raphaelmuniz.uniflow.entities.Estudante;
 import io.github.raphaelmuniz.uniflow.entities.Professor;
 import lombok.NonNull;
 import org.springframework.data.jpa.repository.EntityGraph;

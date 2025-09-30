@@ -7,7 +7,6 @@ import io.github.raphaelmuniz.uniflow.exceptions.NotFoundException;
 import io.github.raphaelmuniz.uniflow.repositories.PapelRepository;
 import io.github.raphaelmuniz.uniflow.services.generic.GenericCrudServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 @Service

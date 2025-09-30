@@ -26,7 +26,7 @@ public class GrupoRequestDTO {
     private List<AtividadeGrupo> atividadesGrupo;
 
     @NotNull
-    private List<String> inscritosId;
+    private List<String> estudantesInscritosId;
 
     @NotNull
     private String criadorId;

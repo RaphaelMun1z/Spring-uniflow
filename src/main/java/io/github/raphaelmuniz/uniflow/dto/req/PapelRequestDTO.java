@@ -1,6 +1,5 @@
 package io.github.raphaelmuniz.uniflow.dto.req;
 
-import io.github.raphaelmuniz.uniflow.entities.Disciplina;
 import io.github.raphaelmuniz.uniflow.entities.Papel;
 import io.github.raphaelmuniz.uniflow.entities.Permissao;
 import jakarta.validation.constraints.NotBlank;

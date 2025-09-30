@@ -1,8 +1,6 @@
 package io.github.raphaelmuniz.uniflow.repositories;
 
-import io.github.raphaelmuniz.uniflow.entities.Assinante;
 import io.github.raphaelmuniz.uniflow.entities.Grupo;
-import io.github.raphaelmuniz.uniflow.entities.Professor;
 import lombok.NonNull;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,6 +21,7 @@ public interface GrupoRepository extends JpaRepository<Grupo, String> {
     @EntityGraph(attributePaths = {"atividadesPublicadas", "inscricoes"})
     Optional<Grupo> findById(String id);
 
-    @Query("SELECT g FROM Grupo g LEFT JOIN FETCH g.inscricoes i LEFT JOIN FETCH i.membro WHERE g.id = :id")
-    Optional<Grupo> findByIdComMembros(@Param("id") String id);
+    @EntityGraph(attributePaths = {"inscricoes", "inscricoes.estudanteMembro"})
+    @Query("SELECT g FROM Grupo g WHERE g.id = :id")
+    Optional<Grupo> findByIdWithMembros(@Param("id") String id);
 }

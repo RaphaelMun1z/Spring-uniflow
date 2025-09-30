@@ -1,6 +1,5 @@
 package io.github.raphaelmuniz.uniflow.services;
 
-import io.github.raphaelmuniz.uniflow.entities.AssinaturaUsuario;
 import io.github.raphaelmuniz.uniflow.entities.Usuario;
 import io.github.raphaelmuniz.uniflow.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;

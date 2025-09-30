@@ -8,8 +8,8 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class AdicionarMembroGrupoDTO {
-    @NotNull(message = "O ID do integrante não pode ser nulo.")
-    private String integranteId;
+    @NotNull(message = "O ID do estudante não pode ser nulo.")
+    private String estudanteId;
 
     @NotNull(message = "O ID do grupo não pode ser nulo.")
     private String grupoId;

@@ -5,21 +5,13 @@ import io.github.raphaelmuniz.uniflow.dto.security.TokenDTO;
 import io.github.raphaelmuniz.uniflow.entities.Usuario;
 import io.github.raphaelmuniz.uniflow.repositories.UsuarioRepository;
 import io.github.raphaelmuniz.uniflow.security.jwt.JwtTokenProvider;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @Service

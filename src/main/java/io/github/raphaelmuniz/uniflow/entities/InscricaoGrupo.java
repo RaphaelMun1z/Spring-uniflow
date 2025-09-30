@@ -2,7 +2,6 @@ package io.github.raphaelmuniz.uniflow.entities;
 
 import io.github.raphaelmuniz.uniflow.entities.enums.PapelGrupoEnum;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -16,7 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "inscricao_grupo", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"grupo_id", "membro_id"})
+        @UniqueConstraint(columnNames = {"grupo_id", "estudante_membro_id"})
 })
 public class InscricaoGrupo implements Serializable {
     @Id
@@ -34,10 +33,10 @@ public class InscricaoGrupo implements Serializable {
     @JoinColumn(name = "grupo_id")
     private Grupo grupo;
 
-    @NotNull(message = "Membro não pode ser nulo")
+    @NotNull(message = "Estudante membro não pode ser nulo")
     @ManyToOne
-    @JoinColumn(name = "membro_id")
-    private Assinante membro;
+    @JoinColumn(name = "estudante_membro_id")
+    private Estudante estudanteMembro;
 
     @Override
     public boolean equals(Object o) {

@@ -1,8 +1,6 @@
 package io.github.raphaelmuniz.uniflow.services;
 
-import io.github.raphaelmuniz.uniflow.dto.req.GrupoRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.req.NotificacaoAssinanteRequestDTO;
-import io.github.raphaelmuniz.uniflow.dto.res.GrupoResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.NotificacaoAssinanteResponseDTO;
 import io.github.raphaelmuniz.uniflow.entities.Assinante;
 import io.github.raphaelmuniz.uniflow.entities.Notificacao;
@@ -13,7 +11,6 @@ import io.github.raphaelmuniz.uniflow.repositories.NotificacaoAssinanteRepositor
 import io.github.raphaelmuniz.uniflow.repositories.NotificacaoRepository;
 import io.github.raphaelmuniz.uniflow.services.generic.GenericCrudServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.stereotype.Service;
 
 @Service

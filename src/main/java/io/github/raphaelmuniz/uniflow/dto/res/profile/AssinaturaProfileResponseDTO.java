@@ -1,7 +1,6 @@
 package io.github.raphaelmuniz.uniflow.dto.res.profile;
 
 import io.github.raphaelmuniz.uniflow.dto.res.AssinaturaModeloResponseDTO;
-import io.github.raphaelmuniz.uniflow.entities.AssinaturaUsuario;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

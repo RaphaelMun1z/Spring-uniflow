@@ -3,7 +3,6 @@ package io.github.raphaelmuniz.uniflow.controllers;
 import io.github.raphaelmuniz.uniflow.controllers.generic.GenericCrudControllerImpl;
 import io.github.raphaelmuniz.uniflow.dto.req.AdicionarMembroGrupoDTO;
 import io.github.raphaelmuniz.uniflow.dto.req.GrupoRequestDTO;
-import io.github.raphaelmuniz.uniflow.dto.res.AssinanteResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.AssinanteResumeResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.AtividadeGrupoResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.GrupoResponseDTO;

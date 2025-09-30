@@ -1,11 +1,8 @@
 package io.github.raphaelmuniz.uniflow.dto.res;
 
-import io.github.raphaelmuniz.uniflow.entities.Papel;
 import io.github.raphaelmuniz.uniflow.entities.Permissao;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import java.util.Set;
 
 @Data
 @AllArgsConstructor

@@ -1,14 +1,11 @@
 package io.github.raphaelmuniz.uniflow.controllers;
 
 import io.github.raphaelmuniz.uniflow.dto.req.profile.AtividadeAssinanteStatusPatchRequestDTO;
-import io.github.raphaelmuniz.uniflow.dto.req.profile.AtividadeAvaliacaoRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.*;
 import io.github.raphaelmuniz.uniflow.dto.res.profile.AssinaturaProfileResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.profile.GruposProfileResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.profile.NotificacoesListResponse;
-import io.github.raphaelmuniz.uniflow.entities.NotificacaoAssinante;
 import io.github.raphaelmuniz.uniflow.entities.Usuario;
-import io.github.raphaelmuniz.uniflow.repositories.NotificacaoAssinanteRepository;
 import io.github.raphaelmuniz.uniflow.services.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +30,7 @@ public class ProfileController {
     PagamentoService pagamentoService;
 
     @Autowired
-    AtividadeAssinanteService atividadeAssinanteService;
+    AtividadeEstudanteService atividadeEstudanteService;
 
     @Autowired
     AssinanteService assinanteService;
@@ -66,10 +63,10 @@ public class ProfileController {
 
     @GetMapping("/me/minhas-atividades")
     @PreAuthorize("isAuthenticated() and authentication.principal.hasRole('ESTUDANTE')")
-    public ResponseEntity<List<AtividadeAssinanteResponseDTO>> getMinhasAtividades(
+    public ResponseEntity<List<AtividadeEstudanteResponseDTO>> getMinhasAtividades(
             @AuthenticationPrincipal Usuario usuarioLogado
     ) {
-        List<AtividadeAssinanteResponseDTO> atividades = atividadeAssinanteService.findByAssinanteDonoId(usuarioLogado.getId());
+        List<AtividadeEstudanteResponseDTO> atividades = atividadeEstudanteService.findByEstudanteDonoId(usuarioLogado.getId());
         return ResponseEntity.ok(atividades);
     }
 
@@ -80,7 +77,7 @@ public class ProfileController {
             @PathVariable String atividadeId,
             @RequestBody @Valid AtividadeAssinanteStatusPatchRequestDTO requestDTO
     ) {
-        atividadeAssinanteService.atualizarStatus(
+        atividadeEstudanteService.atualizarStatus(
                 usuarioLogado,
                 atividadeId,
                 requestDTO.getStatus()

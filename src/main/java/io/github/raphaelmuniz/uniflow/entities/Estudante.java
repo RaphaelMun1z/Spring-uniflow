@@ -1,6 +1,5 @@
 package io.github.raphaelmuniz.uniflow.entities;
 
-import io.github.raphaelmuniz.uniflow.entities.enums.UserRoleEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -9,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -21,8 +21,18 @@ public class Estudante extends Assinante implements Serializable {
     @NotNull(message = "Período não pode ser nulo")
     private Integer periodo;
 
-    public Estudante(String nome, String email, String senha, Set<AssinaturaUsuario> assinaturas, List<Pagamento> pagamentos, Set<AtividadeAssinante> atividadesAssinante, List<AtividadeGrupo> atividadesGrupoPublicadas, Set<InscricaoGrupo> inscricoesGrupos, Set<NotificacaoAssinante> notificacoes, List<Grupo> gruposCriados, Integer periodo, Papel papel) {
-        super(nome, email, senha, assinaturas, pagamentos, atividadesAssinante, atividadesGrupoPublicadas, inscricoesGrupos, notificacoes, gruposCriados, papel);
+    @NotNull(message = "Inscrições Grupos não pode ser nulo")
+    @OneToMany(mappedBy = "estudanteMembro", cascade = CascadeType.ALL)
+    private Set<InscricaoGrupo> inscricoesGrupos = new HashSet<>();
+
+    @NotNull(message = "Atividades não pode ser nulo")
+    @OneToMany(mappedBy = "estudanteDono", cascade = CascadeType.ALL)
+    private Set<AtividadeEstudante> atividadesEstudante = new HashSet<>();
+
+    public Estudante(String nome, String email, String senha, Set<AssinaturaUsuario> assinaturas, List<Pagamento> pagamentos, Set<AtividadeEstudante> atividadesEstudante, List<AtividadeGrupo> atividadesGrupoPublicadas, Set<NotificacaoAssinante> notificacoes, List<Grupo> gruposCriados, Papel papel, Integer periodo, Set<InscricaoGrupo> inscricoesGrupos) {
+        super(nome, email, senha, assinaturas, pagamentos, atividadesGrupoPublicadas, notificacoes, gruposCriados, papel);
         this.periodo = periodo;
+        this.inscricoesGrupos = inscricoesGrupos;
+        this.atividadesEstudante = atividadesEstudante;
     }
 }

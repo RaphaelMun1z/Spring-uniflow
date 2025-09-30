@@ -1,6 +1,5 @@
 package io.github.raphaelmuniz.uniflow.entities;
 
-import io.github.raphaelmuniz.uniflow.entities.enums.UserRoleEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -12,17 +11,15 @@ import java.util.*;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode(callSuper = true, exclude = {"assinaturas", "atividadesAssinante", "atividadesGrupoPublicadas", "inscricoesGrupos", "notificacoes"})
+@EqualsAndHashCode(callSuper = true, exclude = {"assinaturas", "atividadesGrupoPublicadas", "notificacoes"})
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Assinante extends Usuario implements Serializable {
-    public Assinante(String nome, String email, String senha, Set<AssinaturaUsuario> assinaturas, List<Pagamento> pagamentos, Set<AtividadeAssinante> atividadesAssinante, List<AtividadeGrupo> atividadesGrupoPublicadas, Set<InscricaoGrupo> inscricoesGrupos, Set<NotificacaoAssinante> notificacoes, List<Grupo> gruposCriados, Papel papel) {
+    public Assinante(String nome, String email, String senha, Set<AssinaturaUsuario> assinaturas, List<Pagamento> pagamentos, List<AtividadeGrupo> atividadesGrupoPublicadas, Set<NotificacaoAssinante> notificacoes, List<Grupo> gruposCriados, Papel papel) {
         super(nome, email, senha, papel);
         this.assinaturas = assinaturas;
         this.pagamentos = pagamentos;
-        this.atividadesAssinante = atividadesAssinante;
         this.atividadesGrupoPublicadas = atividadesGrupoPublicadas;
-        this.inscricoesGrupos = inscricoesGrupos;
         this.notificacoes = notificacoes;
         this.gruposCriados = gruposCriados;
     }
@@ -35,17 +32,9 @@ public abstract class Assinante extends Usuario implements Serializable {
     @OneToMany(mappedBy = "assinantePagador", cascade = CascadeType.ALL)
     private List<Pagamento> pagamentos = new ArrayList<>();
 
-    @NotNull(message = "Atividades não pode ser nulo")
-    @OneToMany(mappedBy = "assinanteDono", cascade = CascadeType.ALL)
-    private Set<AtividadeAssinante> atividadesAssinante = new HashSet<>();
-
     @NotNull(message = "Atividades Grupo não pode ser nulo")
     @OneToMany(mappedBy = "criadorAtividade", cascade = CascadeType.ALL)
     private List<AtividadeGrupo> atividadesGrupoPublicadas = new ArrayList<>();
-
-    @NotNull(message = "Inscrições Grupos não pode ser nulo")
-    @OneToMany(mappedBy = "membro", cascade = CascadeType.ALL)
-    private Set<InscricaoGrupo> inscricoesGrupos = new HashSet<>();
 
     @OneToMany(mappedBy = "assinante", cascade = CascadeType.ALL)
     private Set<NotificacaoAssinante> notificacoes = new HashSet<>();

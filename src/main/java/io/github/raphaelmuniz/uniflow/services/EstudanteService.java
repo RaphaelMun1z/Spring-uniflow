@@ -4,7 +4,6 @@ import io.github.raphaelmuniz.uniflow.dto.res.EstudanteResponseDTO;
 import io.github.raphaelmuniz.uniflow.entities.*;
 import io.github.raphaelmuniz.uniflow.dto.req.EstudanteRequestDTO;
 import io.github.raphaelmuniz.uniflow.entities.enums.PapelGrupoEnum;
-import io.github.raphaelmuniz.uniflow.entities.enums.StatusEntregaEnum;
 import io.github.raphaelmuniz.uniflow.exceptions.BusinessException;
 import io.github.raphaelmuniz.uniflow.exceptions.NotFoundException;
 import io.github.raphaelmuniz.uniflow.repositories.*;
@@ -14,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;

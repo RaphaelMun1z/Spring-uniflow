@@ -16,12 +16,12 @@ import java.time.LocalDateTime;
 @Table(name = "atividade_assinante", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"titulo", "disciplina_id"})
 })
-public class AtividadeAssinante extends Atividade implements Serializable {
-    public AtividadeAssinante(LocalDateTime dataLancamento, LocalDateTime prazoEntrega, String titulo, String descricao, DificuldadeEnum dificuldade, Disciplina disciplina, String id, StatusEntregaEnum statusEntrega, Assinante assinanteDono, AtividadeGrupo atividadeGrupoOrigem) {
+public class AtividadeEstudante extends Atividade implements Serializable {
+    public AtividadeEstudante(LocalDateTime dataLancamento, LocalDateTime prazoEntrega, String titulo, String descricao, DificuldadeEnum dificuldade, Disciplina disciplina, String id, StatusEntregaEnum statusEntrega, Estudante estudanteDono, AtividadeGrupo atividadeGrupoOrigem) {
         super(dataLancamento, prazoEntrega, titulo, descricao, dificuldade, disciplina);
         this.id = id;
         this.statusEntrega = statusEntrega;
-        this.assinanteDono = assinanteDono;
+        this.estudanteDono = estudanteDono;
         this.atividadeGrupoOrigem = atividadeGrupoOrigem;
     }
 
@@ -31,18 +31,18 @@ public class AtividadeAssinante extends Atividade implements Serializable {
 
     @NotNull(message = "Status não pode ser nulo")
     @Enumerated(EnumType.STRING)
-    private StatusEntregaEnum statusEntrega;
+    private StatusEntregaEnum statusEntrega = StatusEntregaEnum.PENDENTE;
 
-    private Double nota;
+    private Double nota = null;
 
-    private String feedback;
+    private String feedback = null;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "assinante_dono_id", nullable = false)
-    private Assinante assinanteDono;
+    @JoinColumn(name = "estudante_dono_id", nullable = false)
+    private Estudante estudanteDono;
 
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "atividade_grupo_origem_id", nullable = true)
-    private AtividadeGrupo atividadeGrupoOrigem;
+    @JoinColumn(name = "atividade_grupo_origem_id")
+    private AtividadeGrupo atividadeGrupoOrigem = null;
 }

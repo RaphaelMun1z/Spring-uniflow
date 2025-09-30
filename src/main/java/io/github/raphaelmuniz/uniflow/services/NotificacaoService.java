@@ -10,7 +10,6 @@ import io.github.raphaelmuniz.uniflow.repositories.NotificacaoAssinanteRepositor
 import io.github.raphaelmuniz.uniflow.repositories.NotificacaoRepository;
 import io.github.raphaelmuniz.uniflow.services.generic.GenericCrudServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

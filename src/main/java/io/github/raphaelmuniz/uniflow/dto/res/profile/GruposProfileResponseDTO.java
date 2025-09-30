@@ -1,14 +1,11 @@
 package io.github.raphaelmuniz.uniflow.dto.res.profile;
 
-import io.github.raphaelmuniz.uniflow.entities.AtividadeGrupo;
-import io.github.raphaelmuniz.uniflow.entities.Grupo;
 import io.github.raphaelmuniz.uniflow.entities.InscricaoGrupo;
 import io.github.raphaelmuniz.uniflow.entities.enums.PapelGrupoEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @AllArgsConstructor

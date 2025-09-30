@@ -4,7 +4,6 @@ import io.github.raphaelmuniz.uniflow.controllers.generic.GenericCrudControllerI
 import io.github.raphaelmuniz.uniflow.dto.req.AssinanteRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.AssinanteResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.AssinaturaUsuarioResponseDTO;
-import io.github.raphaelmuniz.uniflow.dto.res.GrupoResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.profile.GruposProfileResponseDTO;
 import io.github.raphaelmuniz.uniflow.services.AssinanteService;
 import org.springframework.http.ResponseEntity;
