@@ -1,5 +1,6 @@
 package io.github.raphaelmuniz.uniflow.entities.atividade;
 
+import io.github.raphaelmuniz.uniflow.entities.usuario.Professor;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -31,4 +32,7 @@ public class AvaliacaoAtividade {
     private Double nota;
 
     private String feedback;
+
+    @NotNull(message = "Avaliador não pode ser nulo.")
+    private Professor avaliador;
 }

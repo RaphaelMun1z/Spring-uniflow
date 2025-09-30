@@ -33,6 +33,12 @@ public class AtividadeAvaliativa extends Atividade implements Serializable {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
+    @NotNull(message = "Nota Máxima não pode ser nulo")
+    private Double notaMaxima;
+
+    @NotNull(message = "Permite Envio Atrasado não pode ser nulo")
+    private Boolean permiteEnvioAtrasado;
+
     @NotNull(message = "Visivibilidade não pode ser nulo")
     @Enumerated(EnumType.STRING)
     private VisivibilidadeAtividadeAvaliativaEnum visivibilidadeAtividade;

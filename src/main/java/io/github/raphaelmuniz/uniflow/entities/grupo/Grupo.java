@@ -1,6 +1,7 @@
 package io.github.raphaelmuniz.uniflow.entities.grupo;
 
 import io.github.raphaelmuniz.uniflow.entities.atividade.AtividadeAvaliativa;
+import io.github.raphaelmuniz.uniflow.entities.enums.StatusGrupoEnum;
 import io.github.raphaelmuniz.uniflow.entities.enums.TipoGrupoEnum;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Assinante;
 import jakarta.persistence.*;
@@ -12,12 +13,12 @@ import java.io.Serializable;
 import java.util.*;
 
 @Entity
-@ToString
 @Getter
 @Setter
+@ToString(exclude = {"inscricoes", "atividadesPublicadas", "grupoPai", "subGrupos"})
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Grupo implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -31,13 +32,28 @@ public class Grupo implements Serializable {
     private String descricao;
 
     @NotNull(message = "Tipo de Grupo não pode ser nulo")
+    @Enumerated(EnumType.STRING)
     private TipoGrupoEnum tipoGrupo;
 
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    @NotNull(message = "Atividades Publicadas não pode ser nulo")
-    @OneToMany(mappedBy = "grupoPublicado", cascade = CascadeType.ALL)
-    private Set<AtividadeAvaliativa> atividadesPublicadas = new HashSet<>();
+    @NotNull(message = "Status do Grupo não pode ser nulo")
+    @Enumerated(EnumType.STRING)
+    private StatusGrupoEnum statusGrupo;
+
+    @NotNull(message = "Código Convite não pode ser nulo")
+    @Column(unique = true)
+    private String codigoConvite;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "grupo_pai_id")
+    private Grupo grupoPai;
+
+    @OneToMany(mappedBy = "grupoPai", cascade = CascadeType.ALL)
+    private List<Grupo> subGrupos = new ArrayList<>();
+
+    @NotNull(message = "Criador do grupo não pode ser nulo")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "assinante_criador_id", nullable = false)
+    private Assinante assinanteCriadorGrupo;
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
@@ -45,10 +61,11 @@ public class Grupo implements Serializable {
     @OneToMany(mappedBy = "grupo", cascade = CascadeType.ALL)
     private Set<InscricaoGrupo> inscricoes = new HashSet<>();
 
-    @NotNull(message = "Criador do grupo não pode ser nulo")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "assinante_criador_id", nullable = false)
-    private Assinante assinanteCriadorGrupo;
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @NotNull(message = "Atividades Publicadas não pode ser nulo")
+    @OneToMany(mappedBy = "grupoPublicado", cascade = CascadeType.ALL)
+    private Set<AtividadeAvaliativa> atividadesPublicadas = new HashSet<>();
 
     public void addInscricao(InscricaoGrupo inscricao) {
         this.inscricoes.add(inscricao);

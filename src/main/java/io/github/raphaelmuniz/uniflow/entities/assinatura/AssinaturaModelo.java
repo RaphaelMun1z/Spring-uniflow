@@ -38,6 +38,9 @@ public class AssinaturaModelo implements Serializable {
     @NotNull(message = "Limite de Grupos não pode ser nulo")
     private Integer limiteDeGrupos;
 
+    @NotNull(message = "Limite de SubGrupos não pode ser nulo")
+    private Integer limiteDeSubGrupos;
+
     @NotNull(message = "Limite de Membros por Grupo não pode ser nulo")
     private Integer limiteMembrosPorGrupo;
 

@@ -4,11 +4,14 @@ import io.github.raphaelmuniz.uniflow.entities.enums.DificuldadeEnum;
 import io.github.raphaelmuniz.uniflow.entities.enums.StatusEntregaEnum;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Estudante;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -34,9 +37,14 @@ public class AtividadeEntrega extends Atividade implements Serializable {
     @Enumerated(EnumType.STRING)
     private StatusEntregaEnum statusEntrega = StatusEntregaEnum.PENDENTE;
 
-    private Double nota = null;
+    private String textoResposta;
 
-    private String feedback = null;
+    @NotNull(message = "Anexos não pode ser nulo")
+    private List<String> anexos = new ArrayList<>();
+
+    private LocalDateTime dataEnvio;
+
+    private AvaliacaoAtividade avaliacaoAtividade;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "estudante_dono_id", nullable = false)

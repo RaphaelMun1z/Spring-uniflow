@@ -3,9 +3,11 @@ package io.github.raphaelmuniz.uniflow.entities.usuario;
 import io.github.raphaelmuniz.uniflow.entities.autorizacao.Papel;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Set;
 
@@ -34,6 +36,9 @@ public abstract class Usuario implements UserDetails, Serializable {
 
     @NotBlank(message = "Senha não pode ser vazio/nulo")
     private String senha;
+
+    @NotNull(message = "Data cadastro não pode ser nulo.")
+    private LocalDateTime dataCadastro;
 
     @ManyToOne
     @JoinColumn(name = "papel_id")

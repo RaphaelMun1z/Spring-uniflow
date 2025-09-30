@@ -1,26 +1,24 @@
 package io.github.raphaelmuniz.uniflow.entities.assinatura;
 
-import io.github.raphaelmuniz.uniflow.entities.usuario.Assinante;
+import io.github.raphaelmuniz.uniflow.entities.enums.MetodoPagamentoEnum;
+import io.github.raphaelmuniz.uniflow.entities.enums.StatusPagamentoEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Data
-@EqualsAndHashCode(exclude = "assinantePagador")
+@Getter
+@Setter
+@ToString(exclude = "assinaturaUsuario")
+@EqualsAndHashCode(of = "id")
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "pagamento", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"data_pagamento", "assinante_pagador_id"})
-})
+@Table(name = "pagamento")
 public class Pagamento implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -30,21 +28,25 @@ public class Pagamento implements Serializable {
     private LocalDateTime dataPagamento;
 
     @NotNull(message = "Valor não pode ser nulo")
+    @Column(precision = 10, scale = 2)
     private BigDecimal valor;
 
-    @NotBlank(message = "Status não pode ser vazio/nulo")
-    private String status;
+    @NotNull(message = "Status não pode ser vazio/nulo")
+    @Enumerated(EnumType.STRING)
+    private StatusPagamentoEnum statusPagamento;
 
-    @NotBlank(message = "Metodo não pode ser vazio/nulo")
-    private String metodo;
+    @NotNull(message = "Metodo não pode ser vazio/nulo")
+    @Enumerated(EnumType.STRING)
+    private MetodoPagamentoEnum metodoPagamento;
 
     @NotBlank(message = "Protocolo não pode ser vazio/nulo")
+    @Column(unique = true)
     private String protocolo;
 
-    @NotNull(message = "Assinante Pagador não pode ser nulo")
-    @ManyToOne
-    @JoinColumn(name = "assinante_pagador_id")
-    private Assinante assinantePagador;
+    private String idNotaFiscal;
 
-
+    @NotNull(message = "Assinatura Usuário não pode ser nulo")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "assinante_usuario_id")
+    private AssinaturaUsuario assinaturaUsuario;
 }
