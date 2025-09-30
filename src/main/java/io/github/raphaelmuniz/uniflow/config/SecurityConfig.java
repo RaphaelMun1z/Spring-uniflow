@@ -5,6 +5,7 @@ import io.github.raphaelmuniz.uniflow.security.jwt.CustomAuthenticationEntryPoin
 import io.github.raphaelmuniz.uniflow.security.jwt.JwtTokenFilter;
 import io.github.raphaelmuniz.uniflow.security.jwt.JwtTokenProvider;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +24,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +35,7 @@ import java.util.Map;
 @EnableMethodSecurity
 public class SecurityConfig {
     private final JwtTokenProvider tokenProvider;
+    private final HandlerExceptionResolver handlerExceptionResolver;
 
     @Value("${security.password.encoder.secret}")
     private String encoderSecret;
@@ -43,8 +46,9 @@ public class SecurityConfig {
     @Value("${security.password.encoder.salt-length}")
     private Integer saltLength;
 
-    public SecurityConfig(JwtTokenProvider tokenProvider) {
+    public SecurityConfig(JwtTokenProvider tokenProvider, @Qualifier("handlerExceptionResolver") HandlerExceptionResolver handlerExceptionResolver) {
         this.tokenProvider = tokenProvider;
+        this.handlerExceptionResolver = handlerExceptionResolver;
     }
 
     @Bean
@@ -72,7 +76,7 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http, CustomAuthenticationEntryPoint entryPoint, CustomAccessDeniedHandler accessDeniedHandler) throws Exception {
-        JwtTokenFilter filter = new JwtTokenFilter(tokenProvider);
+        JwtTokenFilter filter = new JwtTokenFilter(tokenProvider, handlerExceptionResolver);
         // @formatter:off
         return http
                 .httpBasic(AbstractHttpConfigurer::disable)

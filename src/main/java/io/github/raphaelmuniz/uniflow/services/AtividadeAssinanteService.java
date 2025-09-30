@@ -134,4 +134,9 @@ public class AtividadeAssinanteService extends GenericCrudServiceImpl<AtividadeA
         return atvAvaliadaDTO;
     }
 
+    public List<AtividadeAssinanteResponseDTO> atividadesClonadasDeAtividadeGrupo(String atividadeGrupoOrigemId) {
+        List<AtividadeAssinante> atividades = repository.findByAtividadeGrupoOrigemId(atividadeGrupoOrigemId);
+        return atividades.stream().map(AtividadeAssinanteResponseDTO::new).toList();
+    }
+
 }

@@ -42,9 +42,6 @@ public class Notificacao implements Serializable {
     @NotNull(message = "Data de criação não pode ser nulo")
     private LocalDateTime dataDeCriacao;
 
-    @NotNull(message = "Data de leitura não pode ser nulo")
-    private LocalDateTime dataDeLeitura;
-
     @NotNull(message = "Tipo de remetente não pode ser nulo")
     private TipoRemetenteEnum remetenteTipo;
 

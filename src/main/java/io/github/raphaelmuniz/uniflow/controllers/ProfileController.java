@@ -2,17 +2,14 @@ package io.github.raphaelmuniz.uniflow.controllers;
 
 import io.github.raphaelmuniz.uniflow.dto.req.profile.AtividadeAssinanteStatusPatchRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.req.profile.AtividadeAvaliacaoRequestDTO;
-import io.github.raphaelmuniz.uniflow.dto.res.AtividadeAssinanteResponseDTO;
-import io.github.raphaelmuniz.uniflow.dto.res.GrupoResponseDTO;
-import io.github.raphaelmuniz.uniflow.dto.res.PagamentoResponseDTO;
-import io.github.raphaelmuniz.uniflow.dto.res.PaginatedResponse;
+import io.github.raphaelmuniz.uniflow.dto.res.*;
 import io.github.raphaelmuniz.uniflow.dto.res.profile.AssinaturaProfileResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.profile.GruposProfileResponseDTO;
+import io.github.raphaelmuniz.uniflow.dto.res.profile.NotificacoesListResponse;
+import io.github.raphaelmuniz.uniflow.entities.NotificacaoAssinante;
 import io.github.raphaelmuniz.uniflow.entities.Usuario;
-import io.github.raphaelmuniz.uniflow.services.AssinanteService;
-import io.github.raphaelmuniz.uniflow.services.AssinaturaUsuarioService;
-import io.github.raphaelmuniz.uniflow.services.AtividadeAssinanteService;
-import io.github.raphaelmuniz.uniflow.services.PagamentoService;
+import io.github.raphaelmuniz.uniflow.repositories.NotificacaoAssinanteRepository;
+import io.github.raphaelmuniz.uniflow.services.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -40,6 +37,9 @@ public class ProfileController {
 
     @Autowired
     AssinanteService assinanteService;
+
+    @Autowired
+    NotificacaoService notificacaoService;
 
     @GetMapping("/me/assinatura")
     @PreAuthorize("isAuthenticated() and (authentication.principal.hasRole('ESTUDANTE') or authentication.principal.hasRole('PROFESSOR'))")
@@ -95,5 +95,26 @@ public class ProfileController {
     ) {
         List<GruposProfileResponseDTO> grupos = assinanteService.findGruposByAssinante(usuarioLogado.getId());
         return ResponseEntity.ok(grupos);
+    }
+
+    @GetMapping("/me/minhas-notificacoes")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<NotificacoesListResponse> getMinhasNotificacoes(
+            @AuthenticationPrincipal Usuario usuarioLogado
+    ) {
+        NotificacoesListResponse minhasNotificacoes = notificacaoService.getNotificacoesByAssinanteId(usuarioLogado.getId());
+        return ResponseEntity.ok(minhasNotificacoes);
+    }
+
+    @PatchMapping("/me/notificacoes/{notificacaoId}/marcar-como-lida")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<NotificacoesListResponse> marcarNotificacaoComoLida(
+            @PathVariable String notificacaoId,
+            @AuthenticationPrincipal Usuario usuarioLogado
+    ) {
+        String assinanteId = usuarioLogado.getId();
+        notificacaoService.marcarNotificacaoComoLida(notificacaoId, assinanteId);
+        NotificacoesListResponse minhasNotificacoesAtualizadas = notificacaoService.getNotificacoesByAssinanteId(assinanteId);
+        return ResponseEntity.ok(minhasNotificacoesAtualizadas);
     }
 }

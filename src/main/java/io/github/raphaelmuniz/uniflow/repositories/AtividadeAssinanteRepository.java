@@ -41,5 +41,7 @@ public interface AtividadeAssinanteRepository extends JpaRepository<AtividadeAss
             @Param("atividadeId") String atividadeId,
             @Param("professorId") String professorId);
 
+    List<AtividadeAssinante> findByAtividadeGrupoOrigemId(String atividadeGrupoOrigemId);
+
     boolean existsByAssinanteDonoIdAndAtividadeGrupoOrigemId(String assinanteId, String atividadeGrupoId);
 }

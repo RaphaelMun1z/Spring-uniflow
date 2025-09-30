@@ -33,9 +33,6 @@ public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoR
     AssinanteRepository assinanteRepository;
 
     @Autowired
-    AtividadeGrupoRepository atividadeGrupoRepository;
-
-    @Autowired
     InscricaoGrupoRepository inscricaoGrupoRepository;
 
     protected GrupoService(GrupoRepository repository) {
