@@ -5,7 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import io.github.raphaelmuniz.uniflow.dto.security.TokenDTO;
-import io.github.raphaelmuniz.uniflow.exceptions.InvalidJwtAuthenticationException;
+import io.github.raphaelmuniz.uniflow.exceptions.models.InvalidJwtAuthenticationException;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;

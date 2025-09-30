@@ -1,29 +1,8 @@
 package io.github.raphaelmuniz.uniflow.services;
 
-import io.github.raphaelmuniz.uniflow.dto.req.GrupoRequestDTO;
-import io.github.raphaelmuniz.uniflow.dto.res.GrupoResponseDTO;
-import io.github.raphaelmuniz.uniflow.entities.*;
-import io.github.raphaelmuniz.uniflow.entities.enums.StatusEntregaEnum;
-import io.github.raphaelmuniz.uniflow.exceptions.NotFoundException;
-import io.github.raphaelmuniz.uniflow.repositories.AssinanteRepository;
-import io.github.raphaelmuniz.uniflow.repositories.GrupoRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.time.LocalDateTime;
-import java.util.*;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willDoNothing;
-import static org.mockito.Mockito.*;
 
 @DisplayName("Testa o serviço do Grupo")
 @ExtendWith(MockitoExtension.class)

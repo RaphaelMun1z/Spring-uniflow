@@ -1,12 +1,18 @@
 package io.github.raphaelmuniz.uniflow.controllers;
 
-import io.github.raphaelmuniz.uniflow.dto.req.profile.AtividadeAssinanteStatusPatchRequestDTO;
+import io.github.raphaelmuniz.uniflow.dto.req.atividade.AtividadeEntregaStatusPatchRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.*;
+import io.github.raphaelmuniz.uniflow.dto.res.assinatura.PagamentoResponseDTO;
+import io.github.raphaelmuniz.uniflow.dto.res.atividade.AtividadeEntregaResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.profile.AssinaturaProfileResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.profile.GruposProfileResponseDTO;
-import io.github.raphaelmuniz.uniflow.dto.res.profile.NotificacoesListResponse;
+import io.github.raphaelmuniz.uniflow.dto.res.profile.NotificacoesProfileResponse;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Usuario;
-import io.github.raphaelmuniz.uniflow.services.*;
+import io.github.raphaelmuniz.uniflow.services.assinatura.AssinaturaUsuarioService;
+import io.github.raphaelmuniz.uniflow.services.assinatura.PagamentoService;
+import io.github.raphaelmuniz.uniflow.services.atividade.AtividadeEntregaService;
+import io.github.raphaelmuniz.uniflow.services.notificacao.NotificacaoService;
+import io.github.raphaelmuniz.uniflow.services.usuario.AssinanteService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -85,10 +91,10 @@ public class ProfileController {
 
     @GetMapping("/me/minhas-atividades")
     @PreAuthorize("isAuthenticated() and authentication.principal.hasRole('ESTUDANTE')")
-    public ResponseEntity<List<AtividadeEstudanteResponseDTO>> getMinhasAtividades(
+    public ResponseEntity<List<AtividadeEntregaResponseDTO>> getMinhasAtividades(
             @AuthenticationPrincipal Usuario usuarioLogado
     ) {
-        List<AtividadeEstudanteResponseDTO> atividades = atividadeEntregaService.findByEstudanteDonoId(usuarioLogado.getId());
+        List<AtividadeEntregaResponseDTO> atividades = atividadeEntregaService.findByEstudanteDonoId(usuarioLogado.getId());
         return ResponseEntity.ok(atividades);
     }
 
@@ -97,7 +103,7 @@ public class ProfileController {
     public ResponseEntity<Void> atualizaStatusMinhaAtividade(
             @AuthenticationPrincipal Usuario usuarioLogado,
             @PathVariable String atividadeId,
-            @RequestBody @Valid AtividadeAssinanteStatusPatchRequestDTO requestDTO
+            @RequestBody @Valid AtividadeEntregaStatusPatchRequestDTO requestDTO
     ) {
         atividadeEntregaService.atualizarStatus(
                 usuarioLogado,
@@ -118,22 +124,22 @@ public class ProfileController {
 
     @GetMapping("/me/minhas-notificacoes")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<NotificacoesListResponse> getMinhasNotificacoes(
+    public ResponseEntity<NotificacoesProfileResponse> getMinhasNotificacoes(
             @AuthenticationPrincipal Usuario usuarioLogado
     ) {
-        NotificacoesListResponse minhasNotificacoes = notificacaoService.getNotificacoesByAssinanteId(usuarioLogado.getId());
+        NotificacoesProfileResponse minhasNotificacoes = notificacaoService.getNotificacoesByAssinanteId(usuarioLogado.getId());
         return ResponseEntity.ok(minhasNotificacoes);
     }
 
     @PatchMapping("/me/notificacoes/{notificacaoId}/marcar-como-lida")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<NotificacoesListResponse> marcarNotificacaoComoLida(
+    public ResponseEntity<NotificacoesProfileResponse> marcarNotificacaoComoLida(
             @PathVariable String notificacaoId,
             @AuthenticationPrincipal Usuario usuarioLogado
     ) {
         String assinanteId = usuarioLogado.getId();
         notificacaoService.marcarNotificacaoComoLida(notificacaoId, assinanteId);
-        NotificacoesListResponse minhasNotificacoesAtualizadas = notificacaoService.getNotificacoesByAssinanteId(assinanteId);
+        NotificacoesProfileResponse minhasNotificacoesAtualizadas = notificacaoService.getNotificacoesByAssinanteId(assinanteId);
         return ResponseEntity.ok(minhasNotificacoesAtualizadas);
     }
 }

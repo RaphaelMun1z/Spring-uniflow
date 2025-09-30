@@ -1,6 +1,6 @@
 package io.github.raphaelmuniz.uniflow.services.generic;
 
-import io.github.raphaelmuniz.uniflow.exceptions.NotFoundException;
+import io.github.raphaelmuniz.uniflow.exceptions.models.NotFoundException;
 import io.github.raphaelmuniz.uniflow.services.interfaces.CrudService;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;

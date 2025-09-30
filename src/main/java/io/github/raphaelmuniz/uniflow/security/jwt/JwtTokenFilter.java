@@ -1,6 +1,6 @@
 package io.github.raphaelmuniz.uniflow.security.jwt;
 
-import io.github.raphaelmuniz.uniflow.exceptions.InvalidJwtAuthenticationException;
+import io.github.raphaelmuniz.uniflow.exceptions.models.InvalidJwtAuthenticationException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;

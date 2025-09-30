@@ -1,5 +1,9 @@
 package io.github.raphaelmuniz.uniflow.exceptions;
 
+import io.github.raphaelmuniz.uniflow.exceptions.models.BadCredentialsException;
+import io.github.raphaelmuniz.uniflow.exceptions.models.BusinessException;
+import io.github.raphaelmuniz.uniflow.exceptions.models.InvalidJwtAuthenticationException;
+import io.github.raphaelmuniz.uniflow.exceptions.models.NotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;

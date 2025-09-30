@@ -1,7 +1,7 @@
 package io.github.raphaelmuniz.uniflow.entities.usuario;
 
-import io.github.raphaelmuniz.uniflow.entities.*;
 import io.github.raphaelmuniz.uniflow.entities.assinatura.AssinaturaUsuario;
+import io.github.raphaelmuniz.uniflow.entities.assinatura.Pagamento;
 import io.github.raphaelmuniz.uniflow.entities.atividade.AtividadeEntrega;
 import io.github.raphaelmuniz.uniflow.entities.atividade.AtividadeAvaliativa;
 import io.github.raphaelmuniz.uniflow.entities.grupo.Grupo;
