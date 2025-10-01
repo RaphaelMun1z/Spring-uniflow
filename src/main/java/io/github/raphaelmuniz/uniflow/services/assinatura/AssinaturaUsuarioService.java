@@ -15,8 +15,6 @@ import io.github.raphaelmuniz.uniflow.services.generic.GenericCrudServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 @Service
 public class AssinaturaUsuarioService extends GenericCrudServiceImpl<AssinaturaUsuarioRequestDTO, AssinaturaUsuarioResponseDTO, AssinaturaUsuario, String> {
     @Autowired
@@ -34,10 +32,9 @@ public class AssinaturaUsuarioService extends GenericCrudServiceImpl<AssinaturaU
 
     @Override
     public AssinaturaUsuarioResponseDTO create(AssinaturaUsuarioRequestDTO data) {
-        AssinaturaModelo assinaturaModelo = assinaturaModeloRepository.findById(data.getAssinaturaId()).orElseThrow(() -> new NotFoundException("Assinatura modelo não encontrada"));
+        AssinaturaModelo assinaturaModelo = assinaturaModeloRepository.findById(data.getAssinaturaModeloId()).orElseThrow(() -> new NotFoundException("Assinatura modelo não encontrada"));
         Assinante assinante = assinanteRepository.findById(data.getAssinanteId()).orElseThrow(() -> new NotFoundException("Assinante não encontrado"));
-        AssinaturaUsuario assinaturaUsuario = new AssinaturaUsuario(null, assinaturaModelo, LocalDateTime.now(), LocalDateTime.now(), true, assinante);
-
+        AssinaturaUsuario assinaturaUsuario = new AssinaturaUsuario(null, data.getDataInicio(), data.getDataExpiracao(), data.getStatusAssinaturaUsuario(), assinaturaModelo, assinante, null);
         AssinaturaUsuario saved = repository.save(assinaturaUsuario);
         return new AssinaturaUsuarioResponseDTO(saved);
     }
@@ -45,7 +42,7 @@ public class AssinaturaUsuarioService extends GenericCrudServiceImpl<AssinaturaU
     public AssinaturaProfileResponseDTO findByAssinanteId(String assinanteId){
         AssinaturaUsuario assinaturaUsuario = assinaturaUsuarioRepository.findByAssinanteId(assinanteId).orElseThrow(() -> new NotFoundException("Assinatura usuário não encontrada"));
         AssinaturaProfileResponseDTO responseDTO = new AssinaturaProfileResponseDTO();
-        responseDTO.setAssinaturaId(assinaturaUsuario.getId());
+        responseDTO.setAssinaturaUsuarioId(assinaturaUsuario.getId());
         responseDTO.setDataInicio(assinaturaUsuario.getDataInicio());
         responseDTO.setDataExpiracao(assinaturaUsuario.getDataExpiracao());
         responseDTO.setStatus(assinaturaUsuario.getStatus());

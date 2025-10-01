@@ -1,6 +1,8 @@
 package io.github.raphaelmuniz.uniflow.dto.res.assinatura;
 
 import io.github.raphaelmuniz.uniflow.entities.assinatura.Pagamento;
+import io.github.raphaelmuniz.uniflow.entities.enums.MetodoPagamentoEnum;
+import io.github.raphaelmuniz.uniflow.entities.enums.StatusPagamentoEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -13,8 +15,8 @@ public class PagamentoResponseDTO {
     private String id;
     private LocalDateTime dataPagamento;
     private BigDecimal valor;
-    private String status;
-    private String metodo;
+    private StatusPagamentoEnum status;
+    private MetodoPagamentoEnum metodo;
     private String protocolo;
     private String assinanteId;
 
@@ -22,13 +24,13 @@ public class PagamentoResponseDTO {
         this.id = pagamento.getId();
         this.dataPagamento = pagamento.getDataPagamento();
         this.valor = pagamento.getValor();
-        this.status = pagamento.getStatus();
-        this.metodo = pagamento.getMetodo();
+        this.status = pagamento.getStatusPagamento();
+        this.metodo = pagamento.getMetodoPagamento();
         this.protocolo = pagamento.getProtocolo();
-        this.assinanteId = pagamento.getAssinantePagador().getId();
+        this.assinanteId = pagamento.getAssinaturaUsuario().getAssinante().getId();
     }
 
     public Pagamento toModel() {
-        return new Pagamento(null, dataPagamento, valor, status, metodo, protocolo, null);
+        return new Pagamento(null, dataPagamento, valor, status, metodo, protocolo, null, null);
     }
 }

@@ -35,8 +35,6 @@ public class AtividadeEntregaResponseDTO {
         this.disciplinaId = atividadeEntrega.getDisciplina().getId();
         this.statusEntrega = atividadeEntrega.getStatusEntrega();
         this.estudanteDonoId = atividadeEntrega.getEstudanteDono().getId();
-        this.nota = atividadeEntrega.getNota();
-        this.feedback = atividadeEntrega.getFeedback();
     }
 
     public AtividadeEntrega toModel() {

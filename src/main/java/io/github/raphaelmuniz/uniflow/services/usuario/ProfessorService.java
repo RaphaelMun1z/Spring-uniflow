@@ -4,6 +4,7 @@ import io.github.raphaelmuniz.uniflow.dto.req.usuario.ProfessorRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.usuario.ProfessorResponseDTO;
 import io.github.raphaelmuniz.uniflow.entities.assinatura.AssinaturaModelo;
 import io.github.raphaelmuniz.uniflow.entities.assinatura.AssinaturaUsuario;
+import io.github.raphaelmuniz.uniflow.entities.enums.StatusAssinaturaUsuarioEnum;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Professor;
 import io.github.raphaelmuniz.uniflow.exceptions.models.BusinessException;
 import io.github.raphaelmuniz.uniflow.exceptions.models.NotFoundException;
@@ -46,7 +47,7 @@ public class ProfessorService extends GenericCrudServiceImpl<ProfessorRequestDTO
         professor.setSenha(passwordEncoder.encode(data.getSenha()));
         professor.setAreaAtuacao(data.getAreaAtuacao());
 
-        AssinaturaUsuario assinaturaUsuario = new AssinaturaUsuario(null, assinaturaModelo, LocalDateTime.now(), LocalDateTime.now(), true, professor);
+        AssinaturaUsuario assinaturaUsuario = new AssinaturaUsuario(null, LocalDateTime.now(), LocalDateTime.now(), StatusAssinaturaUsuarioEnum.ATIVA, assinaturaModelo, professor, null );
         professor.getAssinaturas().add(assinaturaUsuario);
 
         Professor savedProfessor = repository.save(professor);

@@ -28,6 +28,9 @@ public class AssinaturaModeloRequestDTO implements RequestData<AssinaturaModelo>
     @NotNull(message = "O limite de grupos não pode ser nulo.")
     private Integer limiteDeGrupos;
 
+    @NotNull(message = "O limite de subgrupos não pode ser nulo.")
+    private Integer limiteDeSubGrupos;
+
     @NotNull(message = "O limite de membros por grupo não pode ser nulo.")
     private Integer limiteMembrosPorGrupo;
 
@@ -47,6 +50,6 @@ public class AssinaturaModeloRequestDTO implements RequestData<AssinaturaModelo>
     private LocalDateTime dataAtualizacao;
 
     public AssinaturaModelo toModel() {
-        return new AssinaturaModelo(null, nome, descricao, preco, duracaoEmMeses, limiteDeGrupos, limiteMembrosPorGrupo, permiteAnalytics, permiteTemplatesDeAtividade, ativo, dataCriacao, dataAtualizacao);
+        return new AssinaturaModelo(null, nome, descricao, preco, duracaoEmMeses, limiteDeGrupos, limiteDeSubGrupos, limiteMembrosPorGrupo, permiteAnalytics, permiteTemplatesDeAtividade, ativo, dataCriacao, dataAtualizacao);
     }
 }

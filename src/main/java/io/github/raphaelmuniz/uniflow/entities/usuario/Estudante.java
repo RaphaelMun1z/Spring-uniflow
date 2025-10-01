@@ -1,7 +1,6 @@
 package io.github.raphaelmuniz.uniflow.entities.usuario;
 
 import io.github.raphaelmuniz.uniflow.entities.assinatura.AssinaturaUsuario;
-import io.github.raphaelmuniz.uniflow.entities.assinatura.Pagamento;
 import io.github.raphaelmuniz.uniflow.entities.atividade.AtividadeEntrega;
 import io.github.raphaelmuniz.uniflow.entities.atividade.AtividadeAvaliativa;
 import io.github.raphaelmuniz.uniflow.entities.grupo.Grupo;
@@ -37,8 +36,8 @@ public class Estudante extends Assinante implements Serializable {
     @OneToMany(mappedBy = "estudanteDono", cascade = CascadeType.ALL)
     private Set<AtividadeEntrega> atividadesEstudante = new HashSet<>();
 
-    public Estudante(String nome, String email, String senha, Set<AssinaturaUsuario> assinaturas, List<Pagamento> pagamentos, Set<AtividadeEntrega> atividadesEstudante, List<AtividadeAvaliativa> atividadesGrupoPublicadas, Set<NotificacaoAssinante> notificacoes, List<Grupo> gruposCriados, Papel papel, Integer periodo, Set<InscricaoGrupo> inscricoesGrupos) {
-        super(nome, email, senha, assinaturas, pagamentos, atividadesGrupoPublicadas, notificacoes, gruposCriados, papel);
+    public Estudante(String nome, String email, String senha, Set<AssinaturaUsuario> assinaturas, Set<AtividadeEntrega> atividadesEstudante, List<AtividadeAvaliativa> atividadesGrupoPublicadas, Set<NotificacaoAssinante> notificacoes, List<Grupo> gruposCriados, Papel papel, Integer periodo, Set<InscricaoGrupo> inscricoesGrupos) {
+        super(nome, email, senha, assinaturas, atividadesGrupoPublicadas, notificacoes, gruposCriados, papel);
         this.periodo = periodo;
         this.inscricoesGrupos = inscricoesGrupos;
         this.atividadesEstudante = atividadesEstudante;

@@ -1,6 +1,7 @@
 package io.github.raphaelmuniz.uniflow.dto.res.assinatura;
 
 import io.github.raphaelmuniz.uniflow.entities.assinatura.AssinaturaUsuario;
+import io.github.raphaelmuniz.uniflow.entities.enums.StatusAssinaturaUsuarioEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,7 @@ public class AssinaturaUsuarioResponseDTO {
     private String assinaturaModeloId;
     private LocalDateTime dataInicio;
     private LocalDateTime dataExpiracao;
-    private Boolean status;
+    private StatusAssinaturaUsuarioEnum status;
     private String assinanteId;
 
     public AssinaturaUsuarioResponseDTO(AssinaturaUsuario data) {
@@ -23,11 +24,11 @@ public class AssinaturaUsuarioResponseDTO {
         this.assinaturaModeloId = data.getAssinaturaModelo().getId();
         this.dataInicio = data.getDataInicio();
         this.dataExpiracao = data.getDataExpiracao();
-        this.status = data.isVigente();
+        this.status = data.getStatus();
         this.assinanteId = data.getAssinante().getId();
     }
 
     public AssinaturaUsuario toModel() {
-        return new AssinaturaUsuario(id, null, dataInicio, dataExpiracao, status, null);
+        return new AssinaturaUsuario(id, dataInicio, dataExpiracao, status, null, null, null);
     }
 }

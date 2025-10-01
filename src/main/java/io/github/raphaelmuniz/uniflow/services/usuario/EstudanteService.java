@@ -5,6 +5,7 @@ import io.github.raphaelmuniz.uniflow.dto.req.usuario.EstudanteRequestDTO;
 import io.github.raphaelmuniz.uniflow.entities.assinatura.AssinaturaModelo;
 import io.github.raphaelmuniz.uniflow.entities.assinatura.AssinaturaUsuario;
 import io.github.raphaelmuniz.uniflow.entities.enums.PapelGrupoEnum;
+import io.github.raphaelmuniz.uniflow.entities.enums.StatusAssinaturaUsuarioEnum;
 import io.github.raphaelmuniz.uniflow.entities.grupo.Grupo;
 import io.github.raphaelmuniz.uniflow.entities.grupo.InscricaoGrupo;
 import io.github.raphaelmuniz.uniflow.entities.autorizacao.Papel;
@@ -77,7 +78,7 @@ public class EstudanteService extends GenericCrudServiceImpl<EstudanteRequestDTO
         Papel papelEstudante = papelService.findByNome("ESTUDANTE");
         estudante.setPapel(papelEstudante);
 
-        AssinaturaUsuario assinaturaUsuario = new AssinaturaUsuario(null, assinaturaModelo, LocalDateTime.now(), LocalDateTime.now().plusMonths(1), true, estudante);
+        AssinaturaUsuario assinaturaUsuario = new AssinaturaUsuario(null, LocalDateTime.now(), LocalDateTime.now().plusMonths(1), StatusAssinaturaUsuarioEnum.ATIVA, assinaturaModelo, estudante, null);
         estudante.getAssinaturas().add(assinaturaUsuario);
 
         Estudante savedEstudante = repository.save(estudante);

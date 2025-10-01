@@ -31,7 +31,7 @@ public class EstudanteResponseDTO {
     }
 
     public Estudante toModel() {
-        return new Estudante(nome, email, null, null, null, null, null, null, null, null, this.periodo, null);
+        return new Estudante(nome, email, null, null, null, null, null, null, null, this.periodo, null);
     }
 
 

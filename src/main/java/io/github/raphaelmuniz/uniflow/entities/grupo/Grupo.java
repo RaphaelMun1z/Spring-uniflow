@@ -15,10 +15,10 @@ import java.util.*;
 @Entity
 @Getter
 @Setter
-@ToString(exclude = {"inscricoes", "atividadesPublicadas", "grupoPai", "subGrupos"})
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode
 public class Grupo implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -43,13 +43,16 @@ public class Grupo implements Serializable {
     @Column(unique = true)
     private String codigoConvite;
 
+    @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "grupo_pai_id")
     private Grupo grupoPai;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "grupoPai", cascade = CascadeType.ALL)
     private List<Grupo> subGrupos = new ArrayList<>();
 
+    @ToString.Exclude
     @NotNull(message = "Criador do grupo não pode ser nulo")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "assinante_criador_id", nullable = false)

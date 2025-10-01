@@ -34,6 +34,6 @@ public class EstudanteRequestDTO implements RequestData<Estudante> {
     private List<String> gruposId;
 
     public Estudante toModel() {
-        return new Estudante(nome, email, senha, null, null, null, null, null, null, null, this.periodo, null);
+        return new Estudante(nome, email, senha, null, null, null, null, null, null, this.periodo, null);
     }
 }

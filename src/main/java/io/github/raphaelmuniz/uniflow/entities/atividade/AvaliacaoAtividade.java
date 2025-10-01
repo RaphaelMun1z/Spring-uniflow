@@ -1,23 +1,21 @@
 package io.github.raphaelmuniz.uniflow.entities.atividade;
 
-import io.github.raphaelmuniz.uniflow.entities.usuario.Professor;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Data
+@Getter
+@Setter
+@ToString(exclude = {"atividadeAvaliada"})
+@EqualsAndHashCode(of = "id")
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "avaliacao_atividade")
 public class AvaliacaoAtividade {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -33,6 +31,7 @@ public class AvaliacaoAtividade {
 
     private String feedback;
 
-    @NotNull(message = "Avaliador não pode ser nulo.")
-    private Professor avaliador;
+    @OneToOne(optional = false)
+    @JoinColumn(name = "atividade_entrega_id", unique = true)
+    private AtividadeEntrega atividadeAvaliada;
 }

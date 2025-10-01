@@ -6,6 +6,7 @@ import io.github.raphaelmuniz.uniflow.dto.res.atividade.AtividadeEntregaResponse
 import io.github.raphaelmuniz.uniflow.dto.res.atividade.AvaliacaoAtividadeResponseDTO;
 import io.github.raphaelmuniz.uniflow.entities.atividade.AtividadeEntrega;
 import io.github.raphaelmuniz.uniflow.entities.atividade.AtividadeAvaliativa;
+import io.github.raphaelmuniz.uniflow.entities.atividade.AvaliacaoAtividade;
 import io.github.raphaelmuniz.uniflow.entities.atividade.Disciplina;
 import io.github.raphaelmuniz.uniflow.entities.enums.StatusEntregaEnum;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Estudante;
@@ -17,7 +18,6 @@ import io.github.raphaelmuniz.uniflow.repositories.atividade.AtividadeEntregaRep
 import io.github.raphaelmuniz.uniflow.repositories.atividade.DisciplinaRepository;
 import io.github.raphaelmuniz.uniflow.repositories.usuario.EstudanteRepository;
 import io.github.raphaelmuniz.uniflow.services.generic.GenericCrudServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,20 +28,22 @@ import java.util.stream.Collectors;
 
 @Service
 public class AtividadeEntregaService extends GenericCrudServiceImpl<AtividadeEntregaRequestDTO, AtividadeEntregaResponseDTO, AtividadeEntrega, String> {
-    @Autowired
-    AtividadeEntregaRepository repository;
+    private final AtividadeEntregaRepository repository;
+    private final EstudanteRepository estudanteRepository;
+    private final DisciplinaRepository disciplinaRepository;
+    private final AtividadeAvaliativaRepository atividadeAvaliativaRepository;
 
-    @Autowired
-    EstudanteRepository estudanteRepository;
-
-    @Autowired
-    DisciplinaRepository disciplinaRepository;
-
-    @Autowired
-    AtividadeAvaliativaRepository atividadeAvaliativaRepository;
-
-    protected AtividadeEntregaService(AtividadeEntregaRepository repository) {
+    protected AtividadeEntregaService(
+            AtividadeEntregaRepository repository,
+            EstudanteRepository estudanteRepository,
+            DisciplinaRepository disciplinaRepository,
+            AtividadeAvaliativaRepository atividadeAvaliativaRepository
+    ) {
         super(repository, AtividadeEntregaRequestDTO::toModel, AtividadeEntregaResponseDTO::new);
+        this.repository = repository;
+        this.estudanteRepository = estudanteRepository;
+        this.disciplinaRepository = disciplinaRepository;
+        this.atividadeAvaliativaRepository = atividadeAvaliativaRepository;
     }
 
     @Override
@@ -107,7 +109,7 @@ public class AtividadeEntregaService extends GenericCrudServiceImpl<AtividadeEnt
             throw new AccessDeniedException("Você não tem permissão para alterar esta atividade.");
         }
 
-        if (atividade.getNota() != null) {
+        if (atividade.getAvaliacaoAtividade() != null) {
             throw new BusinessException("Não é possível alterar o status de uma atividade já avaliada.");
         }
 
@@ -120,25 +122,25 @@ public class AtividadeEntregaService extends GenericCrudServiceImpl<AtividadeEnt
         AtividadeEntrega atividade = repository.findById(atividadeId)
                 .orElseThrow(() -> new NotFoundException("Atividade do assinante não encontrada."));
 
-        if (atividade.getStatusEntrega() != StatusEntregaEnum.ENTREGUE) {
-            throw new BusinessException("Só é possível avaliar atividades com o status 'ENTREGUE'.");
+        if (atividade.getStatusEntrega() != StatusEntregaEnum.ENTREGUE && atividade.getStatusEntrega() != StatusEntregaEnum.ENTREGUE_COM_ATRASO) {
+            throw new BusinessException("Só é possível avaliar atividades com o status 'ENTREGUE' ou 'ENTREGUE_COM_ATRASO'.");
         }
 
-        atividade.setNota(avaliacaoDTO.getNota());
-        atividade.setFeedback(avaliacaoDTO.getFeedback());
-        //atividade.setDataAvaliacao(LocalDateTime.now());
+        if (atividade.getAvaliacaoAtividade() != null) {
+            throw new BusinessException("Esta atividade já foi avaliada.");
+        }
+
+        AvaliacaoAtividade avaliacao = new AvaliacaoAtividade();
+        avaliacao.setDataAvaliacao(LocalDateTime.now());
+        avaliacao.setNota(avaliacaoDTO.getNota());
+        avaliacao.setFeedback(avaliacaoDTO.getFeedback());
+
+        atividade.setAvaliacao(avaliacao);
         atividade.setStatusEntrega(StatusEntregaEnum.AVALIADO);
 
-        AtividadeEntrega atividadeAvaliada = repository.save(atividade);
+        AtividadeEntrega atividadeSalva = repository.save(atividade);
 
-        AvaliacaoAtividadeResponseDTO atvAvaliadaDTO = new AvaliacaoAtividadeResponseDTO();
-        atividadeAvaliada.setId(atividade.getId());
-        atividadeAvaliada.setTitulo(atividade.getTitulo());
-        atividadeAvaliada.setDescricao(atividade.getDescricao());
-        atividadeAvaliada.setNota(atividade.getNota());
-        atividadeAvaliada.setFeedback(atividade.getFeedback());
-
-        return atvAvaliadaDTO;
+        return new AvaliacaoAtividadeResponseDTO(atividadeSalva);
     }
 
     public List<AtividadeEntregaResponseDTO> atividadesClonadasDeAtividadeAvaliativa(String atividadeAvaliativaOrigemId) {

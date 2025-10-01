@@ -26,25 +26,25 @@ public class GrupoController extends GenericCrudControllerImpl<GrupoRequestDTO, 
 
     @PostMapping("/adicionar/membro")
     public ResponseEntity<Void> adicionarMembro(@RequestBody @Valid AdicionarMembroGrupoDTO data) {
-        service.adicionarIntegrantes(data);
+        service.adicionarMembroNoGrupo(data);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("{grupoId}/remover/{membroId}")
     public ResponseEntity<Void> removerMembro(@PathVariable String grupoId, @PathVariable String membroId) {
-        service.removerIntegrante(grupoId, membroId);
+        service.removerMembroDoGrupo(grupoId, membroId);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{grupoId}/membros")
     public ResponseEntity<List<AssinanteResumeResponseDTO>> listarMembros(@PathVariable String grupoId) {
-        List<AssinanteResumeResponseDTO> membros = service.listarMembros(grupoId);
+        List<AssinanteResumeResponseDTO> membros = service.listarMembrosDoGrupo(grupoId);
         return ResponseEntity.ok(membros);
     }
 
     @GetMapping("/{grupoId}/atividades")
     public ResponseEntity<List<AtividadeAvaliativaResponseDTO>> listarAtividades(@PathVariable String grupoId) {
-        List<AtividadeAvaliativaResponseDTO> atividades = service.listarAtividades(grupoId);
+        List<AtividadeAvaliativaResponseDTO> atividades = service.listarAtividadesDoGrupo(grupoId);
         return ResponseEntity.ok(atividades);
     }
 }

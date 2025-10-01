@@ -25,6 +25,6 @@ public class ProfessorRequestDTO implements RequestData<Professor> {
     private String assinaturaId;
 
     public Professor toModel() {
-        return new Professor(this.nome, this.email, this.senha, null, null, null, null, null, this.areaAtuacao, null);
+        return new Professor(this.nome, this.email, this.senha, null, null, null, null, this.areaAtuacao, null);
     }
 }

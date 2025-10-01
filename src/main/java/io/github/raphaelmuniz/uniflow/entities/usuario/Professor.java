@@ -1,7 +1,6 @@
 package io.github.raphaelmuniz.uniflow.entities.usuario;
 
 import io.github.raphaelmuniz.uniflow.entities.assinatura.AssinaturaUsuario;
-import io.github.raphaelmuniz.uniflow.entities.assinatura.Pagamento;
 import io.github.raphaelmuniz.uniflow.entities.atividade.AtividadeAvaliativa;
 import io.github.raphaelmuniz.uniflow.entities.grupo.Grupo;
 import io.github.raphaelmuniz.uniflow.entities.notificacao.NotificacaoAssinante;
@@ -26,8 +25,10 @@ public class Professor extends Assinante implements Serializable {
     @NotBlank(message = "Área de atuação não pode ser vazio/nulo")
     private String areaAtuacao;
 
-    public Professor(String nome, String email, String senha, Set<AssinaturaUsuario> assinaturas, List<Pagamento> pagamentos, List<AtividadeAvaliativa> atividadesGrupoPublicadas, Set<NotificacaoAssinante> notificacoes, List<Grupo> gruposCriados, String areaAtuacao, Papel papel) {
-        super(nome, email, senha, assinaturas, pagamentos, atividadesGrupoPublicadas, notificacoes, gruposCriados, papel);
+    public Professor(String nome, String email, String senha, Set<AssinaturaUsuario> assinaturas, List<AtividadeAvaliativa> atividadesGrupoPublicadas, Set<NotificacaoAssinante> notificacoes, List<Grupo> gruposCriados, String areaAtuacao, Papel papel) {
+        super(nome, email, senha, assinaturas, atividadesGrupoPublicadas, notificacoes, gruposCriados, papel);
         this.areaAtuacao = areaAtuacao;
     }
+
+
 }
