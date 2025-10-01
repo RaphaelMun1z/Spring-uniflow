@@ -28,7 +28,7 @@ public class AssinaturaModeloService extends GenericCrudServiceImpl<AssinaturaMo
         repository.save(assinaturaModelo);
     }
 
-    public List<AssinaturaModelo> listarAssinaturasAtivas() {
+    public List<AssinaturaModelo> listarAssinaturasModeloAtivas() {
         return repository.findByAtivo(true);
     }
 

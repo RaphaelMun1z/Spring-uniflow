@@ -36,18 +36,18 @@ public class AssinanteService extends GenericCrudServiceImpl<AssinanteRequestDTO
         throw new IllegalArgumentException();
     }
 
-    public List<GruposProfileResponseDTO> findGruposByAssinante(String assinanteId) {
+    public List<GruposProfileResponseDTO> obterGruposPorAssinanteId(String assinanteId) {
         List<InscricaoGrupo> inscricoes = inscricaoGrupoRepository.findAllByEstudanteMembro_Id(assinanteId);
         return inscricoes.stream().map(GruposProfileResponseDTO::new).toList();
     }
 
-    public AssinaturaUsuarioResponseDTO getAssinaturaVigente(String assinanteId) {
+    public AssinaturaUsuarioResponseDTO obterAssinaturaVigente(String assinanteId) {
         if (!repository.existsById(assinanteId)) {
             throw new NotFoundException("Assinante não encontrado.");
         }
 
         AssinaturaUsuario assinaturaVigente = assinaturaUsuarioRepository
-                .findFirstByAssinanteIdAndStatusAndDataExpiracaoAfter(assinanteId, StatusAssinaturaUsuarioEnum.ATIVA, LocalDateTime.now())
+                .findFirstVigenteByAssinanteId(assinanteId, StatusAssinaturaUsuarioEnum.getStatusVigentes(), LocalDateTime.now())
                 .orElseThrow(() -> new NotFoundException("Nenhuma assinatura vigente encontrada para este assinante."));
 
         return new AssinaturaUsuarioResponseDTO(assinaturaVigente);

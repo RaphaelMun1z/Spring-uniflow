@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -53,9 +55,11 @@ public class AssinaturaModelo implements Serializable {
     @NotNull(message = "Ativo não pode ser nulo")
     private Boolean ativo;
 
-    @NotNull(message = "Data criação não pode ser nulo")
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
     private LocalDateTime dataCriacao;
 
-    @NotNull(message = "Data atualização não pode ser nulo")
+    @UpdateTimestamp
+    @Column(nullable = false)
     private LocalDateTime dataAtualizacao;
 }

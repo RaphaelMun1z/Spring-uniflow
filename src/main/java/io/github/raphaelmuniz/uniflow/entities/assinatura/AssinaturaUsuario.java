@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -24,7 +25,8 @@ public class AssinaturaUsuario implements Serializable {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @NotNull(message = "Data início não pode ser nulo")
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
     private LocalDateTime dataInicio;
 
     @NotNull(message = "Data expiração não pode ser nulo")

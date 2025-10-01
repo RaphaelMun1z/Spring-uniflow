@@ -43,13 +43,7 @@ public class AssinaturaModeloRequestDTO implements RequestData<AssinaturaModelo>
     @NotNull(message = "O status 'ativo' não pode ser nulo.")
     private Boolean ativo;
 
-    @NotNull(message = "A data de criação não pode ser nula.")
-    private LocalDateTime dataCriacao;
-
-    @NotNull(message = "A data de atualização não pode ser nula.")
-    private LocalDateTime dataAtualizacao;
-
     public AssinaturaModelo toModel() {
-        return new AssinaturaModelo(null, nome, descricao, preco, duracaoEmMeses, limiteDeGrupos, limiteDeSubGrupos, limiteMembrosPorGrupo, permiteAnalytics, permiteTemplatesDeAtividade, ativo, dataCriacao, dataAtualizacao);
+        return new AssinaturaModelo(null, nome, descricao, preco, duracaoEmMeses, limiteDeGrupos, limiteDeSubGrupos, limiteMembrosPorGrupo, permiteAnalytics, permiteTemplatesDeAtividade, ativo, null, null);
     }
 }

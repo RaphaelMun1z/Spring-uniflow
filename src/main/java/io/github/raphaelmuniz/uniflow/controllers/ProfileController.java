@@ -2,12 +2,15 @@ package io.github.raphaelmuniz.uniflow.controllers;
 
 import io.github.raphaelmuniz.uniflow.dto.req.atividade.AtividadeEntregaStatusPatchRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.*;
+import io.github.raphaelmuniz.uniflow.dto.res.assinatura.AssinaturaModeloResponseDTO;
+import io.github.raphaelmuniz.uniflow.dto.res.assinatura.AssinaturaUsuarioResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.assinatura.PagamentoResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.atividade.AtividadeEntregaResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.profile.AssinaturaProfileResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.profile.GruposProfileResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.profile.NotificacoesProfileResponse;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Usuario;
+import io.github.raphaelmuniz.uniflow.services.assinatura.AssinaturaModeloService;
 import io.github.raphaelmuniz.uniflow.services.assinatura.AssinaturaUsuarioService;
 import io.github.raphaelmuniz.uniflow.services.assinatura.PagamentoService;
 import io.github.raphaelmuniz.uniflow.services.atividade.AtividadeEntregaService;
@@ -37,6 +40,9 @@ public class ProfileController {
     AssinaturaUsuarioService assinaturaUsuarioService;
 
     @Autowired
+    AssinaturaModeloService assinaturaModeloService;
+
+    @Autowired
     PagamentoService pagamentoService;
 
     @Autowired
@@ -50,7 +56,7 @@ public class ProfileController {
 
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<String> whoAmI() {
+    public ResponseEntity<String> me() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null) {
@@ -67,6 +73,16 @@ public class ProfileController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/me/assinatura-ativa")
+    @PreAuthorize("isAuthenticated() and (authentication.principal.hasRole('ESTUDANTE') or authentication.principal.hasRole('PROFESSOR'))")
+    public ResponseEntity<AssinaturaProfileResponseDTO> obterAssinaturaVigente(@AuthenticationPrincipal Usuario usuarioLogado) {
+        AssinaturaUsuarioResponseDTO assinaturaVigente = assinanteService.obterAssinaturaVigente(usuarioLogado.getId());
+        AssinaturaProfileResponseDTO avDTO = new AssinaturaProfileResponseDTO(assinaturaVigente);
+        AssinaturaModeloResponseDTO am = assinaturaModeloService.findById(assinaturaVigente.getAssinaturaModeloId());
+        avDTO.setAssinaturaModelo(am);
+        return ResponseEntity.ok(avDTO);
+    }
+
     @GetMapping("/me/assinaturas")
     @PreAuthorize("isAuthenticated() and (authentication.principal.hasRole('ESTUDANTE') or authentication.principal.hasRole('PROFESSOR'))")
     public ResponseEntity<List<AssinaturaProfileResponseDTO>> obterMinhasAssinaturas(@AuthenticationPrincipal Usuario usuarioLogado) {
@@ -76,7 +92,7 @@ public class ProfileController {
 
     @GetMapping("/me/pagamentos")
     @PreAuthorize("isAuthenticated() and (authentication.principal.hasRole('ESTUDANTE') or authentication.principal.hasRole('PROFESSOR'))")
-    public ResponseEntity<PaginatedResponse<PagamentoResponseDTO>> getMeusPagamentos(
+    public ResponseEntity<PaginatedResponse<PagamentoResponseDTO>> obterMeusPagamentos(
             @AuthenticationPrincipal Usuario usuarioLogado,
             @PageableDefault(size = 10, sort = "dataPagamento", direction = Sort.Direction.DESC) Pageable pageable
     ) {
@@ -92,7 +108,7 @@ public class ProfileController {
 
     @GetMapping("/me/minhas-atividades")
     @PreAuthorize("isAuthenticated() and authentication.principal.hasRole('ESTUDANTE')")
-    public ResponseEntity<List<AtividadeEntregaResponseDTO>> getMinhasAtividades(
+    public ResponseEntity<List<AtividadeEntregaResponseDTO>> obterMinhasAtividades(
             @AuthenticationPrincipal Usuario usuarioLogado
     ) {
         List<AtividadeEntregaResponseDTO> atividades = atividadeEntregaService.findByEstudanteDonoId(usuarioLogado.getId());
@@ -101,7 +117,7 @@ public class ProfileController {
 
     @PatchMapping("/me/minhas-atividades/{atividadeId}")
     @PreAuthorize("isAuthenticated() and authentication.principal.hasRole('ESTUDANTE')")
-    public ResponseEntity<Void> atualizaStatusMinhaAtividade(
+    public ResponseEntity<Void> atualizarStatusMinhaAtividade(
             @AuthenticationPrincipal Usuario usuarioLogado,
             @PathVariable String atividadeId,
             @RequestBody @Valid AtividadeEntregaStatusPatchRequestDTO requestDTO
@@ -116,16 +132,16 @@ public class ProfileController {
 
     @GetMapping("/me/meus-grupos")
     @PreAuthorize("isAuthenticated() and (authentication.principal.hasRole('ESTUDANTE') or authentication.principal.hasRole('PROFESSOR'))")
-    public ResponseEntity<List<GruposProfileResponseDTO>> getMeusGrupos(
+    public ResponseEntity<List<GruposProfileResponseDTO>> obterMeusGrupos(
             @AuthenticationPrincipal Usuario usuarioLogado
     ) {
-        List<GruposProfileResponseDTO> grupos = assinanteService.findGruposByAssinante(usuarioLogado.getId());
+        List<GruposProfileResponseDTO> grupos = assinanteService.obterGruposPorAssinanteId(usuarioLogado.getId());
         return ResponseEntity.ok(grupos);
     }
 
     @GetMapping("/me/minhas-notificacoes")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<NotificacoesProfileResponse> getMinhasNotificacoes(
+    public ResponseEntity<NotificacoesProfileResponse> obterMinhasNotificacoes(
             @AuthenticationPrincipal Usuario usuarioLogado
     ) {
         NotificacoesProfileResponse minhasNotificacoes = notificacaoService.getNotificacoesByAssinanteId(usuarioLogado.getId());

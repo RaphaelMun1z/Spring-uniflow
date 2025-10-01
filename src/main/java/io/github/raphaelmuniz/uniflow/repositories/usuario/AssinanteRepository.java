@@ -11,11 +11,11 @@ import java.util.Optional;
 public interface AssinanteRepository extends JpaRepository<Assinante, String> {
     @Override
     @NonNull
-    @EntityGraph(attributePaths = {"assinaturas", "atividadesAssinante", "inscricoesGrupos"})
+    @EntityGraph(attributePaths = {"assinaturas"})
     List<Assinante> findAll();
 
     @Override
     @NonNull
-    @EntityGraph(attributePaths = {"assinaturas", "atividadesAssinante", "inscricoesGrupos"})
+    @EntityGraph(attributePaths = {"assinaturas"})
     Optional<Assinante> findById(String id);
 }

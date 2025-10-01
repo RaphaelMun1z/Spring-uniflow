@@ -26,12 +26,12 @@ public class AssinanteController extends GenericCrudControllerImpl<AssinanteRequ
 
     @GetMapping("/{assinanteId}/grupos")
     public ResponseEntity<List<GruposProfileResponseDTO>> listarGruposInscritosPeloAssinante(@PathVariable String assinanteId) {
-        return ResponseEntity.ok(assinanteService.findGruposByAssinante(assinanteId));
+        return ResponseEntity.ok(assinanteService.obterGruposPorAssinanteId(assinanteId));
     }
 
     @GetMapping("/{assinanteId}/assinatura-vigente")
     public ResponseEntity<AssinaturaUsuarioResponseDTO> getAssinaturaVigente(@PathVariable String assinanteId) {
-        AssinaturaUsuarioResponseDTO assinatura = assinanteService.getAssinaturaVigente(assinanteId);
+        AssinaturaUsuarioResponseDTO assinatura = assinanteService.obterAssinaturaVigente(assinanteId);
         return ResponseEntity.ok(assinatura);
     }
 }

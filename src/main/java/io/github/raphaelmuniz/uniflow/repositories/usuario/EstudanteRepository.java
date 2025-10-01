@@ -15,11 +15,11 @@ public interface EstudanteRepository extends JpaRepository<Estudante, String> {
 
     @Override
     @NonNull
-    @EntityGraph(attributePaths = {"assinaturas", "atividadesAssinante", "inscricoesGrupos"})
+    @EntityGraph(attributePaths = {"assinaturas", "atividadesEstudante", "inscricoesGrupos"})
     List<Estudante> findAll();
 
     @Override
     @NonNull
-    @EntityGraph(attributePaths = {"assinaturas", "atividadesAssinante", "inscricoesGrupos"})
+    @EntityGraph(attributePaths = {"assinaturas", "atividadesEstudante", "inscricoesGrupos"})
     Optional<Estudante> findById(String id);
 }
