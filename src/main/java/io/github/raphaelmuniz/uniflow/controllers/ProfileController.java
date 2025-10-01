@@ -22,6 +22,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -58,7 +59,7 @@ public class ProfileController {
 
         String username = authentication.getName();
         String authorities = authentication.getAuthorities().stream()
-                .map(grantedAuthority -> grantedAuthority.getAuthority())
+                .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(", "));
 
         String response = "Usuário: " + username + " | Permissões: [" + authorities + "]";
@@ -66,11 +67,11 @@ public class ProfileController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/me/assinatura")
+    @GetMapping("/me/assinaturas")
     @PreAuthorize("isAuthenticated() and (authentication.principal.hasRole('ESTUDANTE') or authentication.principal.hasRole('PROFESSOR'))")
-    public ResponseEntity<AssinaturaProfileResponseDTO> getMinhaAssinatura(@AuthenticationPrincipal Usuario usuarioLogado) {
-        AssinaturaProfileResponseDTO assinatura = assinaturaUsuarioService.findByAssinanteId(usuarioLogado.getId());
-        return ResponseEntity.ok(assinatura);
+    public ResponseEntity<List<AssinaturaProfileResponseDTO>> obterMinhasAssinaturas(@AuthenticationPrincipal Usuario usuarioLogado) {
+        List<AssinaturaProfileResponseDTO> assinaturas = assinaturaUsuarioService.findByAssinanteId(usuarioLogado.getId());
+        return ResponseEntity.ok(assinaturas);
     }
 
     @GetMapping("/me/pagamentos")

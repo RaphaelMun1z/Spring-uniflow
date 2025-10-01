@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Set;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -37,7 +38,8 @@ public abstract class Usuario implements UserDetails, Serializable {
     @NotBlank(message = "Senha não pode ser vazio/nulo")
     private String senha;
 
-    @NotNull(message = "Data cadastro não pode ser nulo.")
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
     private LocalDateTime dataCadastro;
 
     @ManyToOne

@@ -15,6 +15,8 @@ import io.github.raphaelmuniz.uniflow.services.generic.GenericCrudServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AssinaturaUsuarioService extends GenericCrudServiceImpl<AssinaturaUsuarioRequestDTO, AssinaturaUsuarioResponseDTO, AssinaturaUsuario, String> {
     @Autowired
@@ -39,14 +41,17 @@ public class AssinaturaUsuarioService extends GenericCrudServiceImpl<AssinaturaU
         return new AssinaturaUsuarioResponseDTO(saved);
     }
 
-    public AssinaturaProfileResponseDTO findByAssinanteId(String assinanteId){
-        AssinaturaUsuario assinaturaUsuario = assinaturaUsuarioRepository.findByAssinanteId(assinanteId).orElseThrow(() -> new NotFoundException("Assinatura usuário não encontrada"));
-        AssinaturaProfileResponseDTO responseDTO = new AssinaturaProfileResponseDTO();
-        responseDTO.setAssinaturaUsuarioId(assinaturaUsuario.getId());
-        responseDTO.setDataInicio(assinaturaUsuario.getDataInicio());
-        responseDTO.setDataExpiracao(assinaturaUsuario.getDataExpiracao());
-        responseDTO.setStatus(assinaturaUsuario.getStatus());
-        responseDTO.setAssinaturaModelo(new AssinaturaModeloResponseDTO(assinaturaUsuario.getAssinaturaModelo()));
-        return responseDTO;
+    public List<AssinaturaProfileResponseDTO> findByAssinanteId(String assinanteId){
+        List<AssinaturaUsuario> assinaturaUsuario = assinaturaUsuarioRepository.findByAssinanteId(assinanteId);
+        List<AssinaturaProfileResponseDTO> assinaturasDto = assinaturaUsuario.stream().map(au -> {
+            AssinaturaProfileResponseDTO responseDTO = new AssinaturaProfileResponseDTO();
+            responseDTO.setAssinaturaUsuarioId(au.getId());
+            responseDTO.setDataInicio(au.getDataInicio());
+            responseDTO.setDataExpiracao(au.getDataExpiracao());
+            responseDTO.setStatus(au.getStatus());
+            responseDTO.setAssinaturaModelo(new AssinaturaModeloResponseDTO(au.getAssinaturaModelo()));
+            return responseDTO;
+        }).toList();
+        return assinaturasDto;
     }
 }

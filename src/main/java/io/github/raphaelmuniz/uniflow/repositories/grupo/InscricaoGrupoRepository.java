@@ -10,6 +10,6 @@ import java.util.Optional;
 public interface InscricaoGrupoRepository extends JpaRepository<InscricaoGrupo, String> {
     Optional<InscricaoGrupo> findByGrupo_IdAndEstudanteMembro_Id(String grupoId, String assinanteId);
 
-    @EntityGraph(attributePaths = {"grupo", "grupo.criador"})
+    @EntityGraph(attributePaths = {"grupo", "grupo.assinanteCriadorGrupo"})
     List<InscricaoGrupo> findAllByEstudanteMembro_Id(String membroId);
 }

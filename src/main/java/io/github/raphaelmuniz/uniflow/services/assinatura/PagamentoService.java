@@ -36,7 +36,7 @@ public class PagamentoService extends GenericCrudServiceImpl<PagamentoRequestDTO
             throw new NotFoundException("Assinante não encontrado.");
         }
 
-        Page<Pagamento> pagamentos = repository.findByAssinantePagadorIdOrderByDataPagamentoDesc(assinanteId, pageable);
+        Page<Pagamento> pagamentos = repository.findByAssinaturaUsuario_Assinante_IdOrderByDataPagamentoDesc(assinanteId, pageable);
         return pagamentos.map(PagamentoResponseDTO::new);
     }
 }

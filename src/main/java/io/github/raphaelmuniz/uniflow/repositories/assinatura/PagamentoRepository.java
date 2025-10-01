@@ -6,5 +6,5 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PagamentoRepository extends JpaRepository<Pagamento, String> {
-    Page<Pagamento> findByAssinantePagadorIdOrderByDataPagamentoDesc(String assinanteId, Pageable pageable);
+    Page<Pagamento> findByAssinaturaUsuario_Assinante_IdOrderByDataPagamentoDesc(String assinanteId, Pageable pageable);
 }

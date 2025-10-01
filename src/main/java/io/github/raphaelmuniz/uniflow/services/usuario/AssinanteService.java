@@ -5,6 +5,7 @@ import io.github.raphaelmuniz.uniflow.dto.res.usuario.AssinanteResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.assinatura.AssinaturaUsuarioResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.profile.GruposProfileResponseDTO;
 import io.github.raphaelmuniz.uniflow.entities.assinatura.AssinaturaUsuario;
+import io.github.raphaelmuniz.uniflow.entities.enums.StatusAssinaturaUsuarioEnum;
 import io.github.raphaelmuniz.uniflow.entities.grupo.InscricaoGrupo;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Assinante;
 import io.github.raphaelmuniz.uniflow.exceptions.models.NotFoundException;
@@ -46,7 +47,7 @@ public class AssinanteService extends GenericCrudServiceImpl<AssinanteRequestDTO
         }
 
         AssinaturaUsuario assinaturaVigente = assinaturaUsuarioRepository
-                .findFirstByAssinanteIdAndStatusIsTrueAndDataExpiracaoAfter(assinanteId, LocalDateTime.now())
+                .findFirstByAssinanteIdAndStatusAndDataExpiracaoAfter(assinanteId, StatusAssinaturaUsuarioEnum.ATIVA, LocalDateTime.now())
                 .orElseThrow(() -> new NotFoundException("Nenhuma assinatura vigente encontrada para este assinante."));
 
         return new AssinaturaUsuarioResponseDTO(assinaturaVigente);

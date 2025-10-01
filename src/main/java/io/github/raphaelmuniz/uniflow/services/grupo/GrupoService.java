@@ -7,6 +7,7 @@ import io.github.raphaelmuniz.uniflow.dto.res.atividade.AtividadeAvaliativaRespo
 import io.github.raphaelmuniz.uniflow.dto.res.grupo.GrupoResponseDTO;
 import io.github.raphaelmuniz.uniflow.entities.assinatura.AssinaturaModelo;
 import io.github.raphaelmuniz.uniflow.entities.enums.PapelGrupoEnum;
+import io.github.raphaelmuniz.uniflow.entities.enums.StatusAssinaturaUsuarioEnum;
 import io.github.raphaelmuniz.uniflow.entities.grupo.Grupo;
 import io.github.raphaelmuniz.uniflow.entities.grupo.InscricaoGrupo;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Assinante;
@@ -65,7 +66,7 @@ public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoR
     @Override
     public GrupoResponseDTO create(GrupoRequestDTO data) {
         Assinante criador = assinanteRepository.findById(data.getCriadorId()).orElseThrow(() -> new NotFoundException("Assinante não encontrado."));
-        AssinaturaModelo planoDoCriador = assinaturaUsuarioRepository.findAssinaturaModeloAtivaByAssinanteId(criador.getId())
+        AssinaturaModelo planoDoCriador = assinaturaUsuarioRepository.findAssinaturaModeloByAssinanteIdAndStatus(criador.getId(), StatusAssinaturaUsuarioEnum.ATIVA)
                 .orElseThrow(() -> new BusinessException("Plano de assinatura ativo não encontrado."));
 
         regrasParaCriarGrupoPadrao.forEach(regra -> regra.verificar(null, criador, planoDoCriador));
@@ -109,7 +110,7 @@ public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoR
                 .orElseThrow(() -> new NotFoundException("Grupo pai não encontrado."));
         Assinante criador = assinanteRepository.findById(data.getCriadorId())
                 .orElseThrow(() -> new NotFoundException("Criador não encontrado."));
-        AssinaturaModelo planoDoCriador = assinaturaUsuarioRepository.findAssinaturaModeloAtivaByAssinanteId(criador.getId())
+        AssinaturaModelo planoDoCriador = assinaturaUsuarioRepository.findAssinaturaModeloByAssinanteIdAndStatus(criador.getId(), StatusAssinaturaUsuarioEnum.ATIVA)
                 .orElseThrow(() -> new BusinessException("Plano de assinatura ativo não encontrado."));
 
         regrasParaCriarSubGrupo.forEach(regra -> regra.verificar(grupoPai, criador, planoDoCriador));

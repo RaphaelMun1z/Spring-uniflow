@@ -2,21 +2,27 @@ package io.github.raphaelmuniz.uniflow.repositories.assinatura;
 
 import io.github.raphaelmuniz.uniflow.entities.assinatura.AssinaturaModelo;
 import io.github.raphaelmuniz.uniflow.entities.assinatura.AssinaturaUsuario;
+import io.github.raphaelmuniz.uniflow.entities.enums.StatusAssinaturaUsuarioEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public interface AssinaturaUsuarioRepository extends JpaRepository<AssinaturaUsuario, String> {
-    Optional<AssinaturaUsuario> findFirstByAssinanteIdAndStatusIsTrueAndDataExpiracaoAfter(
+    Optional<AssinaturaUsuario> findFirstByAssinanteIdAndStatusAndDataExpiracaoAfter(
             String assinanteId,
+            StatusAssinaturaUsuarioEnum status,
             LocalDateTime agora
     );
 
-    Optional<AssinaturaUsuario> findByAssinanteId(String assinanteId);
+    List<AssinaturaUsuario> findByAssinanteId(String assinanteId);
 
-    @Query("SELECT au.assinaturaModelo FROM AssinaturaUsuario au WHERE au.assinante.id = :assinanteId AND au.status = 'ATIVA'")
-    Optional<AssinaturaModelo> findAssinaturaModeloAtivaByAssinanteId(@Param("assinanteId") String assinanteId);
+    @Query("SELECT au.assinaturaModelo FROM AssinaturaUsuario au WHERE au.assinante.id = :assinanteId AND au.status = :status")
+    Optional<AssinaturaModelo> findAssinaturaModeloByAssinanteIdAndStatus(
+            @Param("assinanteId") String assinanteId,
+            @Param("status") StatusAssinaturaUsuarioEnum status
+    );
 }
