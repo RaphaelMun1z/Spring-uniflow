@@ -9,6 +9,7 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 
         ExceptionResponse exceptionResponse = new ExceptionResponse(
-                new Date(),
+                LocalDateTime.now(),
                 List.of("Acesso negado: você não tem permissão para acessar este recurso."),
                 request.getRequestURI()
         );

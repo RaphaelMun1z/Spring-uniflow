@@ -13,9 +13,8 @@ import java.time.LocalDateTime;
 public class AssinaturaUsuarioRequestDTO implements RequestData<AssinaturaUsuario> {
     private String assinaturaModeloId;
     private String assinanteId;
-    private StatusAssinaturaUsuarioEnum statusAssinaturaUsuario;
 
     public AssinaturaUsuario toModel() {
-        return new AssinaturaUsuario(null, null, null, statusAssinaturaUsuario, null, null, null);
+        return new AssinaturaUsuario(null, null, null, null, null, null, null);
     }
 }

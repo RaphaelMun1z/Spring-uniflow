@@ -6,6 +6,7 @@ import io.github.raphaelmuniz.uniflow.dto.req.grupo.GrupoRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.usuario.AssinanteResumeResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.atividade.AtividadeAvaliativaResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.grupo.GrupoResponseDTO;
+import io.github.raphaelmuniz.uniflow.entities.enums.PapelGrupoEnum;
 import io.github.raphaelmuniz.uniflow.services.grupo.GrupoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +31,18 @@ public class GrupoController extends GenericCrudControllerImpl<GrupoRequestDTO, 
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("{grupoId}/remover/{membroId}")
+    @DeleteMapping("{grupoId}/remover/membro/{membroId}")
     public ResponseEntity<Void> removerMembro(@PathVariable String grupoId, @PathVariable String membroId) {
         service.removerMembroDoGrupo(grupoId, membroId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("{grupoId}/atualizar/membro/{membroId}")
+    public ResponseEntity<Void> atualizarMembro(
+            @PathVariable String grupoId,
+            @PathVariable String membroId,
+            @RequestBody PapelGrupoEnum papelGrupo) {
+        service.atualizarMembroDoGrupo(grupoId, membroId, papelGrupo);
         return ResponseEntity.ok().build();
     }
 

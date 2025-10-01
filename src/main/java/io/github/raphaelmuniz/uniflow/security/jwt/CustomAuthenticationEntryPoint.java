@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.security.core.AuthenticationException;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
         ExceptionResponse exceptionResponse = new ExceptionResponse(
-                new Date(),
+                LocalDateTime.now(),
                 List.of("Credenciais inválidas"),
                 request.getRequestURI()
         );

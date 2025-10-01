@@ -14,6 +14,7 @@ import java.util.Optional;
 
 public interface AssinaturaUsuarioRepository extends JpaRepository<AssinaturaUsuario, String> {
     @Query("SELECT au FROM AssinaturaUsuario au " +
+            "LEFT JOIN FETCH au.assinaturaModelo " +
             "WHERE au.assinante.id = :assinanteId " +
             "AND au.status IN :statusVigentes " +
             "AND au.dataExpiracao > :agora " +
@@ -26,10 +27,4 @@ public interface AssinaturaUsuarioRepository extends JpaRepository<AssinaturaUsu
 
     @EntityGraph(attributePaths = {"assinaturaModelo"})
     List<AssinaturaUsuario> findByAssinanteId(String assinanteId);
-
-    @Query("SELECT au.assinaturaModelo FROM AssinaturaUsuario au WHERE au.assinante.id = :assinanteId AND au.status = :status")
-    Optional<AssinaturaModelo> findAssinaturaModeloByAssinanteIdAndStatus(
-            @Param("assinanteId") String assinanteId,
-            @Param("status") StatusAssinaturaUsuarioEnum status
-    );
 }

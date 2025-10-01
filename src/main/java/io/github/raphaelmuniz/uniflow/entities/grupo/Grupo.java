@@ -89,4 +89,8 @@ public class Grupo implements Serializable {
         this.atividadesPublicadas.remove(atividade);
         atividade.setGrupoPublicado(null);
     }
+
+    public static String gerarCodigoConvite() {
+        return UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+    }
 }

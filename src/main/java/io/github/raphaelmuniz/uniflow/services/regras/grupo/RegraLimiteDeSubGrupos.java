@@ -4,6 +4,7 @@ import io.github.raphaelmuniz.uniflow.entities.assinatura.AssinaturaModelo;
 import io.github.raphaelmuniz.uniflow.entities.grupo.Grupo;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Assinante;
 import io.github.raphaelmuniz.uniflow.exceptions.models.BusinessException;
+import io.github.raphaelmuniz.uniflow.services.regras.grupo.config.RegraCriacaoGrupo;
 import org.springframework.stereotype.Component;
 
 @Component
