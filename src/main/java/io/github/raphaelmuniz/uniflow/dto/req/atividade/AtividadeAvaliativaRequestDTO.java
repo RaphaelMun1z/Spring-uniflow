@@ -23,6 +23,6 @@ public class AtividadeAvaliativaRequestDTO implements RequestData<AtividadeAvali
     private String disciplinaId;
 
     public AtividadeAvaliativa toModel() {
-        return new AtividadeAvaliativa(dataLancamento, prazoEntrega, titulo, descricao, dificuldade, null, null, visivibilidade, null, null);
+        return new AtividadeAvaliativa(dataLancamento, prazoEntrega, titulo, descricao, dificuldade, null, visivibilidade, null, null);
     }
 }

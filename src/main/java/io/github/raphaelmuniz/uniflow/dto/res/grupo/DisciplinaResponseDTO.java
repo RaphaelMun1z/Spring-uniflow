@@ -1,6 +1,6 @@
-package io.github.raphaelmuniz.uniflow.dto.res.atividade;
+package io.github.raphaelmuniz.uniflow.dto.res.grupo;
 
-import io.github.raphaelmuniz.uniflow.entities.atividade.Disciplina;
+import io.github.raphaelmuniz.uniflow.entities.grupo.Disciplina;
 import io.github.raphaelmuniz.uniflow.entities.embeddables.PeriodoLetivo;
 import io.github.raphaelmuniz.uniflow.entities.enums.DificuldadeEnum;
 import jakarta.persistence.Embedded;
@@ -31,6 +31,6 @@ public class DisciplinaResponseDTO {
     }
 
     public Disciplina toModel() {
-        return new Disciplina(id, nome, periodo, dificuldade, periodoLetivo);
+        return new Disciplina(id, nome, periodo, dificuldade, periodoLetivo, null);
     }
 }

@@ -2,9 +2,12 @@ package io.github.raphaelmuniz.uniflow.config;
 
 import io.github.raphaelmuniz.uniflow.entities.autorizacao.Papel;
 import io.github.raphaelmuniz.uniflow.entities.autorizacao.Permissao;
+import io.github.raphaelmuniz.uniflow.entities.embeddables.PeriodoLetivo;
+import io.github.raphaelmuniz.uniflow.entities.enums.DificuldadeEnum;
 import io.github.raphaelmuniz.uniflow.entities.enums.PapelGrupoEnum;
 import io.github.raphaelmuniz.uniflow.entities.enums.StatusGrupoEnum;
 import io.github.raphaelmuniz.uniflow.entities.enums.TipoGrupoEnum;
+import io.github.raphaelmuniz.uniflow.entities.grupo.Disciplina;
 import io.github.raphaelmuniz.uniflow.entities.grupo.Grupo;
 import io.github.raphaelmuniz.uniflow.entities.grupo.InscricaoGrupo;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Admin;
@@ -12,6 +15,7 @@ import io.github.raphaelmuniz.uniflow.entities.usuario.Estudante;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Professor;
 import io.github.raphaelmuniz.uniflow.repositories.autorizacao.PapelRepository;
 import io.github.raphaelmuniz.uniflow.repositories.autorizacao.PermissaoRepository;
+import io.github.raphaelmuniz.uniflow.repositories.grupo.DisciplinaRepository;
 import io.github.raphaelmuniz.uniflow.repositories.grupo.GrupoRepository;
 import io.github.raphaelmuniz.uniflow.repositories.usuario.UsuarioRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -34,13 +38,20 @@ public class DataInitializer implements CommandLineRunner {
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
     private final GrupoRepository grupoRepository;
+    private final DisciplinaRepository disciplinaRepository;
 
-    public DataInitializer(PermissaoRepository permissaoRepository, PapelRepository papelRepository, UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder, GrupoRepository grupoRepository) {
+    public DataInitializer(PermissaoRepository permissaoRepository,
+                           PapelRepository papelRepository,
+                           UsuarioRepository usuarioRepository,
+                           PasswordEncoder passwordEncoder,
+                           GrupoRepository grupoRepository,
+                           DisciplinaRepository disciplinaRepository) {
         this.permissaoRepository = permissaoRepository;
         this.papelRepository = papelRepository;
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
         this.grupoRepository = grupoRepository;
+        this.disciplinaRepository = disciplinaRepository;
     }
 
     @Override
@@ -89,6 +100,16 @@ public class DataInitializer implements CommandLineRunner {
         usuarioRepository.saveAll(List.of(admin, professor, estudante));
         log.info("Usuários de exemplo criados com sucesso.");
 
+        log.info("Criando disciplina de exemplo...");
+        Disciplina disciplinaExemplo = new Disciplina();
+        disciplinaExemplo.setNome("Algoritmos e Estruturas de Dados");
+        disciplinaExemplo.setPeriodo(3);
+        disciplinaExemplo.setDificuldade(DificuldadeEnum.MEDIO);
+        disciplinaExemplo.setPeriodoLetivo(new PeriodoLetivo(2025, 2));
+
+        Disciplina disciplinaSalva = disciplinaRepository.save(disciplinaExemplo);
+        log.info("Disciplina de exemplo criada com sucesso.");
+
         log.info("Criando grupo de exemplo...");
         Grupo grupoExemplo = new Grupo();
         grupoExemplo.setTitulo("Turma de Algoritmos 2025");
@@ -97,6 +118,7 @@ public class DataInitializer implements CommandLineRunner {
         grupoExemplo.setStatusGrupo(StatusGrupoEnum.ATIVO);
         grupoExemplo.setCodigoConvite(Grupo.gerarCodigoConvite());
         grupoExemplo.setAssinanteCriadorGrupo(professor);
+        grupoExemplo.setDisciplina(disciplinaSalva);
 
         InscricaoGrupo inscricaoEstudante = new InscricaoGrupo();
         inscricaoEstudante.setEstudanteMembro(estudante);

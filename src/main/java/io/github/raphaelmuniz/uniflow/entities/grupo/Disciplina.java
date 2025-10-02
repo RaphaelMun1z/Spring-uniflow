@@ -1,4 +1,4 @@
-package io.github.raphaelmuniz.uniflow.entities.atividade;
+package io.github.raphaelmuniz.uniflow.entities.grupo;
 
 import io.github.raphaelmuniz.uniflow.entities.embeddables.PeriodoLetivo;
 import io.github.raphaelmuniz.uniflow.entities.enums.DificuldadeEnum;
@@ -8,8 +8,11 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Data
@@ -36,4 +39,18 @@ public class Disciplina implements Serializable {
     @NotNull(message = "Período letivo não pode ser nulo")
     @Embedded
     private PeriodoLetivo periodoLetivo;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "disciplina", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Grupo> grupos = new HashSet<>();
+
+    public void addGrupo(Grupo grupo) {
+        this.grupos.add(grupo);
+        grupo.setDisciplina(this);
+    }
+
+    public void removeGrupo(Grupo grupo) {
+        this.grupos.remove(grupo);
+        grupo.setDisciplina(null);
+    }
 }

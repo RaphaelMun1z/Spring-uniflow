@@ -32,7 +32,10 @@ public class GrupoRequestDTO implements RequestData<Grupo> {
     @NotNull
     private String criadorId;
 
+    @NotNull
+    private String disciplinaId;
+
     public Grupo toModel() {
-        return new Grupo(null, titulo, descricao, tipoGrupo, null, null, null, null, null, null, null);
+        return new Grupo(null, titulo, descricao, tipoGrupo, null, null, null, null, null, null, null, null);
     }
 }

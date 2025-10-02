@@ -26,8 +26,8 @@ public class TarefaStatusMembro implements Serializable {
 
     @NotNull(message = "O estudante não pode ser nulo")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "estudante_id")
-    private Estudante estudante;
+    @JoinColumn(name = "estudante_dono_id")
+    private Estudante estudanteDono;
 
     @NotNull(message = "Status não pode ser nulo")
     @Enumerated(EnumType.STRING)

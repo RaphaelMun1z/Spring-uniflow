@@ -19,6 +19,10 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "atividade_colaborativa")
 public class AtividadeColaborativa extends Atividade implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "grupo_publicado_id", nullable = false)
     private Grupo grupoPublicado;

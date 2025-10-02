@@ -36,6 +36,6 @@ public class AtividadeAvaliativaResponseDTO {
     }
 
     public AtividadeAvaliativa toModel() {
-        return new AtividadeAvaliativa(dataLancamento, prazoEntrega, titulo, descricao, dificuldade, null, id, visivibilidade, null, null);
+        return new AtividadeAvaliativa(dataLancamento, prazoEntrega, titulo, descricao, dificuldade, id, visivibilidade, null, null);
     }
 }

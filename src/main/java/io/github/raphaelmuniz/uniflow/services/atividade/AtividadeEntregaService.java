@@ -7,7 +7,6 @@ import io.github.raphaelmuniz.uniflow.dto.res.atividade.AvaliacaoAtividadeRespon
 import io.github.raphaelmuniz.uniflow.entities.atividade.AtividadeEntrega;
 import io.github.raphaelmuniz.uniflow.entities.atividade.AtividadeAvaliativa;
 import io.github.raphaelmuniz.uniflow.entities.atividade.AvaliacaoAtividade;
-import io.github.raphaelmuniz.uniflow.entities.atividade.Disciplina;
 import io.github.raphaelmuniz.uniflow.entities.enums.StatusEntregaEnum;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Estudante;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Usuario;
@@ -15,7 +14,6 @@ import io.github.raphaelmuniz.uniflow.exceptions.models.BusinessException;
 import io.github.raphaelmuniz.uniflow.exceptions.models.NotFoundException;
 import io.github.raphaelmuniz.uniflow.repositories.atividade.AtividadeAvaliativaRepository;
 import io.github.raphaelmuniz.uniflow.repositories.atividade.AtividadeEntregaRepository;
-import io.github.raphaelmuniz.uniflow.repositories.atividade.DisciplinaRepository;
 import io.github.raphaelmuniz.uniflow.repositories.usuario.EstudanteRepository;
 import io.github.raphaelmuniz.uniflow.services.generic.GenericCrudServiceImpl;
 import org.springframework.security.access.AccessDeniedException;
@@ -30,27 +28,23 @@ import java.util.stream.Collectors;
 public class AtividadeEntregaService extends GenericCrudServiceImpl<AtividadeEntregaRequestDTO, AtividadeEntregaResponseDTO, AtividadeEntrega, String> {
     private final AtividadeEntregaRepository repository;
     private final EstudanteRepository estudanteRepository;
-    private final DisciplinaRepository disciplinaRepository;
     private final AtividadeAvaliativaRepository atividadeAvaliativaRepository;
 
     protected AtividadeEntregaService(
             AtividadeEntregaRepository repository,
             EstudanteRepository estudanteRepository,
-            DisciplinaRepository disciplinaRepository,
             AtividadeAvaliativaRepository atividadeAvaliativaRepository
     ) {
         super(repository, AtividadeEntregaRequestDTO::toModel, AtividadeEntregaResponseDTO::new);
         this.repository = repository;
         this.estudanteRepository = estudanteRepository;
-        this.disciplinaRepository = disciplinaRepository;
         this.atividadeAvaliativaRepository = atividadeAvaliativaRepository;
     }
 
     @Override
     public AtividadeEntregaResponseDTO create(AtividadeEntregaRequestDTO data) {
         Estudante estudanteDono = estudanteRepository.findById(data.getEstudanteDonoId()).orElseThrow(() -> new NotFoundException("Estudante não encontrado."));
-        Disciplina disciplina = disciplinaRepository.findById(data.getDisciplinaId()).orElseThrow(() -> new NotFoundException("Disciplina não encontrada."));
-        AtividadeEntrega novaAtividade = new AtividadeEntrega(data.getDataLancamento(), data.getPrazoEntrega(), data.getTitulo(), data.getDescricao(), data.getDificuldade(), disciplina, null, data.getStatusEntrega(), estudanteDono, null);
+        AtividadeEntrega novaAtividade = new AtividadeEntrega(data.getDataLancamento(), data.getPrazoEntrega(), data.getTitulo(), data.getDescricao(), data.getDificuldade(), null, data.getStatusEntrega(), estudanteDono, null);
         AtividadeEntrega saved = repository.save(novaAtividade);
         return new AtividadeEntregaResponseDTO(saved);
     }
@@ -92,7 +86,7 @@ public class AtividadeEntregaService extends GenericCrudServiceImpl<AtividadeEnt
 
         Estudante estudanteDono = estudanteRepository.findById(estudanteDonoId).orElseThrow(() -> new NotFoundException("Assinante não encontrado."));
         AtividadeAvaliativa ag = atividadeAvaliativaRepository.findById(atividadeAvaliativaId).orElseThrow(() -> new NotFoundException("Atividade grupo não encontrado."));
-        AtividadeEntrega copia = new AtividadeEntrega(LocalDateTime.now(), ag.getPrazoEntrega(), ag.getTitulo(), ag.getDescricao(), ag.getDificuldade(), ag.getDisciplina(), null, StatusEntregaEnum.PENDENTE, estudanteDono, ag);
+        AtividadeEntrega copia = new AtividadeEntrega(LocalDateTime.now(), ag.getPrazoEntrega(), ag.getTitulo(), ag.getDescricao(), ag.getDificuldade(), null, StatusEntregaEnum.PENDENTE, estudanteDono, ag);
         AtividadeEntrega copiaSalva = repository.save(copia);
         return new AtividadeEntregaResponseDTO(copiaSalva);
     }

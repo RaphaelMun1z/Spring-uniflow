@@ -1,9 +1,9 @@
-package io.github.raphaelmuniz.uniflow.controllers.atividade;
+package io.github.raphaelmuniz.uniflow.controllers.grupo;
 
 import io.github.raphaelmuniz.uniflow.controllers.generic.GenericCrudControllerImpl;
-import io.github.raphaelmuniz.uniflow.dto.req.atividade.DisciplinaRequestDTO;
-import io.github.raphaelmuniz.uniflow.dto.res.atividade.DisciplinaResponseDTO;
-import io.github.raphaelmuniz.uniflow.services.atividade.DisciplinaService;
+import io.github.raphaelmuniz.uniflow.dto.req.grupo.DisciplinaRequestDTO;
+import io.github.raphaelmuniz.uniflow.dto.res.grupo.DisciplinaResponseDTO;
+import io.github.raphaelmuniz.uniflow.services.grupo.DisciplinaService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

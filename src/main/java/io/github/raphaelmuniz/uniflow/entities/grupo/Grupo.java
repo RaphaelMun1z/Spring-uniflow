@@ -19,6 +19,9 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
+@Table(name = "grupo", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"titulo", "disciplina_id"})
+})
 public class Grupo implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -69,6 +72,12 @@ public class Grupo implements Serializable {
     @NotNull(message = "Atividades Publicadas não pode ser nulo")
     @OneToMany(mappedBy = "grupoPublicado", cascade = CascadeType.ALL)
     private Set<AtividadeAvaliativa> atividadesPublicadas = new HashSet<>();
+
+    @ToString.Exclude
+    @NotNull(message = "Disciplina não pode ser nula")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "disciplina_id", nullable = false)
+    private Disciplina disciplina;
 
     public void addInscricao(InscricaoGrupo inscricao) {
         this.inscricoes.add(inscricao);

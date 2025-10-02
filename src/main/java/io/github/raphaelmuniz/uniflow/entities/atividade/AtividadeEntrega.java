@@ -2,6 +2,7 @@ package io.github.raphaelmuniz.uniflow.entities.atividade;
 
 import io.github.raphaelmuniz.uniflow.entities.enums.DificuldadeEnum;
 import io.github.raphaelmuniz.uniflow.entities.enums.StatusEntregaEnum;
+import io.github.raphaelmuniz.uniflow.entities.grupo.Disciplina;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Estudante;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -21,8 +22,8 @@ import java.util.List;
 @AllArgsConstructor
 @Table(name = "atividade_entrega")
 public class AtividadeEntrega extends Atividade implements Serializable {
-    public AtividadeEntrega(LocalDateTime dataLancamento, LocalDateTime prazoEntrega, String titulo, String descricao, DificuldadeEnum dificuldade, Disciplina disciplina, String id, StatusEntregaEnum statusEntrega, Estudante estudanteDono, AtividadeAvaliativa atividadeAvaliativaOrigem) {
-        super(dataLancamento, prazoEntrega, titulo, descricao, dificuldade, disciplina);
+    public AtividadeEntrega(LocalDateTime dataLancamento, LocalDateTime prazoEntrega, String titulo, String descricao, DificuldadeEnum dificuldade, String id, StatusEntregaEnum statusEntrega, Estudante estudanteDono, AtividadeAvaliativa atividadeAvaliativaOrigem) {
+        super(dataLancamento, prazoEntrega, titulo, descricao, dificuldade);
         this.id = id;
         this.statusEntrega = statusEntrega;
         this.estudanteDono = estudanteDono;

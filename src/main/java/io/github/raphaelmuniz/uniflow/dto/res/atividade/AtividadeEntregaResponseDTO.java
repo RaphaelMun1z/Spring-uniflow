@@ -32,12 +32,12 @@ public class AtividadeEntregaResponseDTO {
         this.titulo = atividadeEntrega.getTitulo();
         this.descricao = atividadeEntrega.getDescricao();
         this.dificuldade = atividadeEntrega.getDificuldade();
-        this.disciplinaId = atividadeEntrega.getDisciplina().getId();
+        this.disciplinaId = atividadeEntrega.getAtividadeAvaliativaOrigem().getGrupoPublicado().getDisciplina().getId();
         this.statusEntrega = atividadeEntrega.getStatusEntrega();
         this.estudanteDonoId = atividadeEntrega.getEstudanteDono().getId();
     }
 
     public AtividadeEntrega toModel() {
-        return new AtividadeEntrega(dataLancamento, prazoEntrega, titulo, descricao, dificuldade, null, null, statusEntrega, null, null);
+        return new AtividadeEntrega(dataLancamento, prazoEntrega, titulo, descricao, dificuldade, null, statusEntrega, null, null);
     }
 }

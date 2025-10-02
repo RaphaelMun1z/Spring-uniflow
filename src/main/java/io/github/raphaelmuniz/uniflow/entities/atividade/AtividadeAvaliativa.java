@@ -1,5 +1,6 @@
 package io.github.raphaelmuniz.uniflow.entities.atividade;
 
+import io.github.raphaelmuniz.uniflow.entities.grupo.Disciplina;
 import io.github.raphaelmuniz.uniflow.entities.grupo.Grupo;
 import io.github.raphaelmuniz.uniflow.entities.enums.DificuldadeEnum;
 import io.github.raphaelmuniz.uniflow.entities.enums.VisivibilidadeAtividadeEnum;
@@ -21,8 +22,8 @@ import java.util.Set;
         @UniqueConstraint(columnNames = {"titulo", "grupo_publicado_id"})
 })
 public class AtividadeAvaliativa extends Atividade implements Serializable {
-    public AtividadeAvaliativa(LocalDateTime dataLancamento, LocalDateTime prazoEntrega, String titulo, String descricao, DificuldadeEnum dificuldade, Disciplina disciplina, String id, VisivibilidadeAtividadeEnum visivibilidadeAtividade, Grupo grupoPublicado, Assinante criadorAtividade) {
-        super(dataLancamento, prazoEntrega, titulo, descricao, dificuldade, disciplina);
+    public AtividadeAvaliativa(LocalDateTime dataLancamento, LocalDateTime prazoEntrega, String titulo, String descricao, DificuldadeEnum dificuldade, String id, VisivibilidadeAtividadeEnum visivibilidadeAtividade, Grupo grupoPublicado, Assinante criadorAtividade) {
+        super(dataLancamento, prazoEntrega, titulo, descricao, dificuldade);
         this.id = id;
         this.visivibilidadeAtividade = visivibilidadeAtividade;
         this.grupoPublicado = grupoPublicado;

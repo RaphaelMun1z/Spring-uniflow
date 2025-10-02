@@ -3,7 +3,6 @@ package io.github.raphaelmuniz.uniflow.services.grupo;
 import io.github.raphaelmuniz.uniflow.dto.req.grupo.AdicionarMembroGrupoDTO;
 import io.github.raphaelmuniz.uniflow.dto.req.grupo.GrupoRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.grupo.MembroGrupoResponseDTO;
-import io.github.raphaelmuniz.uniflow.dto.res.usuario.AssinanteResumeResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.atividade.AtividadeAvaliativaResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.grupo.GrupoResponseDTO;
 import io.github.raphaelmuniz.uniflow.entities.assinatura.AssinaturaModelo;
@@ -11,6 +10,7 @@ import io.github.raphaelmuniz.uniflow.entities.assinatura.AssinaturaUsuario;
 import io.github.raphaelmuniz.uniflow.entities.enums.PapelGrupoEnum;
 import io.github.raphaelmuniz.uniflow.entities.enums.StatusAssinaturaUsuarioEnum;
 import io.github.raphaelmuniz.uniflow.entities.enums.StatusGrupoEnum;
+import io.github.raphaelmuniz.uniflow.entities.grupo.Disciplina;
 import io.github.raphaelmuniz.uniflow.entities.grupo.Grupo;
 import io.github.raphaelmuniz.uniflow.entities.grupo.InscricaoGrupo;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Assinante;
@@ -18,6 +18,7 @@ import io.github.raphaelmuniz.uniflow.entities.usuario.Estudante;
 import io.github.raphaelmuniz.uniflow.exceptions.models.BusinessException;
 import io.github.raphaelmuniz.uniflow.exceptions.models.NotFoundException;
 import io.github.raphaelmuniz.uniflow.repositories.assinatura.AssinaturaUsuarioRepository;
+import io.github.raphaelmuniz.uniflow.repositories.grupo.DisciplinaRepository;
 import io.github.raphaelmuniz.uniflow.repositories.grupo.GrupoRepository;
 import io.github.raphaelmuniz.uniflow.repositories.grupo.InscricaoGrupoRepository;
 import io.github.raphaelmuniz.uniflow.repositories.usuario.AssinanteRepository;
@@ -39,6 +40,7 @@ public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoR
     private final EstudanteRepository estudanteRepository;
     private final InscricaoGrupoRepository inscricaoGrupoRepository;
     private final AssinaturaUsuarioRepository assinaturaUsuarioRepository;
+    private final DisciplinaRepository disciplinaRepository;
 
     private final List<RegraCriacaoGrupo> regrasCriacaoGrupoPadrao;
     private final List<RegraCriacaoGrupo> regrasCriacaoSubGrupo;
@@ -49,6 +51,7 @@ public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoR
             EstudanteRepository estudanteRepository,
             InscricaoGrupoRepository inscricaoGrupoRepository,
             AssinaturaUsuarioRepository assinaturaUsuarioRepository,
+            DisciplinaRepository disciplinaRepository,
             @Qualifier("regrasCriacaoGrupoPadrao") List<RegraCriacaoGrupo> regrasCriacaoGrupoPadrao,
             @Qualifier("regrasCriacaoSubGrupo") List<RegraCriacaoGrupo> regrasCriacaoSubGrupo
     ) {
@@ -58,6 +61,7 @@ public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoR
         this.estudanteRepository = estudanteRepository;
         this.inscricaoGrupoRepository = inscricaoGrupoRepository;
         this.assinaturaUsuarioRepository = assinaturaUsuarioRepository;
+        this.disciplinaRepository = disciplinaRepository;
         this.regrasCriacaoGrupoPadrao = regrasCriacaoGrupoPadrao;
         this.regrasCriacaoSubGrupo = regrasCriacaoSubGrupo;
     }
@@ -103,9 +107,13 @@ public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoR
     }
 
     private Grupo montarNovoGrupo(GrupoRequestDTO data, Assinante criador) {
+        Disciplina disciplina = disciplinaRepository.findById(data.getDisciplinaId())
+                .orElseThrow(() -> new NotFoundException("Disciplina não encontrada."));
+
         List<Estudante> estudantesInscritos = validarEstudantes(data.getEstudantesInscritosId());
 
         Grupo novoGrupo = inicializarGrupoBase(data, criador);
+        novoGrupo.setDisciplina(disciplina);
 
         adicionarInscricoes(novoGrupo, estudantesInscritos);
         adicionarAtividades(novoGrupo, data, criador);

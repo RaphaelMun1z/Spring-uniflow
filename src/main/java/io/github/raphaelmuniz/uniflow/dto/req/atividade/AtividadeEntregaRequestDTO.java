@@ -22,6 +22,6 @@ public class AtividadeEntregaRequestDTO implements RequestData<AtividadeEntrega>
     private String estudanteDonoId;
 
     public AtividadeEntrega toModel() {
-        return new AtividadeEntrega(dataLancamento, prazoEntrega, titulo, descricao, dificuldade, null, null, statusEntrega, null, null);
+        return new AtividadeEntrega(dataLancamento, prazoEntrega, titulo, descricao, dificuldade, null, statusEntrega, null, null);
     }
 }

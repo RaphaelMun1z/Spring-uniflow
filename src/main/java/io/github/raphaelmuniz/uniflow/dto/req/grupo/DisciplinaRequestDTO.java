@@ -1,7 +1,7 @@
-package io.github.raphaelmuniz.uniflow.dto.req.atividade;
+package io.github.raphaelmuniz.uniflow.dto.req.grupo;
 
 import io.github.raphaelmuniz.uniflow.dto.req.RequestData;
-import io.github.raphaelmuniz.uniflow.entities.atividade.Disciplina;
+import io.github.raphaelmuniz.uniflow.entities.grupo.Disciplina;
 import io.github.raphaelmuniz.uniflow.entities.embeddables.PeriodoLetivo;
 import io.github.raphaelmuniz.uniflow.entities.enums.DificuldadeEnum;
 import jakarta.persistence.Embedded;
@@ -32,6 +32,6 @@ public class DisciplinaRequestDTO implements RequestData<Disciplina> {
     private PeriodoLetivo periodoLetivo;
 
     public Disciplina toModel(){
-        return new Disciplina(null, nome, periodo, dificuldade, periodoLetivo);
+        return new Disciplina(null, nome, periodo, dificuldade, periodoLetivo, null);
     }
 }
