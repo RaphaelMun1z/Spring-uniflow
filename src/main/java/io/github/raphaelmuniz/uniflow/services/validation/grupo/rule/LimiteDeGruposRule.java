@@ -1,6 +1,8 @@
-package io.github.raphaelmuniz.uniflow.services.validation;
+package io.github.raphaelmuniz.uniflow.services.validation.grupo.rule;
 
 import io.github.raphaelmuniz.uniflow.exceptions.models.BusinessException;
+import io.github.raphaelmuniz.uniflow.services.validation.grupo.GrupoCreationRule;
+import io.github.raphaelmuniz.uniflow.services.validation.grupo.GrupoValidationContext;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 

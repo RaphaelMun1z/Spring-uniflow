@@ -4,7 +4,9 @@ import io.github.raphaelmuniz.uniflow.dto.req.grupo.AdicionarAtividadeRequestDTO
 import io.github.raphaelmuniz.uniflow.dto.req.grupo.GrupoRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.req.grupo.GrupoUpdateRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.req.grupo.SubGrupoRequestDTO;
+import io.github.raphaelmuniz.uniflow.dto.res.grupo.AtividadeDoGrupoResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.grupo.GrupoResponseDTO;
+import io.github.raphaelmuniz.uniflow.dto.res.grupo.MembroGrupoResponseDTO;
 import io.github.raphaelmuniz.uniflow.entities.assinatura.AssinaturaUsuario;
 import io.github.raphaelmuniz.uniflow.entities.enums.PapelGrupoEnum;
 import io.github.raphaelmuniz.uniflow.entities.enums.StatusAssinaturaUsuarioEnum;
@@ -21,9 +23,11 @@ import io.github.raphaelmuniz.uniflow.repositories.grupo.GrupoRepository;
 import io.github.raphaelmuniz.uniflow.repositories.grupo.InscricaoGrupoRepository;
 import io.github.raphaelmuniz.uniflow.repositories.usuario.UsuarioRepository;
 import io.github.raphaelmuniz.uniflow.services.generic.GenericCrudServiceImpl;
-import io.github.raphaelmuniz.uniflow.services.validation.AtividadeStrategy;
-import io.github.raphaelmuniz.uniflow.services.validation.AtividadeStrategyProvider;
-import io.github.raphaelmuniz.uniflow.services.validation.GrupoFactory;
+import io.github.raphaelmuniz.uniflow.services.validation.grupo.strategy.atividadeStrategy.AtividadeStrategy;
+import io.github.raphaelmuniz.uniflow.services.validation.grupo.strategy.atividadeStrategy.provider.AtividadeStrategyProvider;
+import io.github.raphaelmuniz.uniflow.services.validation.grupo.GrupoFactory;
+import io.github.raphaelmuniz.uniflow.services.validation.grupo.strategy.listarAtividadesStrategy.ListarAtividadesStrategy;
+import io.github.raphaelmuniz.uniflow.services.validation.grupo.strategy.listarAtividadesStrategy.provider.ListarAtividadesStrategyProvider;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,7 +44,9 @@ public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoR
     private final AssinaturaUsuarioRepository assinaturaUsuarioRepository;
     private final UsuarioRepository usuarioRepository;
     private final InscricaoGrupoRepository inscricaoGrupoRepository;
+
     private final AtividadeStrategyProvider atividadeStrategyProvider;
+    private final ListarAtividadesStrategyProvider listarAtividadesStrategyProvider;
 
     public GrupoService(
             GrupoRepository repository,
@@ -48,7 +54,8 @@ public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoR
             AssinaturaUsuarioRepository assinaturaUsuarioRepository,
             UsuarioRepository usuarioRepository,
             InscricaoGrupoRepository inscricaoGrupoRepository,
-            AtividadeStrategyProvider atividadeStrategyProvider) {
+            AtividadeStrategyProvider atividadeStrategyProvider,
+            ListarAtividadesStrategyProvider listarAtividadesStrategyProvider) {
         super(repository, GrupoRequestDTO::toModel, GrupoResponseDTO::new);
         this.grupoRepository = repository;
         this.grupoFactory = grupoFactory;
@@ -56,6 +63,7 @@ public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoR
         this.usuarioRepository = usuarioRepository;
         this.inscricaoGrupoRepository = inscricaoGrupoRepository;
         this.atividadeStrategyProvider = atividadeStrategyProvider;
+        this.listarAtividadesStrategyProvider = listarAtividadesStrategyProvider;
     }
 
     @Transactional
@@ -291,4 +299,28 @@ public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoR
         strategy.adicionarAtividade(grupo, dto, usuarioLogado);
     }
 
+    public List<MembroGrupoResponseDTO> listarMembrosDoGrupo(String grupoId, Usuario usuarioLogado) {
+        Grupo grupo = grupoRepository.findById(grupoId)
+                .orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
+
+        boolean isMembro = grupo.getInscricoes().stream()
+                .anyMatch(i -> i.getMembro().getId().equals(usuarioLogado.getId()));
+        if (!isMembro) {
+            throw new AccessDeniedException("Apenas membros podem ver a lista de participantes do grupo.");
+        }
+
+        return grupo.getInscricoes().stream()
+                .map(MembroGrupoResponseDTO::new)
+                .collect(Collectors.toList());
+    }
+
+
+    public List<AtividadeDoGrupoResponseDTO> listarAtividadesDoGrupo(String grupoId, Usuario usuarioLogado) {
+        Grupo grupo = grupoRepository.findById(grupoId)
+                .orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
+
+        ListarAtividadesStrategy strategy = listarAtividadesStrategyProvider.getStrategy(grupo.getTipoGrupo());
+
+        return strategy.listarAtividades(grupo, usuarioLogado);
+    }
 }

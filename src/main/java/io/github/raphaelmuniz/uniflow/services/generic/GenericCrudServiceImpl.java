@@ -12,23 +12,13 @@ import java.util.stream.Collectors;
 
 public abstract class GenericCrudServiceImpl<ReqDTO, ResDTO, E, ID extends Serializable> implements CrudService<ReqDTO, ResDTO> {
     protected final JpaRepository<E, ID> repository;
-    protected final Function<ReqDTO, E> toEntityMapper;
     protected final Function<E, ResDTO> toResponseMapper;
 
     protected GenericCrudServiceImpl(
             JpaRepository<E, ID> repository,
-            Function<ReqDTO, E> toEntityMapper,
             Function<E, ResDTO> toResponseMapper) {
         this.repository = repository;
-        this.toEntityMapper = toEntityMapper;
         this.toResponseMapper = toResponseMapper;
-    }
-
-    @Transactional
-    public ResDTO create(ReqDTO data) {
-        E entity = toEntityMapper.apply(data);
-        E saved = repository.save(entity);
-        return toResponseMapper.apply(saved);
     }
 
     public List<ResDTO> findAll() {

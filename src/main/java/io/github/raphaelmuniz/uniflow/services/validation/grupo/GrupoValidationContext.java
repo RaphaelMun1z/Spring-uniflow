@@ -1,4 +1,4 @@
-package io.github.raphaelmuniz.uniflow.services.validation;
+package io.github.raphaelmuniz.uniflow.services.validation.grupo;
 
 import io.github.raphaelmuniz.uniflow.dto.req.grupo.GrupoRequestDTO;
 import io.github.raphaelmuniz.uniflow.entities.assinatura.AssinaturaModelo;

@@ -2,8 +2,8 @@ package io.github.raphaelmuniz.uniflow.controllers.grupo;
 
 import io.github.raphaelmuniz.uniflow.controllers.generic.GenericCrudControllerImpl;
 import io.github.raphaelmuniz.uniflow.dto.req.grupo.*;
+import io.github.raphaelmuniz.uniflow.dto.res.grupo.AtividadeDoGrupoResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.grupo.MembroGrupoResponseDTO;
-import io.github.raphaelmuniz.uniflow.dto.res.atividade.AtividadeAvaliativaResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.grupo.GrupoResponseDTO;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Usuario;
 import io.github.raphaelmuniz.uniflow.services.grupo.GrupoService;
@@ -126,17 +126,20 @@ public class GrupoController extends GenericCrudControllerImpl<GrupoRequestDTO, 
         grupoService.adicionarAtividade(id, dto, usuarioLogado);
         return ResponseEntity.ok().build();
     }
-    // ------------------------------------------
-/*
-    @GetMapping("/{grupoId}/membros")
-    public ResponseEntity<List<MembroGrupoResponseDTO>> listarMembros(@PathVariable String grupoId) {
-        List<MembroGrupoResponseDTO> membros = service.listarMembrosDoGrupo(grupoId);
+
+    @GetMapping("/{id}/membros")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<MembroGrupoResponseDTO>> listarMembrosDoGrupo(
+            @PathVariable String id, @
+                    AuthenticationPrincipal Usuario usuarioLogado) {
+        List<MembroGrupoResponseDTO> membros = grupoService.listarMembrosDoGrupo(id, usuarioLogado);
         return ResponseEntity.ok(membros);
     }
 
-    @GetMapping("/{grupoId}/atividades")
-    public ResponseEntity<List<AtividadeAvaliativaResponseDTO>> listarAtividades(@PathVariable String grupoId) {
-        List<AtividadeAvaliativaResponseDTO> atividades = service.listarAtividadesDoGrupo(grupoId);
+    @GetMapping("/{id}/atividades")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<AtividadeDoGrupoResponseDTO>> listarAtividades(@PathVariable String id, @AuthenticationPrincipal Usuario usuarioLogado) {
+        List<AtividadeDoGrupoResponseDTO> atividades = grupoService.listarAtividadesDoGrupo(id, usuarioLogado);
         return ResponseEntity.ok(atividades);
-    }*/
+    }
 }

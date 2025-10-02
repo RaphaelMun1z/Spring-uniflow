@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 public interface AtividadeEntregaRepository extends JpaRepository<AtividadeEntrega, String> {
     @Query("""
@@ -51,4 +53,8 @@ public interface AtividadeEntregaRepository extends JpaRepository<AtividadeEntre
     List<AtividadeEntrega> findByAtividadeAvaliativaOrigemId(String atividadeAvaliativaOrigemId);
 
     boolean existsByEstudanteDonoIdAndAtividadeAvaliativaOrigemId(String estudanteId, String atividadeAvaliativaId);
+
+    int countByAtividadeAvaliativa_IdAndStatusIn(String id, Set<StatusEntregaEnum> entregue);
+
+    Optional<AtividadeEntrega> findByAtividadeAvaliativa_IdAndEstudanteDono_Id(String id, String id1);
 }

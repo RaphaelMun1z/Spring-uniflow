@@ -1,6 +1,7 @@
-package io.github.raphaelmuniz.uniflow.services.validation;
+package io.github.raphaelmuniz.uniflow.services.validation.grupo.strategy.atividadeStrategy.provider;
 
 import io.github.raphaelmuniz.uniflow.entities.enums.TipoGrupoEnum;
+import io.github.raphaelmuniz.uniflow.services.validation.grupo.strategy.atividadeStrategy.AtividadeStrategy;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

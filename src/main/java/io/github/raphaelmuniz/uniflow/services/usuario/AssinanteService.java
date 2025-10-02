@@ -8,6 +8,7 @@ import io.github.raphaelmuniz.uniflow.entities.assinatura.AssinaturaUsuario;
 import io.github.raphaelmuniz.uniflow.entities.enums.StatusAssinaturaUsuarioEnum;
 import io.github.raphaelmuniz.uniflow.entities.grupo.InscricaoGrupo;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Assinante;
+import io.github.raphaelmuniz.uniflow.exceptions.models.BusinessException;
 import io.github.raphaelmuniz.uniflow.exceptions.models.NotFoundException;
 import io.github.raphaelmuniz.uniflow.repositories.usuario.AssinanteRepository;
 import io.github.raphaelmuniz.uniflow.repositories.assinatura.AssinaturaUsuarioRepository;
@@ -51,5 +52,13 @@ public class AssinanteService extends GenericCrudServiceImpl<AssinanteRequestDTO
                 .orElseThrow(() -> new NotFoundException("Nenhuma assinatura vigente encontrada para este assinante."));
 
         return new AssinaturaUsuarioResponseDTO(assinaturaVigente);
+    }
+
+    public AssinaturaUsuario obterAssinaturaVigenteEntidade(String assinanteId) {
+        return assinaturaUsuarioRepository
+                .findFirstVigenteByAssinanteId(assinanteId,
+                        StatusAssinaturaUsuarioEnum.getStatusVigentes(),
+                        LocalDateTime.now())
+                .orElseThrow(() -> new BusinessException("É necessário um plano de assinatura ativo."));
     }
 }

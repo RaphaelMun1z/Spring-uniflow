@@ -1,28 +1,38 @@
 package io.github.raphaelmuniz.uniflow.dto.req.atividade;
 
-import io.github.raphaelmuniz.uniflow.dto.req.RequestData;
-import io.github.raphaelmuniz.uniflow.entities.atividade.AtividadeAvaliativa;
 import io.github.raphaelmuniz.uniflow.entities.enums.DificuldadeEnum;
 import io.github.raphaelmuniz.uniflow.entities.enums.VisivibilidadeAtividadeEnum;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 import java.time.LocalDateTime;
 
-@Data
-@AllArgsConstructor
-public class AtividadeAvaliativaRequestDTO implements RequestData<AtividadeAvaliativa> {
-    private LocalDateTime dataLancamento;
-    private LocalDateTime prazoEntrega;
-    private String titulo;
-    private String descricao;
-    private DificuldadeEnum dificuldade;
-    private VisivibilidadeAtividadeEnum visivibilidade;
-    private String grupoId;
-    private String criadorId;
-    private String disciplinaId;
+public record AtividadeAvaliativaRequestDTO(
+        @NotBlank(message = "O título é obrigatório.")
+        String titulo,
 
-    public AtividadeAvaliativa toModel() {
-        return new AtividadeAvaliativa(dataLancamento, prazoEntrega, titulo, descricao, dificuldade, null, visivibilidade, null, null);
-    }
+        @NotBlank(message = "A descrição é obrigatória.")
+        String descricao,
+
+        @NotNull(message = "O prazo de entrega é obrigatório.")
+        @Future(message = "O prazo de entrega deve ser no futuro.")
+        LocalDateTime prazoEntrega,
+
+        @NotNull(message = "A nota máxima é obrigatória.")
+        @Positive(message = "A nota máxima deve ser um valor positivo.")
+        Double notaMaxima,
+
+        @NotNull(message = "O campo 'permiteEnvioAtrasado' é obrigatório.")
+        Boolean permiteEnvioAtrasado,
+
+        @NotNull(message = "A dificuldade é obrigatória.")
+        DificuldadeEnum dificuldade,
+
+        @NotNull(message = "A visibilidade é obrigatória.")
+        VisivibilidadeAtividadeEnum visibilidadeAtividade,
+
+        String idAtividadeParaReutilizar
+) {
 }

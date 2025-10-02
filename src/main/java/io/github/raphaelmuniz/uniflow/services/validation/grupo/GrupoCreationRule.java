@@ -1,4 +1,4 @@
-package io.github.raphaelmuniz.uniflow.services.validation;
+package io.github.raphaelmuniz.uniflow.services.validation.grupo;
 
 @FunctionalInterface
 public interface GrupoCreationRule {

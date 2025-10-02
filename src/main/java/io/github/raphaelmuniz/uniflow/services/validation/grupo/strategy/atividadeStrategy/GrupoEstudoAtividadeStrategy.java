@@ -1,4 +1,4 @@
-package io.github.raphaelmuniz.uniflow.services.validation;
+package io.github.raphaelmuniz.uniflow.services.validation.grupo.strategy.atividadeStrategy;
 
 import io.github.raphaelmuniz.uniflow.dto.req.grupo.AdicionarAtividadeRequestDTO;
 import io.github.raphaelmuniz.uniflow.entities.atividade.AtividadeColaborativa;
