@@ -10,6 +10,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class DisciplinaService extends GenericCrudServiceImpl<DisciplinaRequestDTO, DisciplinaResponseDTO, Disciplina, String> {
     protected DisciplinaService(DisciplinaRepository repository) {
-        super(repository, DisciplinaRequestDTO::toModel, DisciplinaResponseDTO::new);
+        super(repository, DisciplinaResponseDTO::new);
     }
 }

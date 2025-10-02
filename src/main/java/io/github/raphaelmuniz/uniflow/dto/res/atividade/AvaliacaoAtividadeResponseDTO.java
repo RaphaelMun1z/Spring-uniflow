@@ -1,6 +1,7 @@
 package io.github.raphaelmuniz.uniflow.dto.res.atividade;
 
 import io.github.raphaelmuniz.uniflow.entities.atividade.AtividadeEntrega;
+import io.github.raphaelmuniz.uniflow.entities.atividade.AvaliacaoAtividade;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,12 +19,12 @@ public class AvaliacaoAtividadeResponseDTO {
     private String feedback;
     private LocalDateTime dataAvaliacao;
 
-    public AvaliacaoAtividadeResponseDTO(AtividadeEntrega atividadeEntrega) {
-        this.id = atividadeEntrega.getId();
-        this.titulo = atividadeEntrega.getTitulo();
-        this.descricao = atividadeEntrega.getDescricao();
-        this.nota = atividadeEntrega.getAvaliacaoAtividade().getNota();
-        this.feedback = atividadeEntrega.getAvaliacaoAtividade().getFeedback();
-        this.dataAvaliacao = atividadeEntrega.getAvaliacaoAtividade().getDataAvaliacao();
+    public AvaliacaoAtividadeResponseDTO(AvaliacaoAtividade avaliacao) {
+        this.id = avaliacao.getId();
+        this.titulo = avaliacao.getAtividadeAvaliada().getTitulo();
+        this.descricao = avaliacao.getAtividadeAvaliada().getDescricao();
+        this.nota = avaliacao.getNota();
+        this.feedback = avaliacao.getFeedback();
+        this.dataAvaliacao = avaliacao.getDataAvaliacao();
     }
 }

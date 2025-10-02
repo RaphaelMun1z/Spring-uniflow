@@ -22,7 +22,7 @@ public class NotificacaoService extends GenericCrudServiceImpl<NotificacaoReques
     NotificacaoAssinanteRepository notificacaoAssinanteRepository;
 
     protected NotificacaoService(NotificacaoRepository repository) {
-        super(repository, NotificacaoRequestDTO::toModel, NotificacaoResponseDTO::new);
+        super(repository, NotificacaoResponseDTO::new);
     }
 
     public NotificacoesProfileResponse getNotificacoesByAssinanteId(String assinanteId) {
@@ -49,5 +49,9 @@ public class NotificacaoService extends GenericCrudServiceImpl<NotificacaoReques
         if (linhasAfetadas == 0) {
             throw new NotFoundException("Notificação não encontrada ou já lida.");
         }
+    }
+
+    public int countNotificacoesNaoLidas(String id) {
+        return 0;
     }
 }

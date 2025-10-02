@@ -25,10 +25,9 @@ public class NotificacaoAssinanteService extends GenericCrudServiceImpl<Notifica
     NotificacaoRepository notificacaoRepository;
 
     protected NotificacaoAssinanteService(NotificacaoAssinanteRepository repository) {
-        super(repository, NotificacaoAssinanteRequestDTO::toModel, NotificacaoAssinanteResponseDTO::new);
+        super(repository, NotificacaoAssinanteResponseDTO::new);
     }
 
-    @Override
     public NotificacaoAssinanteResponseDTO create(NotificacaoAssinanteRequestDTO data) {
         Assinante assinante = assinanteRepository.findById(data.getAssinanteId()).orElseThrow(() -> new NotFoundException("Assinante não encontrado."));
         Notificacao notificacao = notificacaoRepository.findById(data.getNotificacaoId()).orElseThrow(() -> new NotFoundException("Notificação não encontrado."));

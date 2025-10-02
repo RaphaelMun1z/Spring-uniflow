@@ -15,7 +15,7 @@ public class PapelService extends GenericCrudServiceImpl<PapelRequestDTO, PapelR
     PapelRepository papelRepository;
 
     protected PapelService(PapelRepository repository) {
-        super(repository, PapelRequestDTO::toModel, PapelResponseDTO::new);
+        super(repository, PapelResponseDTO::new);
     }
 
     public Papel findByNome(String nome) {

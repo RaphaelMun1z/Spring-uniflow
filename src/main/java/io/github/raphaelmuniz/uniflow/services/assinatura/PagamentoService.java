@@ -21,10 +21,9 @@ public class PagamentoService extends GenericCrudServiceImpl<PagamentoRequestDTO
     AssinanteRepository assinanteRepository;
 
     protected PagamentoService(PagamentoRepository repository) {
-        super(repository, PagamentoRequestDTO::toModel, PagamentoResponseDTO::new);
+        super(repository, PagamentoResponseDTO::new);
     }
 
-    @Override
     public PagamentoResponseDTO create(PagamentoRequestDTO data) {
         Pagamento pagamento = data.toModel();
         Pagamento saved = repository.save(pagamento);

@@ -1,6 +1,8 @@
 package io.github.raphaelmuniz.uniflow.services.atividade;
 
 import io.github.raphaelmuniz.uniflow.dto.req.atividade.AtividadeAvaliativaRequestDTO;
+import io.github.raphaelmuniz.uniflow.dto.req.atividade.AtividadeAvaliativaUpdateRequestDTO;
+import io.github.raphaelmuniz.uniflow.dto.res.atividade.AtividadeAvaliativaDetalhadaResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.atividade.AtividadeAvaliativaResponseDTO;
 import io.github.raphaelmuniz.uniflow.entities.assinatura.AssinaturaUsuario;
 import io.github.raphaelmuniz.uniflow.entities.atividade.AtividadeAvaliativa;
@@ -107,5 +109,62 @@ public class AtividadeAvaliativaService extends GenericCrudServiceImpl<Atividade
         }
 
         return new AtividadeAvaliativaResponseDTO(atividadeSalva);
+    }
+
+    @Transactional(readOnly = true)
+    public AtividadeAvaliativaDetalhadaResponseDTO findById(String id, Usuario usuarioLogado) {
+        AtividadeAvaliativa atividade = atividadeAvaliativaRepository.findByIdWithEntregas(id)
+                .orElseThrow(() -> new NotFoundException("Atividade Avaliativa não encontrada."));
+
+        boolean isCriador = atividade.getAssinanteCriadorAtividade().getId().equals(usuarioLogado.getId());
+        boolean isAlunoDaTurma = atividade.getGrupoPublicado().getInscricoes().stream()
+                .anyMatch(i -> i.getMembro().getId().equals(usuarioLogado.getId()));
+
+        if (!isCriador && !isAlunoDaTurma) {
+            throw new AccessDeniedException("Você não tem permissão para visualizar esta atividade.");
+        }
+
+        return new AtividadeAvaliativaDetalhadaResponseDTO(atividade);
+    }
+
+    @Transactional
+    public AtividadeAvaliativaResponseDTO update(String id, AtividadeAvaliativaUpdateRequestDTO dto, Usuario professorLogado) {
+        AtividadeAvaliativa atividade = atividadeAvaliativaRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Atividade Avaliativa não encontrada."));
+
+        if (!atividade.getAssinanteCriadorAtividade().getId().equals(professorLogado.getId())) {
+            throw new AccessDeniedException("Apenas o criador pode editar esta atividade.");
+        }
+
+        if (dto.titulo() != null) atividade.setTitulo(dto.titulo());
+        if (dto.descricao() != null) atividade.setDescricao(dto.descricao());
+        if (dto.notaMaxima() != null) atividade.setNotaMaxima(dto.notaMaxima());
+        if (dto.permiteEnvioAtrasado() != null) atividade.setPermiteEnvioAtrasado(dto.permiteEnvioAtrasado());
+        if (dto.dificuldade() != null) atividade.setDificuldade(dto.dificuldade());
+        if (dto.visibilidadeAtividade() != null) atividade.setVisivibilidadeAtividade(dto.visibilidadeAtividade());
+
+        if (dto.prazoEntrega() != null) {
+            atividade.setPrazoEntrega(dto.prazoEntrega());
+            atividade.getCopiasDosAssinantes().forEach(entrega -> {
+                if (entrega.getStatusEntrega() == StatusEntregaEnum.PENDENTE) {
+                    entrega.setPrazoEntrega(dto.prazoEntrega());
+                }
+            });
+        }
+
+        AtividadeAvaliativa atividadeAtualizada = atividadeAvaliativaRepository.save(atividade);
+        return new AtividadeAvaliativaResponseDTO(atividadeAtualizada);
+    }
+
+    @Transactional
+    public void delete(String id, Usuario professorLogado) {
+        AtividadeAvaliativa atividade = atividadeAvaliativaRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Atividade Avaliativa não encontrada."));
+
+        if (!atividade.getAssinanteCriadorAtividade().getId().equals(professorLogado.getId())) {
+            throw new AccessDeniedException("Apenas o criador pode excluir esta atividade.");
+        }
+
+        atividadeAvaliativaRepository.delete(atividade);
     }
 }

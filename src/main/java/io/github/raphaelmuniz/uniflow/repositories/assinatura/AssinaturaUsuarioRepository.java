@@ -2,6 +2,8 @@ package io.github.raphaelmuniz.uniflow.repositories.assinatura;
 
 import io.github.raphaelmuniz.uniflow.entities.assinatura.AssinaturaUsuario;
 import io.github.raphaelmuniz.uniflow.entities.enums.StatusAssinaturaUsuarioEnum;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -24,6 +26,5 @@ public interface AssinaturaUsuarioRepository extends JpaRepository<AssinaturaUsu
             @Param("agora") LocalDateTime agora
     );
 
-    @EntityGraph(attributePaths = {"assinaturaModelo"})
-    List<AssinaturaUsuario> findByAssinanteId(String assinanteId);
+    Page<AssinaturaUsuario> findByAssinante_Id(String assinanteId, Pageable pageable);
 }

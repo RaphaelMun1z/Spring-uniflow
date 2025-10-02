@@ -10,6 +10,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class InscricaoGrupoService extends GenericCrudServiceImpl<InscricaoGrupoRequestDTO, InscricaoGrupoResponseDTO, InscricaoGrupo, String> {
     protected InscricaoGrupoService(InscricaoGrupoRepository repository) {
-        super(repository, InscricaoGrupoRequestDTO::toModel, InscricaoGrupoResponseDTO::new);
+        super(repository, InscricaoGrupoResponseDTO::new);
     }
 }

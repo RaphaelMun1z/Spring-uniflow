@@ -23,10 +23,9 @@ public class TransmissaoService extends GenericCrudServiceImpl<TransmissaoReques
     NotificacaoRepository notificacaoRepository;
 
     protected TransmissaoService(TransmissaoRepository repository) {
-        super(repository, TransmissaoRequestDTO::toModel, TransmissaoResponseDTO::new);
+        super(repository, TransmissaoResponseDTO::new);
     }
 
-    @Override
     public TransmissaoResponseDTO create(TransmissaoRequestDTO data) {
         List<Notificacao> notificacoes = notificacaoRepository.findAllById(data.getNotificacoesId());
         if (notificacoes.size() != data.getNotificacoesId().size()) {

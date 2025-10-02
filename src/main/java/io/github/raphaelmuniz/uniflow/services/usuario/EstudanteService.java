@@ -18,7 +18,6 @@ import io.github.raphaelmuniz.uniflow.repositories.grupo.InscricaoGrupoRepositor
 import io.github.raphaelmuniz.uniflow.repositories.usuario.EstudanteRepository;
 import io.github.raphaelmuniz.uniflow.services.autorizacao.PapelService;
 import io.github.raphaelmuniz.uniflow.services.generic.GenericCrudServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,31 +29,32 @@ import java.util.stream.Collectors;
 
 @Service
 public class EstudanteService extends GenericCrudServiceImpl<EstudanteRequestDTO, EstudanteResponseDTO, Estudante, String> {
-    @Autowired
-    EstudanteRepository repository;
+    private final EstudanteRepository estudanteRepository;
+    private final AssinaturaModeloRepository assinaturaModeloRepository;
+    private final InscricaoGrupoRepository inscricaoGrupoRepository;
+    private final GrupoRepository grupoRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final PapelService papelService;
 
-    @Autowired
-    AssinaturaModeloRepository assinaturaModeloRepository;
-
-    @Autowired
-    InscricaoGrupoRepository inscricaoGrupoRepository;
-
-    @Autowired
-    GrupoRepository grupoRepository;
-
-    @Autowired
-    PasswordEncoder passwordEncoder;
-
-    @Autowired
-    PapelService papelService;
-
-    protected EstudanteService(EstudanteRepository repository) {
-        super(repository, EstudanteRequestDTO::toModel, EstudanteResponseDTO::new);
+    protected EstudanteService(
+            EstudanteRepository estudanteRepository,
+            AssinaturaModeloRepository assinaturaModeloRepository,
+            InscricaoGrupoRepository inscricaoGrupoRepository,
+            PasswordEncoder passwordEncoder,
+            GrupoRepository grupoRepository,
+            PapelService papelService
+    ) {
+        super(estudanteRepository, EstudanteResponseDTO::new);
+        this.estudanteRepository = estudanteRepository;
+        this.assinaturaModeloRepository = assinaturaModeloRepository;
+        this.inscricaoGrupoRepository = inscricaoGrupoRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.grupoRepository = grupoRepository;
+        this.papelService = papelService;
     }
 
-    @Override
     public EstudanteResponseDTO create(EstudanteRequestDTO data) {
-        if (repository.existsByEmail(data.getEmail())) {
+        if (estudanteRepository.existsByEmail(data.getEmail())) {
             throw new BusinessException("Estudante já registrado.");
         }
 

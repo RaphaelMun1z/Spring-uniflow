@@ -13,10 +13,6 @@ public class GenericCrudControllerImpl<ReqDTO, ResDTO> implements CrudController
         this.service = service;
     }
 
-    public ResponseEntity<ResDTO> create(ReqDTO data) {
-        return ResponseEntity.ok(service.create(data));
-    }
-
     public ResponseEntity<List<ResDTO>> findAll() {
         return ResponseEntity.ok(service.findAll());
     }

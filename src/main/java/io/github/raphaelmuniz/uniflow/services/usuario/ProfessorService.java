@@ -29,10 +29,9 @@ public class ProfessorService extends GenericCrudServiceImpl<ProfessorRequestDTO
     PasswordEncoder passwordEncoder;
 
     protected ProfessorService(ProfessorRepository repository) {
-        super(repository, ProfessorRequestDTO::toModel, ProfessorResponseDTO::new);
+        super(repository, ProfessorResponseDTO::new);
     }
 
-    @Override
     public ProfessorResponseDTO create(ProfessorRequestDTO data) {
         if (repository.existsByEmail(data.getEmail())) {
             throw new BusinessException("Professor já registrado.");

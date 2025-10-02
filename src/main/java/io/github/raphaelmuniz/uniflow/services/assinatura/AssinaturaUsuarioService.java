@@ -2,7 +2,6 @@ package io.github.raphaelmuniz.uniflow.services.assinatura;
 
 import io.github.raphaelmuniz.uniflow.dto.req.assinatura.AssinaturaUsuarioRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.profile.AssinaturaProfileResponseDTO;
-import io.github.raphaelmuniz.uniflow.dto.res.assinatura.AssinaturaModeloResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.assinatura.AssinaturaUsuarioResponseDTO;
 import io.github.raphaelmuniz.uniflow.entities.enums.StatusAssinaturaUsuarioEnum;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Assinante;
@@ -13,10 +12,11 @@ import io.github.raphaelmuniz.uniflow.repositories.usuario.AssinanteRepository;
 import io.github.raphaelmuniz.uniflow.repositories.assinatura.AssinaturaModeloRepository;
 import io.github.raphaelmuniz.uniflow.repositories.assinatura.AssinaturaUsuarioRepository;
 import io.github.raphaelmuniz.uniflow.services.generic.GenericCrudServiceImpl;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class AssinaturaUsuarioService extends GenericCrudServiceImpl<AssinaturaUsuarioRequestDTO, AssinaturaUsuarioResponseDTO, AssinaturaUsuario, String> {
@@ -29,13 +29,12 @@ public class AssinaturaUsuarioService extends GenericCrudServiceImpl<AssinaturaU
             AssinaturaUsuarioRepository assinaturaUsuarioRepository,
             AssinaturaModeloRepository assinaturaModeloRepository,
             AssinanteRepository assinanteRepository) {
-        super(repository, AssinaturaUsuarioRequestDTO::toModel, AssinaturaUsuarioResponseDTO::new);
+        super(repository, AssinaturaUsuarioResponseDTO::new);
         this.assinaturaUsuarioRepository = assinaturaUsuarioRepository;
         this.assinaturaModeloRepository = assinaturaModeloRepository;
         this.assinanteRepository = assinanteRepository;
     }
 
-    @Override
     public AssinaturaUsuarioResponseDTO create(AssinaturaUsuarioRequestDTO data) {
         Assinante assinante = assinanteRepository.findById(data.getAssinanteId()).orElseThrow(() -> new NotFoundException("Assinante não encontrado"));
         AssinaturaModelo assinaturaModelo = assinaturaModeloRepository.findById(data.getAssinaturaModeloId()).orElseThrow(() -> new NotFoundException("Assinatura modelo não encontrada"));
@@ -45,11 +44,8 @@ public class AssinaturaUsuarioService extends GenericCrudServiceImpl<AssinaturaU
         return new AssinaturaUsuarioResponseDTO(saved);
     }
 
-    public List<AssinaturaProfileResponseDTO> findByAssinanteId(String assinanteId) {
-        List<AssinaturaUsuario> assinaturaUsuario = assinaturaUsuarioRepository.findByAssinanteId(assinanteId);
-        return assinaturaUsuario.stream().map(au -> {
-            AssinaturaModeloResponseDTO assinaturaModeloResponseDTO = new AssinaturaModeloResponseDTO(au.getAssinaturaModelo());
-            return new AssinaturaProfileResponseDTO(null, au.getDataInicio(), au.getDataExpiracao(), au.getStatus(), assinaturaModeloResponseDTO);
-        }).toList();
+    public Page<AssinaturaProfileResponseDTO> findByAssinanteId(String assinanteId, Pageable pageable) {
+        Page<AssinaturaUsuario> assinaturasPage = assinaturaUsuarioRepository.findByAssinante_Id(assinanteId, pageable);
+        return assinaturasPage.map(AssinaturaProfileResponseDTO::new);
     }
 }

@@ -56,7 +56,7 @@ public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoR
             InscricaoGrupoRepository inscricaoGrupoRepository,
             AtividadeStrategyProvider atividadeStrategyProvider,
             ListarAtividadesStrategyProvider listarAtividadesStrategyProvider) {
-        super(repository, GrupoRequestDTO::toModel, GrupoResponseDTO::new);
+        super(repository, GrupoResponseDTO::new);
         this.grupoRepository = repository;
         this.grupoFactory = grupoFactory;
         this.assinaturaUsuarioRepository = assinaturaUsuarioRepository;

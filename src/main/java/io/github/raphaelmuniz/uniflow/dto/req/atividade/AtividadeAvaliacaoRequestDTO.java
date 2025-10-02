@@ -22,6 +22,6 @@ public class AtividadeAvaliacaoRequestDTO implements RequestData<AvaliacaoAtivid
     private String professorAvaliadorId;
 
     public AvaliacaoAtividade toModel() {
-        return new AvaliacaoAtividade(null, null, nota, feedback, null);
+        return new AvaliacaoAtividade(null, null, nota, feedback, null, null);
     }
 }

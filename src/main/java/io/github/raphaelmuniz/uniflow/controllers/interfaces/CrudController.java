@@ -7,9 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 public interface CrudController<ReqDTO, ResDTO> {
-    @PostMapping
-    ResponseEntity<ResDTO> create(@RequestBody @Valid ReqDTO data);
-
     @GetMapping
     ResponseEntity<List<ResDTO>> findAll();
 

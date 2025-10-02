@@ -2,6 +2,7 @@ package io.github.raphaelmuniz.uniflow.dto.res.profile;
 
 import io.github.raphaelmuniz.uniflow.dto.res.assinatura.AssinaturaModeloResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.assinatura.AssinaturaUsuarioResponseDTO;
+import io.github.raphaelmuniz.uniflow.entities.assinatura.AssinaturaUsuario;
 import io.github.raphaelmuniz.uniflow.entities.enums.StatusAssinaturaUsuarioEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,11 +20,11 @@ public class AssinaturaProfileResponseDTO {
     private StatusAssinaturaUsuarioEnum status;
     private AssinaturaModeloResponseDTO assinaturaModelo;
 
-    public AssinaturaProfileResponseDTO(AssinaturaUsuarioResponseDTO auDTO){
-        this.assinaturaUsuarioId = auDTO.getId();
-        this.dataInicio = auDTO.getDataInicio();
-        this.dataExpiracao = auDTO.getDataExpiracao();
-        this.status = auDTO.getStatus();
+    public AssinaturaProfileResponseDTO(AssinaturaUsuario assinaturaUsuario) {
+        this.assinaturaUsuarioId = assinaturaUsuario.getId();
+        this.dataInicio = assinaturaUsuario.getDataInicio();
+        this.dataExpiracao = assinaturaUsuario.getDataExpiracao();
+        this.status = assinaturaUsuario.getStatus();
         this.assinaturaModelo = null;
     }
 }

@@ -1,5 +1,6 @@
 package io.github.raphaelmuniz.uniflow.entities.atividade;
 
+import io.github.raphaelmuniz.uniflow.entities.usuario.Professor;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -33,7 +34,13 @@ public class AvaliacaoAtividade {
 
     private String feedback;
 
+    @NotNull(message = "Atividade Avaliada não pode ser nulo")
     @OneToOne(optional = false)
     @JoinColumn(name = "atividade_entrega_id", unique = true)
     private AtividadeEntrega atividadeAvaliada;
+
+    @NotNull(message = "Professor Avaliador não pode ser nulo")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "professor_avaliador_id")
+    private Professor professorAvaliador;
 }

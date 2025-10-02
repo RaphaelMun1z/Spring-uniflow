@@ -18,7 +18,7 @@ public class AssinaturaModeloService extends GenericCrudServiceImpl<AssinaturaMo
     AssinaturaModeloRepository repository;
 
     protected AssinaturaModeloService(AssinaturaModeloRepository repository) {
-        super(repository, AssinaturaModeloRequestDTO::toModel, AssinaturaModeloResponseDTO::new);
+        super(repository, AssinaturaModeloResponseDTO::new);
     }
 
     @Transactional

@@ -10,6 +10,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class AdminService extends GenericCrudServiceImpl<AdminRequestDTO, AdminResponseDTO, Admin, String> {
     protected AdminService(AdminRepository repository) {
-        super(repository, AdminRequestDTO::toModel, AdminResponseDTO::new);
+        super(repository, AdminResponseDTO::new);
     }
 }

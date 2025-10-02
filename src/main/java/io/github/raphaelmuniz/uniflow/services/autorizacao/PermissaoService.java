@@ -10,6 +10,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class PermissaoService extends GenericCrudServiceImpl<PermissaoRequestDTO, PermissaoResponseDTO, Permissao, String> {
     protected PermissaoService(PermissaoRepository repository) {
-        super(repository, PermissaoRequestDTO::toModel, PermissaoResponseDTO::new);
+        super(repository, PermissaoResponseDTO::new);
     }
 }

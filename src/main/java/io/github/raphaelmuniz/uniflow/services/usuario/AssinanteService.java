@@ -1,6 +1,7 @@
 package io.github.raphaelmuniz.uniflow.services.usuario;
 
 import io.github.raphaelmuniz.uniflow.dto.req.usuario.AssinanteRequestDTO;
+import io.github.raphaelmuniz.uniflow.dto.res.usuario.AssinantePublicProfileDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.usuario.AssinanteResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.assinatura.AssinaturaUsuarioResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.profile.GruposProfileResponseDTO;
@@ -13,45 +14,37 @@ import io.github.raphaelmuniz.uniflow.exceptions.models.NotFoundException;
 import io.github.raphaelmuniz.uniflow.repositories.usuario.AssinanteRepository;
 import io.github.raphaelmuniz.uniflow.repositories.assinatura.AssinaturaUsuarioRepository;
 import io.github.raphaelmuniz.uniflow.repositories.grupo.InscricaoGrupoRepository;
+import io.github.raphaelmuniz.uniflow.repositories.usuario.UsuarioRepository;
 import io.github.raphaelmuniz.uniflow.services.generic.GenericCrudServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class AssinanteService extends GenericCrudServiceImpl<AssinanteRequestDTO, AssinanteResponseDTO, Assinante, String> {
-    @Autowired
-    InscricaoGrupoRepository inscricaoGrupoRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final InscricaoGrupoRepository inscricaoGrupoRepository;
+    private final AssinaturaUsuarioRepository assinaturaUsuarioRepository;
 
-    @Autowired
-    AssinaturaUsuarioRepository assinaturaUsuarioRepository;
-
-    protected AssinanteService(AssinanteRepository repository) {
-        super(repository, null, AssinanteResponseDTO::new);
+    protected AssinanteService(
+            UsuarioRepository usuarioRepository,
+            AssinanteRepository assinanteRepository,
+            InscricaoGrupoRepository inscricaoGrupoRepository,
+            AssinaturaUsuarioRepository assinaturaUsuarioRepository
+    ) {
+        super(assinanteRepository, AssinanteResponseDTO::new);
+        this.usuarioRepository = usuarioRepository;
+        this.inscricaoGrupoRepository = inscricaoGrupoRepository;
+        this.assinaturaUsuarioRepository = assinaturaUsuarioRepository;
     }
 
-    @Override
-    public AssinanteResponseDTO create(AssinanteRequestDTO data) {
-        throw new IllegalArgumentException();
-    }
+    public Page<GruposProfileResponseDTO> obterGruposPorAssinanteId(String assinanteId, Pageable pageable) {
+        Page<InscricaoGrupo> inscricoesPage = inscricaoGrupoRepository.findByMembro_Id(assinanteId, pageable);
 
-    public List<GruposProfileResponseDTO> obterGruposPorAssinanteId(String assinanteId) {
-        List<InscricaoGrupo> inscricoes = inscricaoGrupoRepository.findAllByEstudanteMembro_Id(assinanteId);
-        return inscricoes.stream().map(GruposProfileResponseDTO::new).toList();
-    }
-
-    public AssinaturaUsuarioResponseDTO obterAssinaturaVigente(String assinanteId) {
-        if (!repository.existsById(assinanteId)) {
-            throw new NotFoundException("Assinante não encontrado.");
-        }
-
-        AssinaturaUsuario assinaturaVigente = assinaturaUsuarioRepository
-                .findFirstVigenteByAssinanteId(assinanteId, StatusAssinaturaUsuarioEnum.getStatusVigentes(), LocalDateTime.now())
-                .orElseThrow(() -> new NotFoundException("Nenhuma assinatura vigente encontrada para este assinante."));
-
-        return new AssinaturaUsuarioResponseDTO(assinaturaVigente);
+        return inscricoesPage.map(GruposProfileResponseDTO::new);
     }
 
     public AssinaturaUsuario obterAssinaturaVigenteEntidade(String assinanteId) {
@@ -60,5 +53,18 @@ public class AssinanteService extends GenericCrudServiceImpl<AssinanteRequestDTO
                         StatusAssinaturaUsuarioEnum.getStatusVigentes(),
                         LocalDateTime.now())
                 .orElseThrow(() -> new BusinessException("É necessário um plano de assinatura ativo."));
+    }
+
+    @Transactional(readOnly = true)
+    public AssinantePublicProfileDTO buscarPerfilPublicoPorId(String id) {
+        Assinante assinante = (Assinante) usuarioRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Usuário não encontrado."));
+        return new AssinantePublicProfileDTO(assinante);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<AssinantePublicProfileDTO> listarTodosPerfisPublicos(Pageable pageable) {
+        Page<Assinante> assinantesPage = usuarioRepository.findAllAssinantes(pageable);
+        return assinantesPage.map(AssinantePublicProfileDTO::new);
     }
 }

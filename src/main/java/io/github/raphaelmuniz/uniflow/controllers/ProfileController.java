@@ -1,162 +1,111 @@
 package io.github.raphaelmuniz.uniflow.controllers;
 
-import io.github.raphaelmuniz.uniflow.dto.req.atividade.AtividadeEntregaStatusPatchRequestDTO;
+import io.github.raphaelmuniz.uniflow.dto.req.usuario.ProfileUpdateRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.*;
-import io.github.raphaelmuniz.uniflow.dto.res.assinatura.AssinaturaModeloResponseDTO;
-import io.github.raphaelmuniz.uniflow.dto.res.assinatura.AssinaturaUsuarioResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.assinatura.PagamentoResponseDTO;
-import io.github.raphaelmuniz.uniflow.dto.res.atividade.AtividadeEntregaResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.profile.AssinaturaProfileResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.profile.GruposProfileResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.profile.NotificacoesProfileResponse;
+import io.github.raphaelmuniz.uniflow.dto.res.usuario.ProfileResponseDTO;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Usuario;
-import io.github.raphaelmuniz.uniflow.services.assinatura.AssinaturaModeloService;
+import io.github.raphaelmuniz.uniflow.services.ProfileService;
 import io.github.raphaelmuniz.uniflow.services.assinatura.AssinaturaUsuarioService;
 import io.github.raphaelmuniz.uniflow.services.assinatura.PagamentoService;
-import io.github.raphaelmuniz.uniflow.services.atividade.AtividadeEntregaService;
 import io.github.raphaelmuniz.uniflow.services.notificacao.NotificacaoService;
 import io.github.raphaelmuniz.uniflow.services.usuario.AssinanteService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/me")
 public class ProfileController {
-    @Autowired
-    AssinaturaUsuarioService assinaturaUsuarioService;
+    private final ProfileService profileService;
+    private final AssinanteService assinanteService;
+    private final AssinaturaUsuarioService assinaturaUsuarioService;
+    private final PagamentoService pagamentoService;
+    private final NotificacaoService notificacaoService;
 
-    @Autowired
-    AssinaturaModeloService assinaturaModeloService;
+    public ProfileController(
+            ProfileService profileService,
+            AssinanteService assinanteService,
+            AssinaturaUsuarioService assinaturaUsuarioService,
+            PagamentoService pagamentoService,
+            NotificacaoService notificacaoService
+    ) {
+        this.profileService = profileService;
+        this.assinanteService = assinanteService;
+        this.assinaturaUsuarioService = assinaturaUsuarioService;
+        this.pagamentoService = pagamentoService;
+        this.notificacaoService = notificacaoService;
+    }
 
-    @Autowired
-    PagamentoService pagamentoService;
-
-    @Autowired
-    AtividadeEntregaService atividadeEntregaService;
-
-    @Autowired
-    AssinanteService assinanteService;
-
-    @Autowired
-    NotificacaoService notificacaoService;
-
-    @GetMapping("/me")
+    @GetMapping
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<String> me() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    public ResponseEntity<ProfileResponseDTO> obterMeuPerfil(@AuthenticationPrincipal Usuario usuarioLogado) {
+        ProfileResponseDTO perfil = profileService.getAuthenticatedUserProfile(usuarioLogado);
+        return ResponseEntity.ok(perfil);
+    }
 
-        if (authentication == null) {
-            return ResponseEntity.status(401).body("Nenhum usuário autenticado.");
-        }
+    @PatchMapping
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ProfileResponseDTO> atualizarMeuPerfil(
+            @AuthenticationPrincipal Usuario usuarioLogado,
+            @RequestBody @Valid ProfileUpdateRequestDTO dto
+    ) {
+        ProfileResponseDTO perfilAtualizado = profileService.atualizarPerfilUsuario(usuarioLogado, dto);
+        return ResponseEntity.ok(perfilAtualizado);
+    }
 
-        String username = authentication.getName();
-        String authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(", "));
-
-        String response = "Usuário: " + username + " | Permissões: [" + authorities + "]";
-
+    @GetMapping("/assinaturas")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<PaginatedResponse<AssinaturaProfileResponseDTO>> obterMinhasAssinaturas(
+            @AuthenticationPrincipal Usuario usuarioLogado,
+            @PageableDefault(size = 5, sort = "dataInicio", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        Page<AssinaturaProfileResponseDTO> page = assinaturaUsuarioService.findByAssinanteId(usuarioLogado.getId(), pageable);
+        PaginatedResponse<AssinaturaProfileResponseDTO> response = new PaginatedResponse<>(
+                page.getContent(), page.getNumber(), page.getTotalPages(), page.getTotalElements()
+        );
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/me/assinatura-ativa")
-    @PreAuthorize("isAuthenticated() and (authentication.principal.hasRole('ESTUDANTE') or authentication.principal.hasRole('PROFESSOR'))")
-    public ResponseEntity<AssinaturaProfileResponseDTO> obterAssinaturaVigente(@AuthenticationPrincipal Usuario usuarioLogado) {
-        AssinaturaUsuarioResponseDTO assinaturaVigente = assinanteService.obterAssinaturaVigente(usuarioLogado.getId());
-        AssinaturaProfileResponseDTO avDTO = new AssinaturaProfileResponseDTO(assinaturaVigente);
-        AssinaturaModeloResponseDTO am = assinaturaModeloService.findById(assinaturaVigente.getAssinaturaModeloId());
-        avDTO.setAssinaturaModelo(am);
-        return ResponseEntity.ok(avDTO);
-    }
-
-    @GetMapping("/me/assinaturas")
-    @PreAuthorize("isAuthenticated() and (authentication.principal.hasRole('ESTUDANTE') or authentication.principal.hasRole('PROFESSOR'))")
-    public ResponseEntity<List<AssinaturaProfileResponseDTO>> obterMinhasAssinaturas(@AuthenticationPrincipal Usuario usuarioLogado) {
-        List<AssinaturaProfileResponseDTO> assinaturas = assinaturaUsuarioService.findByAssinanteId(usuarioLogado.getId());
-        return ResponseEntity.ok(assinaturas);
-    }
-
-    @GetMapping("/me/pagamentos")
-    @PreAuthorize("isAuthenticated() and (authentication.principal.hasRole('ESTUDANTE') or authentication.principal.hasRole('PROFESSOR'))")
+    @GetMapping("/pagamentos")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PaginatedResponse<PagamentoResponseDTO>> obterMeusPagamentos(
             @AuthenticationPrincipal Usuario usuarioLogado,
             @PageableDefault(size = 10, sort = "dataPagamento", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         Page<PagamentoResponseDTO> page = pagamentoService.listarHistoricoDePagamentos(usuarioLogado.getId(), pageable);
         PaginatedResponse<PagamentoResponseDTO> response = new PaginatedResponse<>(
-                page.getContent(),
-                page.getNumber(),
-                page.getTotalPages(),
-                page.getTotalElements()
+                page.getContent(), page.getNumber(), page.getTotalPages(), page.getTotalElements()
         );
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/me/minhas-atividades")
-    @PreAuthorize("isAuthenticated() and authentication.principal.hasRole('ESTUDANTE')")
-    public ResponseEntity<List<AtividadeEntregaResponseDTO>> obterMinhasAtividades(
-            @AuthenticationPrincipal Usuario usuarioLogado
-    ) {
-        List<AtividadeEntregaResponseDTO> atividades = atividadeEntregaService.findByEstudanteDonoId(usuarioLogado.getId());
-        return ResponseEntity.ok(atividades);
-    }
-
-    @PatchMapping("/me/minhas-atividades/{atividadeId}")
-    @PreAuthorize("isAuthenticated() and authentication.principal.hasRole('ESTUDANTE')")
-    public ResponseEntity<Void> atualizarStatusMinhaAtividade(
+    @GetMapping("/grupos")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<PaginatedResponse<GruposProfileResponseDTO>> obterMeusGrupos(
             @AuthenticationPrincipal Usuario usuarioLogado,
-            @PathVariable String atividadeId,
-            @RequestBody @Valid AtividadeEntregaStatusPatchRequestDTO requestDTO
+            @PageableDefault(size = 10, sort = "grupo.titulo", direction = Sort.Direction.ASC) Pageable pageable
     ) {
-        atividadeEntregaService.atualizarStatus(
-                usuarioLogado,
-                atividadeId,
-                requestDTO.getStatus()
+        Page<GruposProfileResponseDTO> page = assinanteService.obterGruposPorAssinanteId(usuarioLogado.getId(), pageable);
+        PaginatedResponse<GruposProfileResponseDTO> response = new PaginatedResponse<>(
+                page.getContent(), page.getNumber(), page.getTotalPages(), page.getTotalElements()
         );
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/me/meus-grupos")
-    @PreAuthorize("isAuthenticated() and (authentication.principal.hasRole('ESTUDANTE') or authentication.principal.hasRole('PROFESSOR'))")
-    public ResponseEntity<List<GruposProfileResponseDTO>> obterMeusGrupos(
-            @AuthenticationPrincipal Usuario usuarioLogado
-    ) {
-        List<GruposProfileResponseDTO> grupos = assinanteService.obterGruposPorAssinanteId(usuarioLogado.getId());
-        return ResponseEntity.ok(grupos);
-    }
-
-    @GetMapping("/me/minhas-notificacoes")
+    @GetMapping("/notificacoes")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<NotificacoesProfileResponse> obterMinhasNotificacoes(
-            @AuthenticationPrincipal Usuario usuarioLogado
-    ) {
-        NotificacoesProfileResponse minhasNotificacoes = notificacaoService.getNotificacoesByAssinanteId(usuarioLogado.getId());
-        return ResponseEntity.ok(minhasNotificacoes);
-    }
-
-    @PatchMapping("/me/notificacoes/{notificacaoId}/marcar-como-lida")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<NotificacoesProfileResponse> marcarNotificacaoComoLida(
-            @PathVariable String notificacaoId,
-            @AuthenticationPrincipal Usuario usuarioLogado
-    ) {
-        String assinanteId = usuarioLogado.getId();
-        notificacaoService.marcarNotificacaoComoLida(notificacaoId, assinanteId);
-        NotificacoesProfileResponse minhasNotificacoesAtualizadas = notificacaoService.getNotificacoesByAssinanteId(assinanteId);
-        return ResponseEntity.ok(minhasNotificacoesAtualizadas);
+    public ResponseEntity<NotificacoesProfileResponse> obterMinhasNotificacoes(@AuthenticationPrincipal Usuario usuarioLogado) {
+        NotificacoesProfileResponse notificacoes = notificacaoService.getNotificacoesByAssinanteId(usuarioLogado.getId());
+        return ResponseEntity.ok(notificacoes);
     }
 }

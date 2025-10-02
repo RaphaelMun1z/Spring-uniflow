@@ -1,27 +1,16 @@
 package io.github.raphaelmuniz.uniflow.dto.req.atividade;
 
-import io.github.raphaelmuniz.uniflow.dto.req.RequestData;
-import io.github.raphaelmuniz.uniflow.entities.atividade.AtividadeEntrega;
-import io.github.raphaelmuniz.uniflow.entities.enums.DificuldadeEnum;
 import io.github.raphaelmuniz.uniflow.entities.enums.StatusEntregaEnum;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import jakarta.validation.constraints.NotNull;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
-@Data
-@AllArgsConstructor
-public class AtividadeEntregaRequestDTO implements RequestData<AtividadeEntrega> {
-    private LocalDateTime dataLancamento;
-    private LocalDateTime prazoEntrega;
-    private String titulo;
-    private String descricao;
-    private DificuldadeEnum dificuldade;
-    private String disciplinaId;
-    private StatusEntregaEnum statusEntrega;
-    private String estudanteDonoId;
+public record AtividadeEntregaRequestDTO(
+        @NotNull(message = "O novo status da entrega é obrigatório.")
+        StatusEntregaEnum status,
 
-    public AtividadeEntrega toModel() {
-        return new AtividadeEntrega(dataLancamento, prazoEntrega, titulo, descricao, dificuldade, null, statusEntrega, null, null);
-    }
+        String textoResposta,
+
+        List<String> anexos
+) {
 }

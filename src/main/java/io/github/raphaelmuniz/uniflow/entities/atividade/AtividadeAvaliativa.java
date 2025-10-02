@@ -54,6 +54,6 @@ public class AtividadeAvaliativa extends Atividade implements Serializable {
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "atividadeAvaliativaOrigem")
+    @OneToMany(mappedBy = "atividadeAvaliativaOrigem", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<AtividadeEntrega> copiasDosAssinantes = new HashSet<>();
 }
