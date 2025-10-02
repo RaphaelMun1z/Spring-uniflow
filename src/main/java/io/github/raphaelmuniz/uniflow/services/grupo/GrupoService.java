@@ -1,211 +1,294 @@
 package io.github.raphaelmuniz.uniflow.services.grupo;
 
-import io.github.raphaelmuniz.uniflow.dto.req.grupo.AdicionarMembroGrupoDTO;
+import io.github.raphaelmuniz.uniflow.dto.req.grupo.AdicionarAtividadeRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.req.grupo.GrupoRequestDTO;
-import io.github.raphaelmuniz.uniflow.dto.res.grupo.MembroGrupoResponseDTO;
-import io.github.raphaelmuniz.uniflow.dto.res.atividade.AtividadeAvaliativaResponseDTO;
+import io.github.raphaelmuniz.uniflow.dto.req.grupo.GrupoUpdateRequestDTO;
+import io.github.raphaelmuniz.uniflow.dto.req.grupo.SubGrupoRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.grupo.GrupoResponseDTO;
-import io.github.raphaelmuniz.uniflow.entities.assinatura.AssinaturaModelo;
 import io.github.raphaelmuniz.uniflow.entities.assinatura.AssinaturaUsuario;
 import io.github.raphaelmuniz.uniflow.entities.enums.PapelGrupoEnum;
 import io.github.raphaelmuniz.uniflow.entities.enums.StatusAssinaturaUsuarioEnum;
 import io.github.raphaelmuniz.uniflow.entities.enums.StatusGrupoEnum;
-import io.github.raphaelmuniz.uniflow.entities.grupo.Disciplina;
+import io.github.raphaelmuniz.uniflow.entities.enums.TipoGrupoEnum;
 import io.github.raphaelmuniz.uniflow.entities.grupo.Grupo;
 import io.github.raphaelmuniz.uniflow.entities.grupo.InscricaoGrupo;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Assinante;
-import io.github.raphaelmuniz.uniflow.entities.usuario.Estudante;
+import io.github.raphaelmuniz.uniflow.entities.usuario.Usuario;
 import io.github.raphaelmuniz.uniflow.exceptions.models.BusinessException;
 import io.github.raphaelmuniz.uniflow.exceptions.models.NotFoundException;
 import io.github.raphaelmuniz.uniflow.repositories.assinatura.AssinaturaUsuarioRepository;
-import io.github.raphaelmuniz.uniflow.repositories.grupo.DisciplinaRepository;
 import io.github.raphaelmuniz.uniflow.repositories.grupo.GrupoRepository;
 import io.github.raphaelmuniz.uniflow.repositories.grupo.InscricaoGrupoRepository;
-import io.github.raphaelmuniz.uniflow.repositories.usuario.AssinanteRepository;
-import io.github.raphaelmuniz.uniflow.repositories.usuario.EstudanteRepository;
+import io.github.raphaelmuniz.uniflow.repositories.usuario.UsuarioRepository;
 import io.github.raphaelmuniz.uniflow.services.generic.GenericCrudServiceImpl;
-import io.github.raphaelmuniz.uniflow.services.regras.grupo.config.ContextoCriacaoGrupo;
-import io.github.raphaelmuniz.uniflow.services.regras.grupo.config.RegraCriacaoGrupo;
-import org.springframework.beans.factory.annotation.Qualifier;
+import io.github.raphaelmuniz.uniflow.services.validation.AtividadeStrategy;
+import io.github.raphaelmuniz.uniflow.services.validation.AtividadeStrategyProvider;
+import io.github.raphaelmuniz.uniflow.services.validation.GrupoFactory;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoResponseDTO, Grupo, String> {
-    private final GrupoRepository repository;
-    private final AssinanteRepository assinanteRepository;
-    private final EstudanteRepository estudanteRepository;
-    private final InscricaoGrupoRepository inscricaoGrupoRepository;
+    private final GrupoRepository grupoRepository;
+    private final GrupoFactory grupoFactory;
     private final AssinaturaUsuarioRepository assinaturaUsuarioRepository;
-    private final DisciplinaRepository disciplinaRepository;
-
-    private final List<RegraCriacaoGrupo> regrasCriacaoGrupoPadrao;
-    private final List<RegraCriacaoGrupo> regrasCriacaoSubGrupo;
+    private final UsuarioRepository usuarioRepository;
+    private final InscricaoGrupoRepository inscricaoGrupoRepository;
+    private final AtividadeStrategyProvider atividadeStrategyProvider;
 
     public GrupoService(
             GrupoRepository repository,
-            AssinanteRepository assinanteRepository,
-            EstudanteRepository estudanteRepository,
-            InscricaoGrupoRepository inscricaoGrupoRepository,
+            GrupoFactory grupoFactory,
             AssinaturaUsuarioRepository assinaturaUsuarioRepository,
-            DisciplinaRepository disciplinaRepository,
-            @Qualifier("regrasCriacaoGrupoPadrao") List<RegraCriacaoGrupo> regrasCriacaoGrupoPadrao,
-            @Qualifier("regrasCriacaoSubGrupo") List<RegraCriacaoGrupo> regrasCriacaoSubGrupo
-    ) {
+            UsuarioRepository usuarioRepository,
+            InscricaoGrupoRepository inscricaoGrupoRepository,
+            AtividadeStrategyProvider atividadeStrategyProvider) {
         super(repository, GrupoRequestDTO::toModel, GrupoResponseDTO::new);
-        this.repository = repository;
-        this.assinanteRepository = assinanteRepository;
-        this.estudanteRepository = estudanteRepository;
-        this.inscricaoGrupoRepository = inscricaoGrupoRepository;
+        this.grupoRepository = repository;
+        this.grupoFactory = grupoFactory;
         this.assinaturaUsuarioRepository = assinaturaUsuarioRepository;
-        this.disciplinaRepository = disciplinaRepository;
-        this.regrasCriacaoGrupoPadrao = regrasCriacaoGrupoPadrao;
-        this.regrasCriacaoSubGrupo = regrasCriacaoSubGrupo;
+        this.usuarioRepository = usuarioRepository;
+        this.inscricaoGrupoRepository = inscricaoGrupoRepository;
+        this.atividadeStrategyProvider = atividadeStrategyProvider;
     }
 
-    @Override
-    public GrupoResponseDTO create(GrupoRequestDTO data) {
-        Assinante criador = assinanteRepository.findById(data.getCriadorId())
-                .orElseThrow(() -> new NotFoundException("Assinante não encontrado."));
-
-        ContextoCriacaoGrupo contexto = prepararContexto(null, criador);
-        regrasCriacaoGrupoPadrao.forEach(regra -> regra.verificar(contexto));
-
-        Grupo novoGrupo = montarNovoGrupo(data, criador);
+    @Transactional
+    public GrupoResponseDTO criarGrupo(GrupoRequestDTO data, Usuario usuarioAutenticado) {
+        Grupo novoGrupo = grupoFactory.criarGrupo(data, usuarioAutenticado);
         Grupo grupoSalvo = repository.save(novoGrupo);
         return new GrupoResponseDTO(grupoSalvo);
     }
 
     @Transactional
-    public GrupoResponseDTO criarSubGrupo(String grupoPaiId, GrupoRequestDTO data) {
-        Assinante criador = assinanteRepository.findById(data.getCriadorId())
-                .orElseThrow(() -> new NotFoundException("Assinante não encontrado."));
+    public void juntarComConvite(String grupoId, String codigoConvite, Usuario usuarioLogado) {
+        Grupo grupo = grupoRepository.findById(grupoId)
+                .orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
 
-        Grupo grupoPai = repository.findById(grupoPaiId)
-                .orElseThrow(() -> new NotFoundException("Grupo pai não encontrado."));
+        if (grupo.getTipoGrupo() != TipoGrupoEnum.TURMA) {
+            throw new BusinessException("Apenas é possível entrar com código de convite em grupos do tipo TURMA.");
+        }
 
-        ContextoCriacaoGrupo contexto = prepararContexto(grupoPai, criador);
-        regrasCriacaoSubGrupo.forEach(regra -> regra.verificar(contexto));
+        if (!codigoConvite.equals(grupo.getCodigoConvite())) {
+            throw new BusinessException("Código de convite inválido.");
+        }
 
-        Grupo novoSubGrupo = montarNovoGrupo(data, criador);
-        Grupo grupoSalvo = repository.save(novoSubGrupo);
+        boolean jaInscrito = grupo.getInscricoes().stream()
+                .anyMatch(i -> i.getMembro().getId().equals(usuarioLogado.getId()));
+        if (jaInscrito) {
+            throw new BusinessException("Você já está inscrito neste grupo.");
+        }
+
+        verificarLimiteDeMembros(grupo);
+
+        InscricaoGrupo novaInscricao = new InscricaoGrupo();
+        novaInscricao.setMembro((Assinante) usuarioLogado);
+        novaInscricao.setPapelNoGrupo(PapelGrupoEnum.MEMBRO);
+
+        grupo.addInscricao(novaInscricao);
+        grupoRepository.save(grupo);
+    }
+
+    @Transactional
+    public void adicionarMembroDiretamente(String grupoId, String usuarioParaAdicionarId, Usuario usuarioLogado) {
+        Grupo grupo = grupoRepository.findById(grupoId)
+                .orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
+
+        if (!grupo.getAssinanteCriadorGrupo().getId().equals(usuarioLogado.getId())) {
+            throw new AccessDeniedException("Apenas o criador do grupo pode adicionar membros diretamente.");
+        }
+
+        if (grupo.getTipoGrupo() != TipoGrupoEnum.GRUPO_ESTUDO) {
+            throw new BusinessException("A adição direta de membros só é permitida em GRUPO_ESTUDO.");
+        }
+
+        verificarLimiteDeMembros(grupo);
+
+        Assinante novoMembro = (Assinante) usuarioRepository.findById(usuarioParaAdicionarId)
+                .orElseThrow(() -> new NotFoundException("Usuário a ser adicionado não encontrado."));
+
+        boolean jaInscrito = grupo.getInscricoes().stream()
+                .anyMatch(i -> i.getMembro().getId().equals(novoMembro.getId()));
+        if (jaInscrito) {
+            throw new BusinessException("Este usuário já está no grupo.");
+        }
+
+        InscricaoGrupo novaInscricao = new InscricaoGrupo();
+        novaInscricao.setMembro(novoMembro);
+        novaInscricao.setPapelNoGrupo(PapelGrupoEnum.MEMBRO);
+
+        grupo.addInscricao(novaInscricao);
+        grupoRepository.save(grupo);
+    }
+
+    @Transactional
+    public void alterarPapelMembro(String grupoId, String membroId, PapelGrupoEnum novoPapel, Usuario usuarioLogado) {
+        Grupo grupo = grupoRepository.findById(grupoId)
+                .orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
+
+        if (!grupo.getAssinanteCriadorGrupo().getId().equals(usuarioLogado.getId())) {
+            throw new AccessDeniedException("Apenas o criador do grupo pode alterar papéis de membros.");
+        }
+
+        if (grupo.getTipoGrupo() != TipoGrupoEnum.TURMA) {
+            throw new BusinessException("A alteração de papéis só é permitida em grupos do tipo TURMA.");
+        }
+
+        InscricaoGrupo inscricao = inscricaoGrupoRepository.findByGrupo_IdAndEstudanteMembro_Id(grupoId, membroId)
+                .orElseThrow(() -> new NotFoundException("Membro não encontrado neste grupo."));
+
+        inscricao.setPapelNoGrupo(novoPapel);
+        inscricaoGrupoRepository.save(inscricao);
+    }
+
+    @Transactional
+    public void removerMembro(String grupoId, String membroId, Usuario usuarioLogado) {
+        Grupo grupo = grupoRepository.findById(grupoId)
+                .orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
+
+        InscricaoGrupo inscricaoParaRemover = inscricaoGrupoRepository.findByGrupo_IdAndEstudanteMembro_Id(grupoId, membroId)
+                .orElseThrow(() -> new NotFoundException("Membro não encontrado neste grupo."));
+
+        boolean isCriador = grupo.getAssinanteCriadorGrupo().getId().equals(usuarioLogado.getId());
+        boolean isProprioUsuario = usuarioLogado.getId().equals(membroId);
+
+        if (!isCriador && !isProprioUsuario) {
+            throw new AccessDeniedException("Você não tem permissão para remover este membro.");
+        }
+
+        if (grupo.getAssinanteCriadorGrupo().getId().equals(membroId)) {
+            throw new BusinessException("O criador não pode sair ou ser removido do grupo.");
+        }
+
+        grupo.removeInscricao(inscricaoParaRemover);
+        grupoRepository.save(grupo);
+    }
+
+    private void verificarLimiteDeMembros(Grupo grupo) {
+        Assinante criador = grupo.getAssinanteCriadorGrupo();
+        AssinaturaUsuario assinaturaVigente = assinaturaUsuarioRepository
+                .findFirstVigenteByAssinanteId(criador.getId(), StatusAssinaturaUsuarioEnum.getStatusVigentes(), LocalDateTime.now())
+                .orElseThrow(() -> new BusinessException("O criador do grupo não possui uma assinatura ativa."));
+
+        Integer limite = assinaturaVigente.getAssinaturaModelo().getLimiteMembrosPorGrupo();
+        int contagemAtual = grupo.getInscricoes().size();
+
+        if (contagemAtual >= limite) {
+            throw new BusinessException("O grupo atingiu o limite de %d membros.".formatted(limite));
+        }
+    }
+
+    @Transactional
+    public GrupoResponseDTO editarGrupo(String grupoId, GrupoUpdateRequestDTO dto, Usuario usuarioLogado) {
+        Grupo grupo = verificarCriador(grupoId, usuarioLogado);
+
+        if (dto.titulo() != null && !dto.titulo().isBlank()) {
+            grupo.setTitulo(dto.titulo());
+        }
+
+        if (dto.descricao() != null && !dto.descricao().isBlank()) {
+            grupo.setDescricao(dto.descricao());
+        }
+
+        Grupo grupoSalvo = grupoRepository.save(grupo);
         return new GrupoResponseDTO(grupoSalvo);
     }
 
-    private ContextoCriacaoGrupo prepararContexto(Grupo grupoPai, Assinante criador) {
-        AssinaturaUsuario assinaturaUsuario = assinaturaUsuarioRepository
-                .findFirstVigenteByAssinanteId(criador.getId(),
-                        StatusAssinaturaUsuarioEnum.getStatusVigentes(),
-                        LocalDateTime.now())
-                .orElseThrow(() -> new BusinessException("É necessário um plano de assinatura ativo."));
-
-        AssinaturaModelo planoDoCriador = assinaturaUsuario.getAssinaturaModelo();
-        return new ContextoCriacaoGrupo(grupoPai, criador, planoDoCriador);
+    @Transactional
+    public void excluirGrupo(String grupoId, Usuario usuarioLogado) {
+        Grupo grupo = verificarCriador(grupoId, usuarioLogado);
+        grupoRepository.delete(grupo);
     }
 
-    private Grupo montarNovoGrupo(GrupoRequestDTO data, Assinante criador) {
-        Disciplina disciplina = disciplinaRepository.findById(data.getDisciplinaId())
-                .orElseThrow(() -> new NotFoundException("Disciplina não encontrada."));
+    private Grupo verificarCriador(String grupoId, Usuario usuarioLogado) {
+        Grupo grupo = grupoRepository.findById(grupoId)
+                .orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
 
-        List<Estudante> estudantesInscritos = validarEstudantes(data.getEstudantesInscritosId());
-
-        Grupo novoGrupo = inicializarGrupoBase(data, criador);
-        novoGrupo.setDisciplina(disciplina);
-
-        adicionarInscricoes(novoGrupo, estudantesInscritos);
-        adicionarAtividades(novoGrupo, data, criador);
-
-        return novoGrupo;
-    }
-
-    private List<Estudante> validarEstudantes(List<String> estudantesIds) {
-        if (estudantesIds == null || estudantesIds.isEmpty()) {
-            throw new BusinessException("É necessário ao menos um estudante inscrito para criar um grupo.");
+        if (!grupo.getAssinanteCriadorGrupo().getId().equals(usuarioLogado.getId())) {
+            throw new AccessDeniedException("Apenas o criador pode modificar este grupo.");
         }
 
-        List<Estudante> estudantes = estudanteRepository.findAllById(estudantesIds);
-        if (estudantes.size() != estudantesIds.size()) {
-            throw new NotFoundException("Um ou mais estudantes informados não foram encontrados.");
-        }
-        return estudantes;
-    }
-
-    private Grupo inicializarGrupoBase(GrupoRequestDTO data, Assinante criador) {
-        Grupo grupo = new Grupo();
-        grupo.setTitulo(data.getTitulo());
-        grupo.setDescricao(data.getDescricao());
-        grupo.setTipoGrupo(data.getTipoGrupo());
-        grupo.setAssinanteCriadorGrupo(criador);
-        grupo.setStatusGrupo(StatusGrupoEnum.ATIVO);
-        grupo.setCodigoConvite(Grupo.gerarCodigoConvite());
         return grupo;
     }
 
-    private void adicionarInscricoes(Grupo grupo, List<Estudante> estudantes) {
-        estudantes.forEach(estudante -> {
+    @Transactional
+    public GrupoResponseDTO criarSubGrupo(String grupoPaiId, SubGrupoRequestDTO dto, Usuario usuarioLogado) {
+        Grupo grupoPai = grupoRepository.findById(grupoPaiId)
+                .orElseThrow(() -> new NotFoundException("Grupo principal (TURMA) não foi encontrado."));
+
+        if (!grupoPai.getAssinanteCriadorGrupo().getId().equals(usuarioLogado.getId())) {
+            throw new AccessDeniedException("Apenas o professor criador da turma pode criar subgrupos.");
+        }
+
+        if (grupoPai.getTipoGrupo() != TipoGrupoEnum.TURMA) {
+            throw new BusinessException("Subgrupos só podem ser criados a partir de uma TURMA.");
+        }
+
+        AssinaturaUsuario assinaturaVigente = getAssinaturaVigente(usuarioLogado.getId());
+        if (!assinaturaVigente.getAssinaturaModelo().getPermiteCriarSubgrupos()) {
+            throw new BusinessException("Seu plano de assinatura não permite a criação de subgrupos.");
+        }
+
+        validarMembrosDoSubgrupo(grupoPai, dto.idsDosMembros());
+
+        Grupo subGrupo = new Grupo();
+        subGrupo.setTitulo(dto.titulo());
+        subGrupo.setDescricao(dto.descricao());
+        subGrupo.setAssinanteCriadorGrupo((Assinante) usuarioLogado);
+        subGrupo.setGrupoPai(grupoPai);
+        subGrupo.setDisciplina(grupoPai.getDisciplina());
+        subGrupo.setStatusGrupo(StatusGrupoEnum.ATIVO);
+
+        subGrupo.setTipoGrupo(TipoGrupoEnum.GRUPO_ESTUDO);
+
+        List<Assinante> membros = usuarioRepository.findAllById(dto.idsDosMembros()).stream()
+                .map(u -> (Assinante) u)
+                .toList();
+
+        for (Assinante membro : membros) {
             InscricaoGrupo inscricao = new InscricaoGrupo();
-            inscricao.setEstudanteMembro(estudante);
+            inscricao.setMembro(membro);
             inscricao.setPapelNoGrupo(PapelGrupoEnum.MEMBRO);
-            grupo.addInscricao(inscricao);
-        });
+            subGrupo.addInscricao(inscricao);
+        }
+
+        Grupo subGrupoSalvo = grupoRepository.save(subGrupo);
+        return new GrupoResponseDTO(subGrupoSalvo);
     }
 
-    private void adicionarAtividades(Grupo grupo, GrupoRequestDTO data, Assinante criador) {
-        if (data.getAtividadesGrupo() != null && !data.getAtividadesGrupo().isEmpty()) {
-            data.getAtividadesGrupo().forEach(atividade -> {
-                atividade.setAssinanteCriadorAtividade(criador);
-                grupo.addAtividadePublicada(atividade);
-            });
+    private void validarMembrosDoSubgrupo(Grupo grupoPai, List<String> idsMembrosRequisitados) {
+        Set<String> idsMembrosDaTurma = grupoPai.getInscricoes().stream()
+                .map(inscricao -> inscricao.getMembro().getId())
+                .collect(Collectors.toSet());
+
+        for (String idRequisitado : idsMembrosRequisitados) {
+            if (!idsMembrosDaTurma.contains(idRequisitado)) {
+                throw new BusinessException("O usuário com ID '" + idRequisitado + "' não é membro da turma principal e não pode ser adicionado ao subgrupo.");
+            }
         }
     }
 
+    private AssinaturaUsuario getAssinaturaVigente(String assinanteId) {
+        return assinaturaUsuarioRepository
+                .findFirstVigenteByAssinanteId(assinanteId,
+                        StatusAssinaturaUsuarioEnum.getStatusVigentes(),
+                        LocalDateTime.now())
+                .orElseThrow(() -> new BusinessException("É necessário um plano de assinatura ativo."));
+    }
+
     @Transactional
-    public void adicionarMembroNoGrupo(AdicionarMembroGrupoDTO data) {
-        Grupo grupo = repository.findById(data.getGrupoId())
+    public void adicionarAtividade(String grupoId, AdicionarAtividadeRequestDTO dto, Usuario usuarioLogado) {
+        Grupo grupo = grupoRepository.findById(grupoId)
                 .orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
 
-        Estudante estudante = estudanteRepository.findById(data.getEstudanteId())
-                .orElseThrow(() -> new NotFoundException("Estudante não encontrado."));
+        AtividadeStrategy strategy = atividadeStrategyProvider.getStrategy(grupo.getTipoGrupo());
 
-        boolean jaExiste = inscricaoGrupoRepository
-                .findByGrupo_IdAndEstudanteMembro_Id(grupo.getId(), estudante.getId())
-                .isPresent();
-
-        if (jaExiste) {
-            throw new BusinessException("Estudante já está inscrito neste grupo.");
-        }
-
-        InscricaoGrupo inscricaoGrupo = new InscricaoGrupo(null, LocalDateTime.now(),
-                data.getPapel(), grupo, estudante);
-
-        grupo.addInscricao(inscricaoGrupo);
+        strategy.adicionarAtividade(grupo, dto, usuarioLogado);
     }
 
-    @Transactional
-    public void removerMembroDoGrupo(String grupoId, String membroId) {
-        Grupo grupo = repository.findById(grupoId).orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
-        InscricaoGrupo inscricaoEncontrada = inscricaoGrupoRepository.findByGrupo_IdAndEstudanteMembro_Id(grupoId, membroId).orElseThrow(() -> new NotFoundException("Inscrição não encontrada."));
-        grupo.removeInscricao(inscricaoEncontrada);
-    }
-
-    @Transactional
-    public void atualizarMembroDoGrupo(String grupoId, String membroId, PapelGrupoEnum novoPapelNoGrupo) {
-        InscricaoGrupo inscricaoEncontrada = inscricaoGrupoRepository.findByGrupo_IdAndEstudanteMembro_Id(grupoId, membroId).orElseThrow(() -> new NotFoundException("Inscrição não encontrada."));
-        inscricaoEncontrada.setPapelNoGrupo(novoPapelNoGrupo);
-    }
-
-    public List<MembroGrupoResponseDTO> listarMembrosDoGrupo(String grupoId) {
-        Grupo grupo = repository.findByIdWithMembros(grupoId).orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
-        return grupo.getInscricoes().stream()
-                .map(MembroGrupoResponseDTO::new)
-                .toList();
-    }
-
-    public List<AtividadeAvaliativaResponseDTO> listarAtividadesDoGrupo(String grupoId) {
-        Grupo grupo = repository.findById(grupoId).orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
-        return grupo.getAtividadesPublicadas().stream().map(AtividadeAvaliativaResponseDTO::new).toList();
-    }
 }

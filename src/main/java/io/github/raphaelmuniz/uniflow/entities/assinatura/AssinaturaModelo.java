@@ -52,6 +52,9 @@ public class AssinaturaModelo implements Serializable {
     @NotNull(message = "Permite Templates de Atividade não pode ser nulo")
     private Boolean permiteTemplatesDeAtividade;
 
+    @NotNull(message = "Permite Criar Subgrupos não pode ser nulo")
+    private Boolean permiteCriarSubgrupos;
+
     @NotNull(message = "Ativo não pode ser nulo")
     private Boolean ativo;
 

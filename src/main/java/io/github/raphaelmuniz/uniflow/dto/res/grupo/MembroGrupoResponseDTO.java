@@ -16,9 +16,9 @@ public class MembroGrupoResponseDTO {
     private PapelGrupoEnum papelNoGrupo;
 
     public MembroGrupoResponseDTO(InscricaoGrupo inscricaoGrupo) {
-        this.idMembro = inscricaoGrupo.getEstudanteMembro().getId();
-        this.nome = inscricaoGrupo.getEstudanteMembro().getNome();
-        this.email = inscricaoGrupo.getEstudanteMembro().getEmail();
+        this.idMembro = inscricaoGrupo.getMembro().getId();
+        this.nome = inscricaoGrupo.getMembro().getNome();
+        this.email = inscricaoGrupo.getMembro().getEmail();
         this.papelNoGrupo = inscricaoGrupo.getPapelNoGrupo();
     }
 }

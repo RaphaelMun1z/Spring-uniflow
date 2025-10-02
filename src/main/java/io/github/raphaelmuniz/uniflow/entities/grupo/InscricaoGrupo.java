@@ -1,6 +1,7 @@
 package io.github.raphaelmuniz.uniflow.entities.grupo;
 
 import io.github.raphaelmuniz.uniflow.entities.enums.PapelGrupoEnum;
+import io.github.raphaelmuniz.uniflow.entities.usuario.Assinante;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Estudante;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -36,10 +37,10 @@ public class InscricaoGrupo implements Serializable {
     @JoinColumn(name = "grupo_id")
     private Grupo grupo;
 
-    @NotNull(message = "Estudante membro não pode ser nulo")
+    @NotNull(message = "Membro não pode ser nulo")
     @ManyToOne
-    @JoinColumn(name = "estudante_membro_id")
-    private Estudante estudanteMembro;
+    @JoinColumn(name = "membro_id")
+    private Assinante membro;
 
     @Override
     public boolean equals(Object o) {

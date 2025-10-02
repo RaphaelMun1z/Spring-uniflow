@@ -1,23 +1,16 @@
 package io.github.raphaelmuniz.uniflow.dto.req.grupo;
 
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import java.util.List;
 
-@Data
-@AllArgsConstructor
-public class SubGrupoRequestDTO {
-    @NotNull
-    private String titulo;
+public record SubGrupoRequestDTO(
+        @NotBlank(message = "O título não pode ser vazio.")
+        String titulo,
 
-    @NotNull
-    private String descricao;
+        @NotBlank(message = "A descrição não pode ser vazia.")
+        String descricao,
 
-    @NotNull
-    private String criadorId;
-
-    @NotNull
-    private List<String> estudantesInscritosId;
-}
+        @NotEmpty(message = "É necessário especificar ao menos um membro para o subgrupo.")
+        List<String> idsDosMembros
+) {}

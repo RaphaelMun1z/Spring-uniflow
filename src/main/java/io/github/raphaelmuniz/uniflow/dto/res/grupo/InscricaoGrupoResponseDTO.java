@@ -15,7 +15,7 @@ public class InscricaoGrupoResponseDTO {
 
     public InscricaoGrupoResponseDTO(InscricaoGrupo inscricaoGrupo){
         this.id = inscricaoGrupo.getId();
-        this.alunoId = inscricaoGrupo.getEstudanteMembro().getId();
+        this.alunoId = inscricaoGrupo.getMembro().getId();
         this.grupoId = inscricaoGrupo.getGrupo().getId();
         this.papelNoGrupo = inscricaoGrupo.getPapelNoGrupo();
     }

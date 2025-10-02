@@ -13,9 +13,6 @@ import io.github.raphaelmuniz.uniflow.repositories.usuario.AssinanteRepository;
 import io.github.raphaelmuniz.uniflow.repositories.assinatura.AssinaturaModeloRepository;
 import io.github.raphaelmuniz.uniflow.repositories.assinatura.AssinaturaUsuarioRepository;
 import io.github.raphaelmuniz.uniflow.services.generic.GenericCrudServiceImpl;
-import io.github.raphaelmuniz.uniflow.services.regras.assinante.config.ContextoValidacaoAssinatura;
-import io.github.raphaelmuniz.uniflow.services.regras.assinante.config.RegraValidacaoAssinatura;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -26,28 +23,22 @@ public class AssinaturaUsuarioService extends GenericCrudServiceImpl<AssinaturaU
     private final AssinaturaUsuarioRepository assinaturaUsuarioRepository;
     private final AssinaturaModeloRepository assinaturaModeloRepository;
     private final AssinanteRepository assinanteRepository;
-    private final List<RegraValidacaoAssinatura> regrasCriacaoAssinatura;
 
     protected AssinaturaUsuarioService(
             AssinaturaUsuarioRepository repository,
             AssinaturaUsuarioRepository assinaturaUsuarioRepository,
             AssinaturaModeloRepository assinaturaModeloRepository,
-            AssinanteRepository assinanteRepository,
-            @Qualifier("regrasCriacaoAssinatura") List<RegraValidacaoAssinatura> regras) {
+            AssinanteRepository assinanteRepository) {
         super(repository, AssinaturaUsuarioRequestDTO::toModel, AssinaturaUsuarioResponseDTO::new);
         this.assinaturaUsuarioRepository = assinaturaUsuarioRepository;
         this.assinaturaModeloRepository = assinaturaModeloRepository;
         this.assinanteRepository = assinanteRepository;
-        this.regrasCriacaoAssinatura = regras;
     }
 
     @Override
     public AssinaturaUsuarioResponseDTO create(AssinaturaUsuarioRequestDTO data) {
         Assinante assinante = assinanteRepository.findById(data.getAssinanteId()).orElseThrow(() -> new NotFoundException("Assinante não encontrado"));
         AssinaturaModelo assinaturaModelo = assinaturaModeloRepository.findById(data.getAssinaturaModeloId()).orElseThrow(() -> new NotFoundException("Assinatura modelo não encontrada"));
-
-        ContextoValidacaoAssinatura contexto = new ContextoValidacaoAssinatura(assinante, assinaturaModelo);
-        regrasCriacaoAssinatura.forEach(regra -> regra.verificar(contexto));
 
         AssinaturaUsuario assinaturaUsuario = new AssinaturaUsuario(null, null, LocalDateTime.now().plusMonths(1), StatusAssinaturaUsuarioEnum.ATIVA, assinaturaModelo, assinante, null);
         AssinaturaUsuario saved = repository.save(assinaturaUsuario);

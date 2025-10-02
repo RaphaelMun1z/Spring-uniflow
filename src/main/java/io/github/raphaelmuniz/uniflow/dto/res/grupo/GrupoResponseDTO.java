@@ -22,7 +22,7 @@ public class GrupoResponseDTO {
         this.descricao = grupo.getDescricao();
         this.titulo = grupo.getTitulo();
         this.atividadesId = grupo.getAtividadesPublicadas().stream().map(AtividadeAvaliativa::getId).toList();
-        this.estudantesMembrosId = grupo.getInscricoes().stream().map(ig -> ig.getEstudanteMembro().getId()).toList();
+        this.estudantesMembrosId = grupo.getInscricoes().stream().map(ig -> ig.getMembro().getId()).toList();
         this.criadorId = grupo.getAssinanteCriadorGrupo().getId();
     }
 }

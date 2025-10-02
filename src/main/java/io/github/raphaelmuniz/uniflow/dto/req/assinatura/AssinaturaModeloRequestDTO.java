@@ -39,10 +39,13 @@ public class AssinaturaModeloRequestDTO implements RequestData<AssinaturaModelo>
     @NotNull(message = "A permissão de templates de atividade não pode ser nula.")
     private Boolean permiteTemplatesDeAtividade;
 
+    @NotNull(message = "A permissão de criar subgrupos não pode ser nula.")
+    private Boolean permiteCriarSubgrupos;
+
     @NotNull(message = "O status 'ativo' não pode ser nulo.")
     private Boolean ativo;
 
     public AssinaturaModelo toModel() {
-        return new AssinaturaModelo(null, nome, descricao, preco, duracaoEmMeses, limiteDeGrupos, limiteDeSubGrupos, limiteMembrosPorGrupo, permiteAnalytics, permiteTemplatesDeAtividade, ativo, null, null);
+        return new AssinaturaModelo(null, nome, descricao, preco, duracaoEmMeses, limiteDeGrupos, limiteDeSubGrupos, limiteMembrosPorGrupo, permiteAnalytics, permiteTemplatesDeAtividade, permiteCriarSubgrupos, ativo, null, null);
     }
 }

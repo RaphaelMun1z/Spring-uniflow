@@ -121,7 +121,7 @@ public class DataInitializer implements CommandLineRunner {
         grupoExemplo.setDisciplina(disciplinaSalva);
 
         InscricaoGrupo inscricaoEstudante = new InscricaoGrupo();
-        inscricaoEstudante.setEstudanteMembro(estudante);
+        inscricaoEstudante.setMembro(estudante);
         inscricaoEstudante.setPapelNoGrupo(PapelGrupoEnum.MEMBRO);
 
         grupoExemplo.addInscricao(inscricaoEstudante);

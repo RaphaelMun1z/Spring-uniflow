@@ -44,6 +44,9 @@ public class AssinaturaModeloResponseDTO {
     private Boolean permiteTemplatesDeAtividade;
 
     @NotNull
+    private Boolean permiteCriarSubgrupos;
+
+    @NotNull
     private Boolean ativo;
 
     @NotNull
@@ -63,12 +66,13 @@ public class AssinaturaModeloResponseDTO {
         this.permiteTemplatesDeAtividade = assinaturaModelo.getPermiteTemplatesDeAtividade();
         this.preco = assinaturaModelo.getPreco();
         this.duracaoEmMeses = assinaturaModelo.getDuracaoEmMeses();
+        this.permiteCriarSubgrupos = assinaturaModelo.getPermiteCriarSubgrupos();
         this.ativo = assinaturaModelo.getAtivo();
         this.dataCriacao = assinaturaModelo.getDataCriacao();
         this.dataAtualizacao = assinaturaModelo.getDataAtualizacao();
     }
 
     public AssinaturaModelo toModel() {
-        return new AssinaturaModelo(id, nome, descricao, preco, duracaoEmMeses, limiteDeGrupos, limiteDeSubGrupos, limiteMembrosPorGrupo, permiteAnalytics, permiteTemplatesDeAtividade, ativo, dataCriacao, dataAtualizacao);
+        return new AssinaturaModelo(id, nome, descricao, preco, duracaoEmMeses, limiteDeGrupos, limiteDeSubGrupos, limiteMembrosPorGrupo, permiteAnalytics, permiteTemplatesDeAtividade, permiteCriarSubgrupos, ativo, dataCriacao, dataAtualizacao);
     }
 }

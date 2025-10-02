@@ -3,6 +3,7 @@ package io.github.raphaelmuniz.uniflow.entities.usuario;
 import io.github.raphaelmuniz.uniflow.entities.assinatura.AssinaturaUsuario;
 import io.github.raphaelmuniz.uniflow.entities.atividade.AtividadeAvaliativa;
 import io.github.raphaelmuniz.uniflow.entities.grupo.Grupo;
+import io.github.raphaelmuniz.uniflow.entities.grupo.InscricaoGrupo;
 import io.github.raphaelmuniz.uniflow.entities.notificacao.NotificacaoAssinante;
 import io.github.raphaelmuniz.uniflow.entities.autorizacao.Papel;
 import jakarta.persistence.*;
@@ -38,6 +39,10 @@ public abstract class Assinante extends Usuario implements Serializable {
 
     @OneToMany(mappedBy = "assinanteNotificado", cascade = CascadeType.ALL)
     private Set<NotificacaoAssinante> notificacoes = new HashSet<>();
+
+    @NotNull(message = "Inscrições Grupos não pode ser nulo")
+    @OneToMany(mappedBy = "membro", cascade = CascadeType.ALL)
+    private Set<InscricaoGrupo> inscricoesGrupos = new HashSet<>();
 
     @OneToMany(mappedBy = "assinanteCriadorGrupo", cascade = CascadeType.ALL)
     private List<Grupo> gruposCriados = new ArrayList<>();
