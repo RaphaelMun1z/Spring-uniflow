@@ -1,6 +1,5 @@
 package io.github.raphaelmuniz.uniflow.repositories.assinatura;
 
-import io.github.raphaelmuniz.uniflow.entities.assinatura.AssinaturaModelo;
 import io.github.raphaelmuniz.uniflow.entities.assinatura.AssinaturaUsuario;
 import io.github.raphaelmuniz.uniflow.entities.enums.StatusAssinaturaUsuarioEnum;
 import org.springframework.data.jpa.repository.EntityGraph;

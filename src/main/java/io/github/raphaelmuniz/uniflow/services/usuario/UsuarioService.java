@@ -1,7 +1,6 @@
 package io.github.raphaelmuniz.uniflow.services.usuario;
 
 import io.github.raphaelmuniz.uniflow.repositories.usuario.UsuarioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -9,8 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UsuarioService implements UserDetailsService {
-    @Autowired
-    UsuarioRepository repository;
+    private final UsuarioRepository repository;
 
     public UsuarioService(UsuarioRepository repository) {
         this.repository = repository;

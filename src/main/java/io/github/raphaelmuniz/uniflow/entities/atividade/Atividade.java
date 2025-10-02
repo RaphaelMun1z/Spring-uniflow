@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -22,7 +23,8 @@ public abstract class Atividade implements Serializable {
         this.disciplina = disciplina;
     }
 
-    @NotNull(message = "Data lançamento não pode ser nulo")
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
     private LocalDateTime dataLancamento;
 
     @NotNull(message = "Prazo entrega não pode ser nulo")

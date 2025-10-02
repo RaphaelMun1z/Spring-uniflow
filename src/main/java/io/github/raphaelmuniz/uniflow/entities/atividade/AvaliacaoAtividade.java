@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -21,7 +22,8 @@ public class AvaliacaoAtividade {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @NotNull(message = "A data da avaliação não pode ser nula.")
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
     private LocalDateTime dataAvaliacao;
 
     @NotNull(message = "A nota não pode ser nula.")

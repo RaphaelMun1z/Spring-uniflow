@@ -5,6 +5,7 @@ import io.github.raphaelmuniz.uniflow.entities.usuario.Estudante;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -23,7 +24,8 @@ public class InscricaoGrupo implements Serializable {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @NotNull(message = "Data entrada não pode ser nulo")
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
     private LocalDateTime dataEntrada;
 
     @NotNull(message = "Papel no grupo não pode ser vazio/nulo")

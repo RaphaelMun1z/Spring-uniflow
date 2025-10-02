@@ -5,7 +5,6 @@ import io.github.raphaelmuniz.uniflow.dto.req.assinatura.PagamentoRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.assinatura.PagamentoResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.PaginatedResponse;
 import io.github.raphaelmuniz.uniflow.services.assinatura.PagamentoService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +15,7 @@ import org.springframework.data.web.PageableDefault;
 @RestController
 @RequestMapping("/api/pagamentos")
 public class PagamentoController extends GenericCrudControllerImpl<PagamentoRequestDTO, PagamentoResponseDTO> {
-    @Autowired
-    PagamentoService pagamentoService;
+    private final PagamentoService pagamentoService;
 
     protected PagamentoController(PagamentoService service) {
         super(service);
@@ -27,7 +25,7 @@ public class PagamentoController extends GenericCrudControllerImpl<PagamentoRequ
     @GetMapping("/assinantes/{assinanteId}/pagamentos")
     public ResponseEntity<PaginatedResponse<PagamentoResponseDTO>> getHistoricoPagamentos(
             @PathVariable String assinanteId,
-            @PageableDefault(size = 10, sort = "dataPagamento", direction = Sort.Direction.DESC) Pageable pageable
+            @PageableDefault(size = 15, sort = "dataPagamento", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         Page<PagamentoResponseDTO> page = pagamentoService.listarHistoricoDePagamentos(assinanteId, pageable);
         PaginatedResponse<PagamentoResponseDTO> response = new PaginatedResponse<>(

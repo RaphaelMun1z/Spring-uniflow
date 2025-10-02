@@ -2,6 +2,7 @@ package io.github.raphaelmuniz.uniflow.services.grupo;
 
 import io.github.raphaelmuniz.uniflow.dto.req.grupo.AdicionarMembroGrupoDTO;
 import io.github.raphaelmuniz.uniflow.dto.req.grupo.GrupoRequestDTO;
+import io.github.raphaelmuniz.uniflow.dto.res.grupo.MembroGrupoResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.usuario.AssinanteResumeResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.atividade.AtividadeAvaliativaResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.grupo.GrupoResponseDTO;
@@ -188,11 +189,10 @@ public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoR
         inscricaoEncontrada.setPapelNoGrupo(novoPapelNoGrupo);
     }
 
-    public List<AssinanteResumeResponseDTO> listarMembrosDoGrupo(String grupoId) {
+    public List<MembroGrupoResponseDTO> listarMembrosDoGrupo(String grupoId) {
         Grupo grupo = repository.findByIdWithMembros(grupoId).orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
         return grupo.getInscricoes().stream()
-                .map(InscricaoGrupo::getEstudanteMembro)
-                .map(AssinanteResumeResponseDTO::new)
+                .map(MembroGrupoResponseDTO::new)
                 .toList();
     }
 

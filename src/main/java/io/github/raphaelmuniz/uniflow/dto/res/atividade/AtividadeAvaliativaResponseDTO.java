@@ -2,7 +2,7 @@ package io.github.raphaelmuniz.uniflow.dto.res.atividade;
 
 import io.github.raphaelmuniz.uniflow.entities.atividade.AtividadeAvaliativa;
 import io.github.raphaelmuniz.uniflow.entities.enums.DificuldadeEnum;
-import io.github.raphaelmuniz.uniflow.entities.enums.VisivibilidadeAtividadeAvaliativaEnum;
+import io.github.raphaelmuniz.uniflow.entities.enums.VisivibilidadeAtividadeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,7 +19,7 @@ public class AtividadeAvaliativaResponseDTO {
     private String titulo;
     private String descricao;
     private DificuldadeEnum dificuldade;
-    private VisivibilidadeAtividadeAvaliativaEnum visivibilidade;
+    private VisivibilidadeAtividadeEnum visivibilidade;
     private String grupoId;
     private String criadorId;
 

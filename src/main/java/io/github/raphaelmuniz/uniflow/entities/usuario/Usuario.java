@@ -3,7 +3,6 @@ package io.github.raphaelmuniz.uniflow.entities.usuario;
 import io.github.raphaelmuniz.uniflow.entities.autorizacao.Papel;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.io.Serializable;

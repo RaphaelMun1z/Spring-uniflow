@@ -2,11 +2,11 @@ package io.github.raphaelmuniz.uniflow.controllers.grupo;
 
 import io.github.raphaelmuniz.uniflow.controllers.generic.GenericCrudControllerImpl;
 import io.github.raphaelmuniz.uniflow.dto.req.grupo.AdicionarMembroGrupoDTO;
+import io.github.raphaelmuniz.uniflow.dto.req.grupo.AtualizarPapelMembroGrupoDTO;
 import io.github.raphaelmuniz.uniflow.dto.req.grupo.GrupoRequestDTO;
-import io.github.raphaelmuniz.uniflow.dto.res.usuario.AssinanteResumeResponseDTO;
+import io.github.raphaelmuniz.uniflow.dto.res.grupo.MembroGrupoResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.atividade.AtividadeAvaliativaResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.grupo.GrupoResponseDTO;
-import io.github.raphaelmuniz.uniflow.entities.enums.PapelGrupoEnum;
 import io.github.raphaelmuniz.uniflow.services.grupo.GrupoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,14 +41,14 @@ public class GrupoController extends GenericCrudControllerImpl<GrupoRequestDTO, 
     public ResponseEntity<Void> atualizarMembro(
             @PathVariable String grupoId,
             @PathVariable String membroId,
-            @RequestBody PapelGrupoEnum papelGrupo) {
-        service.atualizarMembroDoGrupo(grupoId, membroId, papelGrupo);
-        return ResponseEntity.ok().build();
+            @RequestBody @Valid AtualizarPapelMembroGrupoDTO dto) {
+        service.atualizarMembroDoGrupo(grupoId, membroId, dto.getNovoPapelNoGrupo());
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{grupoId}/membros")
-    public ResponseEntity<List<AssinanteResumeResponseDTO>> listarMembros(@PathVariable String grupoId) {
-        List<AssinanteResumeResponseDTO> membros = service.listarMembrosDoGrupo(grupoId);
+    public ResponseEntity<List<MembroGrupoResponseDTO>> listarMembros(@PathVariable String grupoId) {
+        List<MembroGrupoResponseDTO> membros = service.listarMembrosDoGrupo(grupoId);
         return ResponseEntity.ok(membros);
     }
 

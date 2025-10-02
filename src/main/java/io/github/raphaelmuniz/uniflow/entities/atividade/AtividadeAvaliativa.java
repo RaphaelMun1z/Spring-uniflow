@@ -2,7 +2,7 @@ package io.github.raphaelmuniz.uniflow.entities.atividade;
 
 import io.github.raphaelmuniz.uniflow.entities.grupo.Grupo;
 import io.github.raphaelmuniz.uniflow.entities.enums.DificuldadeEnum;
-import io.github.raphaelmuniz.uniflow.entities.enums.VisivibilidadeAtividadeAvaliativaEnum;
+import io.github.raphaelmuniz.uniflow.entities.enums.VisivibilidadeAtividadeEnum;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Assinante;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -21,7 +21,7 @@ import java.util.Set;
         @UniqueConstraint(columnNames = {"titulo", "grupo_publicado_id"})
 })
 public class AtividadeAvaliativa extends Atividade implements Serializable {
-    public AtividadeAvaliativa(LocalDateTime dataLancamento, LocalDateTime prazoEntrega, String titulo, String descricao, DificuldadeEnum dificuldade, Disciplina disciplina, String id, VisivibilidadeAtividadeAvaliativaEnum visivibilidadeAtividade, Grupo grupoPublicado, Assinante criadorAtividade) {
+    public AtividadeAvaliativa(LocalDateTime dataLancamento, LocalDateTime prazoEntrega, String titulo, String descricao, DificuldadeEnum dificuldade, Disciplina disciplina, String id, VisivibilidadeAtividadeEnum visivibilidadeAtividade, Grupo grupoPublicado, Assinante criadorAtividade) {
         super(dataLancamento, prazoEntrega, titulo, descricao, dificuldade, disciplina);
         this.id = id;
         this.visivibilidadeAtividade = visivibilidadeAtividade;
@@ -41,7 +41,7 @@ public class AtividadeAvaliativa extends Atividade implements Serializable {
 
     @NotNull(message = "Visivibilidade não pode ser nulo")
     @Enumerated(EnumType.STRING)
-    private VisivibilidadeAtividadeAvaliativaEnum visivibilidadeAtividade;
+    private VisivibilidadeAtividadeEnum visivibilidadeAtividade;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "grupo_publicado_id", nullable = false)
