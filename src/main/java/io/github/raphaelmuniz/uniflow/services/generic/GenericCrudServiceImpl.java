@@ -33,12 +33,4 @@ public abstract class GenericCrudServiceImpl<ReqDTO, ResDTO, E, ID extends Seria
                 .orElseThrow(() -> new NotFoundException("Entidade não encontrada."));
         return toResponseMapper.apply(entity);
     }
-
-    @Transactional
-    public void delete(ID id) {
-        if (repository.findById((ID) id).isEmpty()) {
-            throw new NotFoundException("Entidade não encontrada.");
-        }
-        repository.deleteById((ID) id);
-    }
 }

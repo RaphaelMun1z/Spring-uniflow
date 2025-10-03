@@ -5,6 +5,7 @@ import io.github.raphaelmuniz.uniflow.dto.res.usuario.ProfileResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.profile.AssinaturaProfileResponseDTO;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Professor;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Usuario;
+import io.github.raphaelmuniz.uniflow.exceptions.models.BusinessException;
 import io.github.raphaelmuniz.uniflow.repositories.usuario.UsuarioRepository;
 import io.github.raphaelmuniz.uniflow.services.assinatura.AssinaturaModeloService;
 import io.github.raphaelmuniz.uniflow.services.notificacao.NotificacaoService;
@@ -36,8 +37,8 @@ public class ProfileService {
             assinaturaDTO = new AssinaturaProfileResponseDTO(assinanteService.obterAssinaturaVigenteEntidade(usuarioLogado.getId()));
             var modelo = assinaturaModeloService.findById(assinaturaDTO.getAssinaturaModelo().getId());
             assinaturaDTO.setAssinaturaModelo(modelo);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (BusinessException e) {
+            System.out.println("Usuário " + usuarioLogado.getEmail() + " não possui assinatura ativa, o que é esperado para este perfil.");
         }
 
         int notificacoesNaoLidas = notificacaoService.countNotificacoesNaoLidas(usuarioLogado.getId());

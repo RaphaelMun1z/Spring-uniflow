@@ -61,9 +61,10 @@ public class ListarAtividadesTurmaStrategy implements ListarAtividadesStrategy {
                 .count();
 
         return atividades.stream().map(atividade -> {
+            Set<StatusEntregaEnum> statuses = Set.of(StatusEntregaEnum.ENTREGUE, StatusEntregaEnum.AVALIADO);
+
             int totalEntregas = atividadeEntregaRepository
-                    .countByAtividadeAvaliativa_IdAndStatusIn(atividade.getId(),
-                            Set.of(StatusEntregaEnum.ENTREGUE, StatusEntregaEnum.AVALIADO));
+                    .countByAtividadeAvaliativaOrigem_IdAndStatusEntregaIn(atividade.getId(), statuses);
 
             return AtividadeDoGrupoResponseDTO.builder()
                     .id(atividade.getId())
@@ -77,7 +78,7 @@ public class ListarAtividadesTurmaStrategy implements ListarAtividadesStrategy {
     private List<AtividadeDoGrupoResponseDTO> listarAtividadesParaEstudante(Set<AtividadeAvaliativa> atividades, Estudante estudante) {
         return atividades.stream().map(atividade -> {
             Optional<AtividadeEntrega> minhaEntregaOpt = atividadeEntregaRepository
-                    .findByAtividadeAvaliativa_IdAndEstudanteDono_Id(atividade.getId(), estudante.getId());
+                    .findByAtividadeAvaliativaOrigem_IdAndEstudanteDono_Id(atividade.getId(), estudante.getId());
 
             AtividadeDoGrupoResponseDTO.StatusAluno statusAluno;
 

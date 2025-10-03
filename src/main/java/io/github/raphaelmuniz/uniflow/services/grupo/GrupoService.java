@@ -147,7 +147,7 @@ public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoR
             throw new BusinessException("A alteração de papéis só é permitida em grupos do tipo TURMA.");
         }
 
-        InscricaoGrupo inscricao = inscricaoGrupoRepository.findByGrupo_IdAndEstudanteMembro_Id(grupoId, membroId)
+        InscricaoGrupo inscricao = inscricaoGrupoRepository.findByGrupo_IdAndMembro_Id(grupoId, membroId)
                 .orElseThrow(() -> new NotFoundException("Membro não encontrado neste grupo."));
 
         inscricao.setPapelNoGrupo(novoPapel);
@@ -159,7 +159,7 @@ public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoR
         Grupo grupo = grupoRepository.findById(grupoId)
                 .orElseThrow(() -> new NotFoundException("Grupo não encontrado."));
 
-        InscricaoGrupo inscricaoParaRemover = inscricaoGrupoRepository.findByGrupo_IdAndEstudanteMembro_Id(grupoId, membroId)
+        InscricaoGrupo inscricaoParaRemover = inscricaoGrupoRepository.findByGrupo_IdAndMembro_Id(grupoId, membroId)
                 .orElseThrow(() -> new NotFoundException("Membro não encontrado neste grupo."));
 
         boolean isCriador = grupo.getAssinanteCriadorGrupo().getId().equals(usuarioLogado.getId());

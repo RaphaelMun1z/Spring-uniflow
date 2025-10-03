@@ -8,7 +8,4 @@ public interface CrudService<ReqDTO, ResDTO> {
     List<ResDTO> findAll();
 
     ResDTO findById(String id);
-
-    @Transactional
-    void delete(String id);
 }

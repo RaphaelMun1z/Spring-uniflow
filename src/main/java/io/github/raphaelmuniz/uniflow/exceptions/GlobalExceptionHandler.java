@@ -9,6 +9,7 @@ import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +22,16 @@ import java.util.*;
 @ControllerAdvice
 @RestController
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+    @ExceptionHandler(AccessDeniedException.class)
+    public final ResponseEntity<ExceptionResponse> handleAccessDeniedException(AccessDeniedException ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+                LocalDateTime.now(),
+                List.of("Acesso Negado. Você não tem permissão para executar esta ação."),
+                request.getDescription(false)
+        );
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.FORBIDDEN);
+    }
+
     @ExceptionHandler(NotFoundException.class)
     public final ResponseEntity<ExceptionResponse> notFoundException(Exception ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(), List.of(ex.getMessage()), request.getDescription(false));

@@ -25,6 +25,12 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Estudante extends Assinante implements Serializable {
+    public Estudante(String nome, String email, String senha, Set<AssinaturaUsuario> assinaturas, Set<AtividadeEntrega> atividadesEstudante, List<AtividadeAvaliativa> atividadesGrupoPublicadas, Set<NotificacaoAssinante> notificacoes, List<Grupo> gruposCriados, Papel papel, Integer periodo) {
+        super(nome, email, senha, assinaturas, atividadesGrupoPublicadas, notificacoes, gruposCriados, papel);
+        this.periodo = periodo;
+        this.atividadesEstudante = atividadesEstudante;
+    }
+
     @NotNull(message = "Período não pode ser nulo")
     private Integer periodo;
 
@@ -35,10 +41,4 @@ public class Estudante extends Assinante implements Serializable {
     @NotNull(message = "Tarefas não pode ser nulo")
     @OneToMany(mappedBy = "estudanteDono", cascade = CascadeType.ALL)
     private Set<TarefaStatusMembro> tarefasEstudante = new HashSet<>();
-
-    public Estudante(String nome, String email, String senha, Set<AssinaturaUsuario> assinaturas, Set<AtividadeEntrega> atividadesEstudante, List<AtividadeAvaliativa> atividadesGrupoPublicadas, Set<NotificacaoAssinante> notificacoes, List<Grupo> gruposCriados, Papel papel, Integer periodo) {
-        super(nome, email, senha, assinaturas, atividadesGrupoPublicadas, notificacoes, gruposCriados, papel);
-        this.periodo = periodo;
-        this.atividadesEstudante = atividadesEstudante;
-    }
 }

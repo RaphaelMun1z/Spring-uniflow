@@ -45,10 +45,10 @@ public abstract class Usuario implements UserDetails, Serializable {
     @JoinColumn(name = "papel_id")
     private Papel papel;
 
-    private Boolean isAccountNonExpired;
-    private Boolean isAccountNonLocked;
-    private Boolean isCredentialsNonExpired;
-    private Boolean isEnabled;
+    private Boolean isAccountNonExpired = true;
+    private Boolean isAccountNonLocked = true;
+    private Boolean isCredentialsNonExpired = true;
+    private Boolean isEnabled = true;
 
     public Usuario(String nome, String email, String senha, Papel papel) {
         this.nome = nome;

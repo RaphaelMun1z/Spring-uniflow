@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "inscricao_grupo", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"grupo_id", "estudante_membro_id"})
+        @UniqueConstraint(columnNames = {"grupo_id", "membro_id"})
 })
 public class InscricaoGrupo implements Serializable {
     @Id

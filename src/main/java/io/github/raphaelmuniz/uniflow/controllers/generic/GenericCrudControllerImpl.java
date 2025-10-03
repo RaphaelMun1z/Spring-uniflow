@@ -20,9 +20,4 @@ public class GenericCrudControllerImpl<ReqDTO, ResDTO> implements CrudController
     public ResponseEntity<ResDTO> findById(String id) {
         return ResponseEntity.ok(service.findById(id));
     }
-
-    public ResponseEntity<Void> delete(String id) {
-        service.delete(id);
-        return ResponseEntity.ok().build();
-    }
 }

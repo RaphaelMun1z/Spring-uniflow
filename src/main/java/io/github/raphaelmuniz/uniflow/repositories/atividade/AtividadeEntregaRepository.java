@@ -2,39 +2,14 @@ package io.github.raphaelmuniz.uniflow.repositories.atividade;
 
 import io.github.raphaelmuniz.uniflow.entities.atividade.AtividadeEntrega;
 import io.github.raphaelmuniz.uniflow.entities.enums.StatusEntregaEnum;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 public interface AtividadeEntregaRepository extends JpaRepository<AtividadeEntrega, String> {
-    @Query("""
-                  SELECT ae FROM AtividadeEntrega ae\s
-                  WHERE ae.estudanteDono.id = :estudanteId
-                  AND ae.atividadeAvaliativaOrigem.grupoPublicado.id = :grupoId\s
-            \s""")
-    List<AtividadeEntrega> findAllByEstudanteAndGrupoOrigem(
-            @Param("estudanteId") String estudanteId,
-            @Param("grupoId") String grupoId
-    );
-
-    @Query("SELECT ae FROM AtividadeEntrega ae " +
-            "WHERE ae.estudanteDono.id = :estudanteId " +
-            "AND ae.atividadeAvaliativaOrigem.grupoPublicado.id = :grupoId " +
-            "AND ae.statusEntrega = :status")
-    List<AtividadeEntrega> findAllByEstudanteAndGrupoOrigemAndStatus(
-            @Param("estudanteId") String estudanteId,
-            @Param("grupoId") String grupoId,
-            @Param("status") StatusEntregaEnum status
-    );
-
-    @EntityGraph(attributePaths = {"atividadeAvaliativaOrigem"})
-    List<AtividadeEntrega> findByEstudanteDonoId(String estudanteDonoId);
-
     @Query("""
               SELECT CASE WHEN COUNT(g) > 0 THEN TRUE ELSE FALSE END
               FROM AtividadeEntrega ae
@@ -50,11 +25,7 @@ public interface AtividadeEntregaRepository extends JpaRepository<AtividadeEntre
             @Param("atividadeId") String atividadeId
     );
 
-    List<AtividadeEntrega> findByAtividadeAvaliativaOrigemId(String atividadeAvaliativaOrigemId);
+    int countByAtividadeAvaliativaOrigem_IdAndStatusEntregaIn(String id, Set<StatusEntregaEnum> entregue);
 
-    boolean existsByEstudanteDonoIdAndAtividadeAvaliativaOrigemId(String estudanteId, String atividadeAvaliativaId);
-
-    int countByAtividadeAvaliativa_IdAndStatusIn(String id, Set<StatusEntregaEnum> entregue);
-
-    Optional<AtividadeEntrega> findByAtividadeAvaliativa_IdAndEstudanteDono_Id(String id, String id1);
+    Optional<AtividadeEntrega> findByAtividadeAvaliativaOrigem_IdAndEstudanteDono_Id(String id, String id1);
 }

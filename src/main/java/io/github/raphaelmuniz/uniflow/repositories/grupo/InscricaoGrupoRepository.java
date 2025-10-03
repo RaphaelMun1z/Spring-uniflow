@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface InscricaoGrupoRepository extends JpaRepository<InscricaoGrupo, String> {
-    Optional<InscricaoGrupo> findByGrupo_IdAndEstudanteMembro_Id(String grupoId, String assinanteId);
+    Optional<InscricaoGrupo> findByGrupo_IdAndMembro_Id(String grupoId, String assinanteId);
 
     Page<InscricaoGrupo> findByMembro_Id(String assinanteId, Pageable pageable);
 }

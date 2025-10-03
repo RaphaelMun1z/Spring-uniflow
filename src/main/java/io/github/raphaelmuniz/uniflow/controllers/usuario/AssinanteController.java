@@ -17,11 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/assinantes")
-public class AssinanteController extends GenericCrudControllerImpl<AssinanteRequestDTO, AssinanteResponseDTO> {
+public class AssinanteController {
     private final AssinanteService assinanteService;
 
     protected AssinanteController(AssinanteService service) {
-        super(service);
         this.assinanteService = service;
     }
 

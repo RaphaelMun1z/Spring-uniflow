@@ -55,6 +55,14 @@ public class AssinanteService extends GenericCrudServiceImpl<AssinanteRequestDTO
                 .orElseThrow(() -> new BusinessException("É necessário um plano de assinatura ativo."));
     }
 
+    public boolean verificarSePossuiAssinaturaAtiva(String assinanteId) {
+        return assinaturaUsuarioRepository
+                .findFirstVigenteByAssinanteId(assinanteId,
+                        StatusAssinaturaUsuarioEnum.getStatusVigentes(),
+                        LocalDateTime.now())
+                .isPresent();
+    }
+
     @Transactional(readOnly = true)
     public AssinantePublicProfileDTO buscarPerfilPublicoPorId(String id) {
         Assinante assinante = (Assinante) usuarioRepository.findById(id)

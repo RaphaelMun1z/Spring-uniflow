@@ -27,4 +27,6 @@ public interface AssinaturaUsuarioRepository extends JpaRepository<AssinaturaUsu
     );
 
     Page<AssinaturaUsuario> findByAssinante_Id(String assinanteId, Pageable pageable);
+
+    boolean existsByAssinaturaModelo_Id(String id);
 }

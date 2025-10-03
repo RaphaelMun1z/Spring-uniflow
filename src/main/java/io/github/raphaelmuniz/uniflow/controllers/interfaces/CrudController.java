@@ -12,7 +12,4 @@ public interface CrudController<ReqDTO, ResDTO> {
 
     @GetMapping("/{id}")
     ResponseEntity<ResDTO> findById(@PathVariable String id);
-
-    @DeleteMapping("/{id}")
-    ResponseEntity<Void> delete(@PathVariable String id);
 }
