@@ -1,37 +1,24 @@
 package io.github.raphaelmuniz.uniflow.dto.req.grupo;
 
-import io.github.raphaelmuniz.uniflow.dto.req.RequestData;
-import io.github.raphaelmuniz.uniflow.entities.grupo.Disciplina;
-import io.github.raphaelmuniz.uniflow.entities.embeddables.PeriodoLetivo;
 import io.github.raphaelmuniz.uniflow.entities.enums.DificuldadeEnum;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import jakarta.validation.constraints.*;
 
-@Data
-@AllArgsConstructor
-public class DisciplinaRequestDTO implements RequestData<Disciplina> {
-    @NotBlank
-    private String nome;
+public record DisciplinaRequestDTO(
+        @NotBlank(message = "O nome da disciplina é obrigatório.")
+        String nome,
 
-    @NotNull
-    private Integer periodo;
+        @NotNull(message = "O período (semestre) da disciplina é obrigatório.")
+        @Positive(message = "O período deve ser um número positivo.")
+        Integer periodo,
 
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private DificuldadeEnum dificuldade;
+        @NotNull(message = "O nível de dificuldade é obrigatório.")
+        DificuldadeEnum dificuldade,
 
-    @NotNull
-    @Valid
-    @Embedded
-    private PeriodoLetivo periodoLetivo;
+        @NotNull(message = "O ano do período letivo é obrigatório.")
+        Integer anoLetivo,
 
-    public Disciplina toModel(){
-        return new Disciplina(null, nome, periodo, dificuldade, periodoLetivo, null);
-    }
-}
+        @NotNull(message = "O semestre do período letivo é obrigatório.")
+        @Min(value = 1, message = "O semestre deve ser 1 ou 2.")
+        @Max(value = 2, message = "O semestre deve ser 1 ou 2.")
+        Integer semestreLetivo
+) {}

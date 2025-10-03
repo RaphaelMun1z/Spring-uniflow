@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/admin")
-public class AdminController extends GenericCrudControllerImpl<AdminRequestDTO, AdminResponseDTO> {
+public class AdminController {
     protected AdminController(AdminService service) {
-        super(service);
+
     }
 }

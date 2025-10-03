@@ -26,4 +26,6 @@ public interface GrupoRepository extends JpaRepository<Grupo, String> {
     Optional<Grupo> findByIdWithMembros(@Param("id") String id);
 
     long countByAssinanteCriadorGrupoId(String assinanteId);
+
+    boolean existsByDisciplina_Id(String id);
 }

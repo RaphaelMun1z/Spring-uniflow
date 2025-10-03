@@ -1,26 +1,22 @@
 package io.github.raphaelmuniz.uniflow.dto.res.autorizacao;
 
 import io.github.raphaelmuniz.uniflow.entities.autorizacao.Papel;
-import io.github.raphaelmuniz.uniflow.entities.autorizacao.Permissao;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
-@Data
-@AllArgsConstructor
+@Getter
 public class PapelResponseDTO {
-    private String id;
-    private String nome;
-    private Set<Permissao> permissoes;
+    private final String id;
+    private final String nome;
+    private final Set<PermissaoResponseDTO> permissoes;
 
     public PapelResponseDTO(Papel papel) {
         this.id = papel.getId();
         this.nome = papel.getNome();
-        this.permissoes = papel.getPermissoes();
-    }
-
-    public Papel toModel() {
-        return new Papel(id, nome, permissoes);
+        this.permissoes = papel.getPermissoes().stream()
+                .map(PermissaoResponseDTO::new)
+                .collect(Collectors.toSet());
     }
 }

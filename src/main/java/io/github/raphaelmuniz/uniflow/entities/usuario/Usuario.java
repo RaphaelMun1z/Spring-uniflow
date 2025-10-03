@@ -37,6 +37,9 @@ public abstract class Usuario implements UserDetails, Serializable {
     @NotBlank(message = "Senha não pode ser vazio/nulo")
     private String senha;
 
+    private String passwordResetToken;
+    private LocalDateTime passwordResetTokenExpiry;
+
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private LocalDateTime dataCadastro;

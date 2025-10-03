@@ -59,4 +59,14 @@ public class ProfileService {
         Usuario usuarioSalvo = usuarioRepository.save(usuarioLogado);
         return getAuthenticatedUserProfile(usuarioSalvo);
     }
+
+    @Transactional
+    public void cancelarConta(Usuario usuarioLogado) {
+        // Regra de Negócio: Antes de deletar, você pode adicionar lógicas complexas,
+        // como anonimizar dados, verificar se o usuário é criador de grupos importantes, etc.
+        // Por agora, faremos a exclusão direta.
+
+        // A exclusão em cascata configurada nas entidades removerá dados dependentes.
+        usuarioRepository.deleteById(usuarioLogado.getId());
+    }
 }

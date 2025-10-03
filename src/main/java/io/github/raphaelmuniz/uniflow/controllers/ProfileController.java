@@ -108,4 +108,11 @@ public class ProfileController {
         NotificacoesProfileResponse notificacoes = notificacaoService.getNotificacoesByAssinanteId(usuarioLogado.getId());
         return ResponseEntity.ok(notificacoes);
     }
+
+    @DeleteMapping
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Void> cancelarMinhaConta(@AuthenticationPrincipal Usuario usuarioLogado) {
+        profileService.cancelarConta(usuarioLogado);
+        return ResponseEntity.noContent().build();
+    }
 }

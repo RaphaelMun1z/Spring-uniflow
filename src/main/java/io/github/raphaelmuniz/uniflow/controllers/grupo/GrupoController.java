@@ -1,6 +1,5 @@
 package io.github.raphaelmuniz.uniflow.controllers.grupo;
 
-import io.github.raphaelmuniz.uniflow.controllers.generic.GenericCrudControllerImpl;
 import io.github.raphaelmuniz.uniflow.dto.req.grupo.*;
 import io.github.raphaelmuniz.uniflow.dto.res.grupo.AtividadeDoGrupoResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.grupo.MembroGrupoResponseDTO;
@@ -18,11 +17,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/grupos")
-public class GrupoController extends GenericCrudControllerImpl<GrupoRequestDTO, GrupoResponseDTO> {
+public class GrupoController {
     private final GrupoService grupoService;
 
     public GrupoController(GrupoService grupoService) {
-        super(grupoService);
         this.grupoService = grupoService;
     }
 
@@ -60,18 +58,6 @@ public class GrupoController extends GenericCrudControllerImpl<GrupoRequestDTO, 
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping("/{id}/membros/{membroId}")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Void> alterarPapel(
-            @PathVariable String id,
-            @PathVariable String membroId,
-            @RequestBody @Valid AlterarPapelRequestDTO dto,
-            @AuthenticationPrincipal Usuario usuarioLogado
-    ) {
-        grupoService.alterarPapelMembro(id, membroId, dto.novoPapel(), usuarioLogado);
-        return ResponseEntity.noContent().build();
-    }
-
     @DeleteMapping("/{id}/membros/{membroId}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> removerMembro(
@@ -102,18 +88,6 @@ public class GrupoController extends GenericCrudControllerImpl<GrupoRequestDTO, 
     ) {
         grupoService.excluirGrupo(id, usuarioLogado);
         return ResponseEntity.noContent().build();
-    }
-
-    @PostMapping("/{id}/subgrupos")
-    @PreAuthorize("hasRole('PROFESSOR')")
-    public ResponseEntity<GrupoResponseDTO> criarSubGrupo(
-            @PathVariable String id,
-            @RequestBody @Valid SubGrupoRequestDTO dto,
-            @AuthenticationPrincipal Usuario usuarioLogado
-    ) {
-        GrupoResponseDTO novoSubGrupo = grupoService.criarSubGrupo(id, dto, usuarioLogado);
-        URI location = URI.create("/grupos/" + novoSubGrupo.getId());
-        return ResponseEntity.created(location).body(novoSubGrupo);
     }
 
     @PostMapping("/{id}/atividades")

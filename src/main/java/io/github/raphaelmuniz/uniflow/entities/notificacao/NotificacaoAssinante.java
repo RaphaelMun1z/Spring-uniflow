@@ -11,25 +11,25 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-@ToString(exclude = {"assinanteNotificado", "notificacao"})
 @EqualsAndHashCode(of = "id")
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "notificacao_assinante")
 public class NotificacaoAssinante implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     @NotNull
-    private Boolean foiLido = false;
+    private boolean lida = false;
 
     private LocalDateTime dataLeitura;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "assinante_notificado_id")
-    private Assinante assinanteNotificado;
+    @JoinColumn(name = "destinatario_id", nullable = false)
+    private Assinante destinatario;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "notificacao_id")
+    @JoinColumn(name = "notificacao_id", nullable = false)
     private Notificacao notificacao;
 }

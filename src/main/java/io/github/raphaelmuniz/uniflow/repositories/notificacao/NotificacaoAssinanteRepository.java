@@ -1,6 +1,8 @@
 package io.github.raphaelmuniz.uniflow.repositories.notificacao;
 
 import io.github.raphaelmuniz.uniflow.entities.notificacao.NotificacaoAssinante;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -28,4 +30,8 @@ public interface NotificacaoAssinanteRepository extends JpaRepository<Notificaca
     );
 
     long countAllByAssinanteNotificadoId(String assinanteNotificadoId);
+
+    Page<NotificacaoAssinante> findByDestinatario_IdOrderByNotificacao_DataCriacaoDesc(String id, Pageable pageable);
+
+    List<NotificacaoAssinante> findAllByDestinatario_IdAndLidaIsFalse(String id);
 }

@@ -22,7 +22,6 @@ import io.github.raphaelmuniz.uniflow.repositories.assinatura.AssinaturaUsuarioR
 import io.github.raphaelmuniz.uniflow.repositories.grupo.GrupoRepository;
 import io.github.raphaelmuniz.uniflow.repositories.grupo.InscricaoGrupoRepository;
 import io.github.raphaelmuniz.uniflow.repositories.usuario.UsuarioRepository;
-import io.github.raphaelmuniz.uniflow.services.generic.GenericCrudServiceImpl;
 import io.github.raphaelmuniz.uniflow.services.validation.grupo.strategy.atividadeStrategy.AtividadeStrategy;
 import io.github.raphaelmuniz.uniflow.services.validation.grupo.strategy.atividadeStrategy.provider.AtividadeStrategyProvider;
 import io.github.raphaelmuniz.uniflow.services.validation.grupo.GrupoFactory;
@@ -38,7 +37,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoResponseDTO, Grupo, String> {
+public class GrupoService {
     private final GrupoRepository grupoRepository;
     private final GrupoFactory grupoFactory;
     private final AssinaturaUsuarioRepository assinaturaUsuarioRepository;
@@ -56,7 +55,6 @@ public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoR
             InscricaoGrupoRepository inscricaoGrupoRepository,
             AtividadeStrategyProvider atividadeStrategyProvider,
             ListarAtividadesStrategyProvider listarAtividadesStrategyProvider) {
-        super(repository, GrupoResponseDTO::new);
         this.grupoRepository = repository;
         this.grupoFactory = grupoFactory;
         this.assinaturaUsuarioRepository = assinaturaUsuarioRepository;
@@ -69,7 +67,7 @@ public class GrupoService extends GenericCrudServiceImpl<GrupoRequestDTO, GrupoR
     @Transactional
     public GrupoResponseDTO criarGrupo(GrupoRequestDTO data, Usuario usuarioAutenticado) {
         Grupo novoGrupo = grupoFactory.criarGrupo(data, usuarioAutenticado);
-        Grupo grupoSalvo = repository.save(novoGrupo);
+        Grupo grupoSalvo = grupoRepository.save(novoGrupo);
         return new GrupoResponseDTO(grupoSalvo);
     }
 
