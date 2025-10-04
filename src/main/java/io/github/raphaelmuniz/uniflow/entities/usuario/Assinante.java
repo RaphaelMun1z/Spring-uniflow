@@ -16,7 +16,7 @@ import java.util.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = {"assinaturas", "atividadesCriadas", "notificacoes", "gruposCriados", "inscricoes"}) // Ajustado
+@ToString(exclude = {"assinaturas", "atividadesCriadas", "notificacoes", "gruposCriados", "inscricoes"})
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Assinante extends Usuario implements Serializable {
 

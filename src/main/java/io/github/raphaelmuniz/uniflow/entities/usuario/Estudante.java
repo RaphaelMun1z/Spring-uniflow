@@ -2,7 +2,7 @@ package io.github.raphaelmuniz.uniflow.entities.usuario;
 
 import io.github.raphaelmuniz.uniflow.entities.atividade.AtividadeEntrega;
 import io.github.raphaelmuniz.uniflow.entities.atividade.TarefaStatusMembro;
-import io.github.raphaelmuniz.uniflow.entities.embeddables.PeriodoLetivo; // <-- Importar
+import io.github.raphaelmuniz.uniflow.entities.embeddables.PeriodoLetivo;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;

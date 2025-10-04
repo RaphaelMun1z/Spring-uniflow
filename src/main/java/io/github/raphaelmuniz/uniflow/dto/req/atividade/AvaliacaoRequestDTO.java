@@ -8,7 +8,7 @@ import org.hibernate.validator.constraints.Length;
 public record AvaliacaoRequestDTO(
         @NotNull(message = "A nota é obrigatória.")
         @PositiveOrZero(message = "A nota não pode ser negativa.")
-        @Max(value = 100, message = "A nota máxima não pode exceder 100.") // Exemplo de valor máximo
+        @Max(value = 100, message = "A nota máxima não pode exceder 100.")
         Double nota,
 
         @Length(max = 1000, message = "O feedback não pode exceder 1000 caracteres.")

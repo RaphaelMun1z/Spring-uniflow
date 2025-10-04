@@ -93,8 +93,6 @@ authorizeHttpRequests -> authorizeHttpRequests
                             "/swagger-ui/**",
                             "/v3/api-docs/**"
                     ).permitAll()
-                    //.requestMatchers("/api/papeis/**").hasAuthority("ADMIN_GERENCIAR_PAPEIS")
-                    .requestMatchers("/**").permitAll()
                     .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex

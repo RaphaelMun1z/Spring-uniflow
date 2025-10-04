@@ -48,7 +48,7 @@ public class AtividadeEntrega implements Serializable {
     private Estudante estudanteDono;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "atividade_avaliativa_origem_id", nullable = false) // MELHORIA
+    @JoinColumn(name = "atividade_avaliativa_origem_id", nullable = false)
     @ToString.Exclude
     private AtividadeAvaliativa atividadeAvaliativaOrigem;
 

@@ -40,12 +40,7 @@ public class DataInitializer implements CommandLineRunner {
     private final GrupoRepository grupoRepository;
     private final DisciplinaRepository disciplinaRepository;
 
-    public DataInitializer(PermissaoRepository permissaoRepository,
-                           PapelRepository papelRepository,
-                           UsuarioRepository usuarioRepository,
-                           PasswordEncoder passwordEncoder,
-                           GrupoRepository grupoRepository,
-                           DisciplinaRepository disciplinaRepository) {
+    public DataInitializer(PermissaoRepository permissaoRepository, PapelRepository papelRepository, UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder, GrupoRepository grupoRepository, DisciplinaRepository disciplinaRepository) {
         this.permissaoRepository = permissaoRepository;
         this.papelRepository = papelRepository;
         this.usuarioRepository = usuarioRepository;
@@ -68,13 +63,19 @@ public class DataInitializer implements CommandLineRunner {
         Permissao pAdminGerenciar = new Permissao(null, "ADMIN_GERENCIAR_PAPEIS");
         Permissao pUserLer = new Permissao(null, "USUARIO_LER");
         Permissao pUserEscrever = new Permissao(null, "USUARIO_ESCREVER");
-        permissaoRepository.saveAll(List.of(pAdminGerenciar, pUserLer, pUserEscrever));
+
+        Permissao pAssinaturaUsuarioCriar = new Permissao(null, "ASSINATURA_USUARIO_CRIAR");
+        Permissao pAssinaturaUsuarioLer = new Permissao(null, "ASSINATURA_USUARIO_LER");
+        Permissao pAssinaturaUsuarioEditar = new Permissao(null, "ASSINATURA_USUARIO_EDITAR");
+
+        permissaoRepository.saveAll(List.of(pAdminGerenciar, pUserLer, pUserEscrever, pAssinaturaUsuarioCriar, pAssinaturaUsuarioLer, pAssinaturaUsuarioEditar // <-- Salvar
+        ));
         log.info("Permissões criadas com sucesso.");
 
         log.info("Criando papéis...");
-        Papel papelAdmin = new Papel(null, "ADMIN", Set.of(pAdminGerenciar, pUserLer, pUserEscrever));
-        Papel papelProfessor = new Papel(null, "PROFESSOR", Set.of(pUserLer));
-        Papel papelEstudante = new Papel(null, "ESTUDANTE", Set.of(pUserLer));
+        Papel papelAdmin = new Papel(null, "ROLE_ADMIN", Set.of(pAdminGerenciar, pUserLer, pUserEscrever, pAssinaturaUsuarioCriar, pAssinaturaUsuarioLer, pAssinaturaUsuarioEditar));
+        Papel papelProfessor = new Papel(null, "ROLE_PROFESSOR", Set.of(pUserLer));
+        Papel papelEstudante = new Papel(null, "ROLE_ESTUDANTE", Set.of(pUserLer));
         papelRepository.saveAll(List.of(papelAdmin, papelProfessor, papelEstudante));
         log.info("Papéis criados e associados às permissões.");
 

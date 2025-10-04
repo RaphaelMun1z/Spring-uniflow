@@ -10,9 +10,15 @@ import io.github.raphaelmuniz.uniflow.dto.res.autorizacao.PapelResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.autorizacao.PermissaoResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.usuario.AssinantePublicProfileDTO;
 import io.github.raphaelmuniz.uniflow.services.usuario.AdminService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +36,26 @@ public class AdminController {
         this.adminService = service;
     }
 
+    @Operation(summary = "Busca todos os usuários do sistema",
+        description = "Recurso administrativo que permite a busca por todos os usuários do sistema",
+        tags = {"Usuário"},
+        responses = {
+            @ApiResponse(
+                description = "Success",
+                responseCode = "200",
+                content = {
+                    @Content(
+                        mediaType = MediaType.APPLICATION_JSON_VALUE,
+                        array = @ArraySchema(schema = @Schema(implementation = AssinantePublicProfileDTO.class))
+                    )
+                }),
+            @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+            @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+            @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+            @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+            @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
+        }
+    )
     @GetMapping("/usuarios")
     public ResponseEntity<PaginatedResponse<AssinantePublicProfileDTO>> listarUsuarios(
             @RequestParam(required = false) String tipo,
@@ -42,10 +68,31 @@ public class AdminController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "Busca todos os planos de assinatura",
+        description = "Recurso administrativo que permite a busca por todos os planos de assinatura",
+        tags = {"Assinatura"},
+        responses = {
+            @ApiResponse(
+                description = "Success",
+                responseCode = "200",
+                content = {
+                    @Content(
+                        mediaType = MediaType.APPLICATION_JSON_VALUE,
+                        array = @ArraySchema(schema = @Schema(implementation = AssinaturaModeloResponseDTO.class))
+                    )
+                }),
+            @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+            @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+            @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+            @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+            @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
+        }
+    )
     @GetMapping("/planos")
     public ResponseEntity<List<AssinaturaModeloResponseDTO>> listarPlanos() {
         return ResponseEntity.ok(adminService.listarPlanos());
     }
+
 
     @PostMapping("/planos")
     public ResponseEntity<AssinaturaModeloResponseDTO> criarPlano(@RequestBody @Valid AssinaturaModeloRequestDTO dto) {

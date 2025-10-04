@@ -2,7 +2,7 @@ package io.github.raphaelmuniz.uniflow.services.notificacao;
 
 import io.github.raphaelmuniz.uniflow.dto.req.notificacao.NotificacaoBroadcastRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.req.notificacao.NotificacaoGrupoRequestDTO;
-import io.github.raphaelmuniz.uniflow.dto.res.notificacao.NotificacaoResponseDTO; // Reutilizando o DTO que já temos
+import io.github.raphaelmuniz.uniflow.dto.res.notificacao.NotificacaoResponseDTO;
 import io.github.raphaelmuniz.uniflow.entities.enums.CategoriaNotificacaoEnum;
 import io.github.raphaelmuniz.uniflow.entities.grupo.Grupo;
 import io.github.raphaelmuniz.uniflow.entities.grupo.InscricaoGrupo;

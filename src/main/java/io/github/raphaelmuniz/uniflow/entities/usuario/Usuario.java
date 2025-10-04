@@ -8,11 +8,14 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -69,7 +72,12 @@ public abstract class Usuario implements UserDetails, Serializable {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.papel != null ? this.papel.getPermissoes() : Set.of();
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        if (this.papel != null) {
+            authorities.add(new SimpleGrantedAuthority(this.papel.getNome()));
+            authorities.addAll(this.papel.getPermissoes());
+        }
+        return authorities;
     }
 
     public boolean hasRole(String nomeDoPapel) {
