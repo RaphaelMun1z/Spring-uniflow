@@ -20,7 +20,7 @@ public record AssinaturaModeloRequestDTO(
 
         @NotNull(message = "A duração em meses é obrigatória.")
         @PositiveOrZero(message = "A duração deve ser zero ou maior.")
-        Long duracaoEmMeses,
+        Integer duracaoEmMeses,
 
         @NotNull(message = "O limite de grupos é obrigatório.")
         @PositiveOrZero(message = "O limite de grupos deve ser zero ou maior.")

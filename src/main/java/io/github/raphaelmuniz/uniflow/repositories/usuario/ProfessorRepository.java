@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProfessorRepository extends JpaRepository<Professor, String> {
-    Optional<Professor> findByEmail(String email);
-
     boolean existsByEmail(String email);
 
     @Override
@@ -21,5 +19,5 @@ public interface ProfessorRepository extends JpaRepository<Professor, String> {
     @Override
     @NonNull
     @EntityGraph(attributePaths = {"assinaturas"})
-    Optional<Professor> findById(String id);
+    Optional<Professor> findById(@NonNull String id);
 }

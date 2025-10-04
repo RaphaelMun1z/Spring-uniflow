@@ -2,7 +2,6 @@ package io.github.raphaelmuniz.uniflow.entities.grupo;
 
 import io.github.raphaelmuniz.uniflow.entities.enums.PapelGrupoEnum;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Assinante;
-import io.github.raphaelmuniz.uniflow.entities.usuario.Estudante;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;

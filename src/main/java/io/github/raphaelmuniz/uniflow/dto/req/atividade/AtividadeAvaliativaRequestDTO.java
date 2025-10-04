@@ -3,7 +3,6 @@ package io.github.raphaelmuniz.uniflow.dto.req.atividade;
 import io.github.raphaelmuniz.uniflow.entities.enums.DificuldadeEnum;
 import io.github.raphaelmuniz.uniflow.entities.enums.VisivibilidadeAtividadeEnum;
 import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 

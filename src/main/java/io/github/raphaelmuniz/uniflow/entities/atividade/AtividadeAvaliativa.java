@@ -1,6 +1,5 @@
 package io.github.raphaelmuniz.uniflow.entities.atividade;
 
-import io.github.raphaelmuniz.uniflow.entities.grupo.Disciplina;
 import io.github.raphaelmuniz.uniflow.entities.grupo.Grupo;
 import io.github.raphaelmuniz.uniflow.entities.enums.DificuldadeEnum;
 import io.github.raphaelmuniz.uniflow.entities.enums.VisivibilidadeAtividadeEnum;

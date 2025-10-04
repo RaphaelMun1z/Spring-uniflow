@@ -6,9 +6,9 @@ import lombok.Getter;
 
 @Getter
 public class AssinantePublicProfileDTO {
-    private String id;
-    private String nome;
-    private String tipo;
+    private final String id;
+    private final String nome;
+    private final String tipo;
     private String areaAtuacao;
 
     public AssinantePublicProfileDTO(Assinante assinante) {

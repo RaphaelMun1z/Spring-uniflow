@@ -1,7 +1,6 @@
 package io.github.raphaelmuniz.uniflow.entities.atividade;
 
 import io.github.raphaelmuniz.uniflow.entities.enums.DificuldadeEnum;
-import io.github.raphaelmuniz.uniflow.entities.grupo.Disciplina;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

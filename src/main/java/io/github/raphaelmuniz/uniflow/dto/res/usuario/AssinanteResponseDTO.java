@@ -2,9 +2,6 @@ package io.github.raphaelmuniz.uniflow.dto.res.usuario;
 
 import io.github.raphaelmuniz.uniflow.entities.assinatura.AssinaturaUsuario;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Assinante;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 public record AssinanteResponseDTO(
         String id,

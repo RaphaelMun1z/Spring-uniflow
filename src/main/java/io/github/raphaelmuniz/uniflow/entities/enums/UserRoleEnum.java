@@ -1,5 +1,8 @@
 package io.github.raphaelmuniz.uniflow.entities.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum UserRoleEnum {
     ADMIN("ADMIN"),
     ESTUDANTE("ESTUDANTE"),
@@ -11,7 +14,4 @@ public enum UserRoleEnum {
         this.role = role;
     }
 
-    public String getRole() {
-        return role;
-    }
 }

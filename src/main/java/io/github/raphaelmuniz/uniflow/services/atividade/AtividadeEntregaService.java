@@ -2,7 +2,6 @@ package io.github.raphaelmuniz.uniflow.services.atividade;
 
 import io.github.raphaelmuniz.uniflow.dto.req.atividade.AtividadeEntregaRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.req.atividade.AvaliacaoRequestDTO;
-import io.github.raphaelmuniz.uniflow.dto.res.atividade.AtividadeEntregaResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.atividade.AvaliacaoAtividadeResponseDTO;
 import io.github.raphaelmuniz.uniflow.entities.atividade.AtividadeEntrega;
 import io.github.raphaelmuniz.uniflow.entities.atividade.AvaliacaoAtividade;
@@ -11,11 +10,8 @@ import io.github.raphaelmuniz.uniflow.entities.usuario.Estudante;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Professor;
 import io.github.raphaelmuniz.uniflow.exceptions.models.BusinessException;
 import io.github.raphaelmuniz.uniflow.exceptions.models.NotFoundException;
-import io.github.raphaelmuniz.uniflow.repositories.atividade.AtividadeAvaliativaRepository;
 import io.github.raphaelmuniz.uniflow.repositories.atividade.AtividadeEntregaRepository;
 import io.github.raphaelmuniz.uniflow.repositories.atividade.AvaliacaoAtividadeRepository;
-import io.github.raphaelmuniz.uniflow.repositories.usuario.EstudanteRepository;
-import io.github.raphaelmuniz.uniflow.services.generic.GenericCrudServiceImpl;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,24 +19,16 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 
 @Service
-public class AtividadeEntregaService extends GenericCrudServiceImpl<AtividadeEntregaRequestDTO, AtividadeEntregaResponseDTO, AtividadeEntrega, String> {
+public class AtividadeEntregaService {
     private final AtividadeEntregaRepository atividadeEntregaRepository;
     private final AvaliacaoAtividadeRepository avaliacaoAtividadeRepository;
 
-    private final EstudanteRepository estudanteRepository;
-    private final AtividadeAvaliativaRepository atividadeAvaliativaRepository;
-
     protected AtividadeEntregaService(
             AtividadeEntregaRepository atividadeEntregaRepository,
-            AvaliacaoAtividadeRepository avaliacaoAtividadeRepository,
-            EstudanteRepository estudanteRepository,
-            AtividadeAvaliativaRepository atividadeAvaliativaRepository
+            AvaliacaoAtividadeRepository avaliacaoAtividadeRepository
     ) {
-        super(atividadeEntregaRepository, AtividadeEntregaResponseDTO::new);
         this.atividadeEntregaRepository = atividadeEntregaRepository;
         this.avaliacaoAtividadeRepository = avaliacaoAtividadeRepository;
-        this.estudanteRepository = estudanteRepository;
-        this.atividadeAvaliativaRepository = atividadeAvaliativaRepository;
     }
 
     @Transactional

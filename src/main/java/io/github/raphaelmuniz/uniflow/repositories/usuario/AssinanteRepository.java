@@ -17,5 +17,5 @@ public interface AssinanteRepository extends JpaRepository<Assinante, String> {
     @Override
     @NonNull
     @EntityGraph(attributePaths = {"assinaturas"})
-    Optional<Assinante> findById(String id);
+    Optional<Assinante> findById(@NonNull String id);
 }

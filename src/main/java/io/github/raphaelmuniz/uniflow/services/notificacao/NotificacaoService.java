@@ -5,6 +5,7 @@ import io.github.raphaelmuniz.uniflow.dto.req.notificacao.NotificacaoGrupoReques
 import io.github.raphaelmuniz.uniflow.dto.res.notificacao.NotificacaoResponseDTO; // Reutilizando o DTO que já temos
 import io.github.raphaelmuniz.uniflow.entities.enums.CategoriaNotificacaoEnum;
 import io.github.raphaelmuniz.uniflow.entities.grupo.Grupo;
+import io.github.raphaelmuniz.uniflow.entities.grupo.InscricaoGrupo;
 import io.github.raphaelmuniz.uniflow.entities.notificacao.Notificacao;
 import io.github.raphaelmuniz.uniflow.entities.notificacao.NotificacaoAssinante;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Assinante;
@@ -41,7 +42,7 @@ public class NotificacaoService {
                 .orElseThrow(() -> new NotFoundException("Grupo não encontrado com o ID: " + dto.grupoId()));
 
         List<Assinante> destinatarios = grupo.getInscricoes().stream()
-                .map(inscricao -> (Assinante) inscricao.getMembro())
+                .map(InscricaoGrupo::getMembro)
                 .toList();
 
         return criarEEnviar(dto.mensagem(), dto.categoria(), dto.link(), (Assinante) remetente, destinatarios);

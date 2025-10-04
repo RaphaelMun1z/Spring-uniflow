@@ -89,8 +89,7 @@ public class AssinaturaUsuarioService{
         return new AssinaturaUsuarioResponseDTO(assinaturaCancelada);
     }
 
-    public Page<AssinaturaUsuarioResponseDTO> findByAssinanteId(String assinanteId, Pageable pageable) {
-        Page<AssinaturaUsuario> assinaturasPage = assinaturaUsuarioRepository.findByAssinante_Id(assinanteId, pageable);
-        return assinaturasPage.map(AssinaturaUsuarioResponseDTO::new);
+    public Page<AssinaturaUsuario> buscarEntidadesPorAssinanteId(String assinanteId, Pageable pageable) {
+        return assinaturaUsuarioRepository.findByAssinante_Id(assinanteId, pageable);
     }
 }

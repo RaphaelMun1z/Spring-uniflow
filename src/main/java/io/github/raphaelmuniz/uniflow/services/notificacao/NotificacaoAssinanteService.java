@@ -66,4 +66,8 @@ public class NotificacaoAssinanteService {
         }
         return notificacao;
     }
+
+    public int countNotificacoesNaoLidas(String usuarioId) {
+        return (int) notificacaoAssinanteRepository.countByDestinatario_IdAndLidaIsFalse(usuarioId);
+    }
 }

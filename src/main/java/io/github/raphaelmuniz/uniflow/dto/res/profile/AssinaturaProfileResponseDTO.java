@@ -1,30 +1,37 @@
 package io.github.raphaelmuniz.uniflow.dto.res.profile;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.github.raphaelmuniz.uniflow.dto.res.assinatura.AssinaturaModeloResponseDTO;
-import io.github.raphaelmuniz.uniflow.dto.res.assinatura.AssinaturaUsuarioResponseDTO;
 import io.github.raphaelmuniz.uniflow.entities.assinatura.AssinaturaUsuario;
 import io.github.raphaelmuniz.uniflow.entities.enums.StatusAssinaturaUsuarioEnum;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
 public class AssinaturaProfileResponseDTO {
-    private String assinaturaUsuarioId;
+
+    private String id;
     private LocalDateTime dataInicio;
-    private LocalDateTime dataExpiracao;
+    private LocalDateTime dataFim;
     private StatusAssinaturaUsuarioEnum status;
+
+    private String assinaturaModeloId;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private AssinaturaModeloResponseDTO assinaturaModelo;
 
     public AssinaturaProfileResponseDTO(AssinaturaUsuario assinaturaUsuario) {
-        this.assinaturaUsuarioId = assinaturaUsuario.getId();
+        this.id = assinaturaUsuario.getId();
         this.dataInicio = assinaturaUsuario.getDataInicio();
-        this.dataExpiracao = assinaturaUsuario.getDataExpiracao();
+        this.dataFim = assinaturaUsuario.getDataExpiracao();
         this.status = assinaturaUsuario.getStatus();
-        this.assinaturaModelo = null;
+        if (assinaturaUsuario.getAssinaturaModelo() != null) {
+            this.assinaturaModeloId = assinaturaUsuario.getAssinaturaModelo().getId();
+        }
     }
 }

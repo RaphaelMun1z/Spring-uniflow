@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
@@ -19,4 +20,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, String> {
     Optional<Usuario> findByPasswordResetToken(@NotBlank(message = "O token de redefinição é obrigatório.") String token);
 
     boolean existsByPapel_Id(String id);
-}
+
+    @Query("SELECT u FROM Usuario u WHERE TYPE(u) = :tipo")
+    Page<Assinante> findAllByTipo(@Param("tipo") Class<? extends Assinante> tipo, Pageable pageable);}

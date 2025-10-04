@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EstudanteRepository extends JpaRepository<Estudante, String> {
-    Optional<Estudante> findByEmail(String email);
-
     boolean existsByEmail(String email);
 
     @Override
@@ -21,5 +19,5 @@ public interface EstudanteRepository extends JpaRepository<Estudante, String> {
     @Override
     @NonNull
     @EntityGraph(attributePaths = {"assinaturas", "atividadesEstudante", "inscricoesGrupos"})
-    Optional<Estudante> findById(String id);
+    Optional<Estudante> findById(@NonNull String id);
 }

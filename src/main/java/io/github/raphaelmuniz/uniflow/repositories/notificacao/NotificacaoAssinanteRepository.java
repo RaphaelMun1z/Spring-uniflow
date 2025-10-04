@@ -34,4 +34,6 @@ public interface NotificacaoAssinanteRepository extends JpaRepository<Notificaca
     Page<NotificacaoAssinante> findByDestinatario_IdOrderByNotificacao_DataCriacaoDesc(String id, Pageable pageable);
 
     List<NotificacaoAssinante> findAllByDestinatario_IdAndLidaIsFalse(String id);
+
+    long countByDestinatario_IdAndLidaIsFalse(String destinatarioId);
 }

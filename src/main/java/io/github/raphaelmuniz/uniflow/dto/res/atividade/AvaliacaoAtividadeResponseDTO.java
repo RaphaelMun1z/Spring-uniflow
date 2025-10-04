@@ -1,6 +1,5 @@
 package io.github.raphaelmuniz.uniflow.dto.res.atividade;
 
-import io.github.raphaelmuniz.uniflow.entities.atividade.AtividadeEntrega;
 import io.github.raphaelmuniz.uniflow.entities.atividade.AvaliacaoAtividade;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,10 +1,8 @@
 package io.github.raphaelmuniz.uniflow.entities.atividade;
 
-import io.github.raphaelmuniz.uniflow.entities.enums.VisivibilidadeAtividadeEnum;
 import io.github.raphaelmuniz.uniflow.entities.grupo.Grupo;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Estudante;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
