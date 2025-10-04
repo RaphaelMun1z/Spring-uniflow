@@ -13,8 +13,8 @@ import io.github.raphaelmuniz.uniflow.exceptions.models.BusinessException;
 import io.github.raphaelmuniz.uniflow.exceptions.models.NotFoundException;
 import io.github.raphaelmuniz.uniflow.repositories.assinatura.AssinaturaModeloRepository;
 import io.github.raphaelmuniz.uniflow.repositories.assinatura.AssinaturaUsuarioRepository;
-import io.github.raphaelmuniz.uniflow.repositories.usuario.AssinanteRepository;
 import io.github.raphaelmuniz.uniflow.repositories.assinatura.PagamentoRepository;
+import io.github.raphaelmuniz.uniflow.repositories.usuario.AssinanteRepository;
 import io.github.raphaelmuniz.uniflow.services.usuario.AssinanteService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -61,18 +61,18 @@ public class PagamentoService {
         novaAssinatura.setAssinaturaModelo(modelo);
         novaAssinatura.setStatus(StatusAssinaturaUsuarioEnum.ATIVA);
         novaAssinatura.setDataInicio(LocalDateTime.now());
-        novaAssinatura.setDataExpiracao(LocalDateTime.now().plusMonths(modelo.getDuracaoEmMeses()));
+        novaAssinatura.setDataFim(LocalDateTime.now().plusMonths(modelo.getDuracaoEmMeses()));
         AssinaturaUsuario assinaturaSalva = assinaturaUsuarioRepository.save(novaAssinatura);
 
         Pagamento pagamento = new Pagamento();
         pagamento.setAssinaturaUsuario(assinaturaSalva);
         pagamento.setDataPagamento(LocalDateTime.now());
         pagamento.setValor(modelo.getPreco());
-        pagamento.setStatusPagamento(StatusPagamentoEnum.APROVADO);
+        pagamento.setStatus(StatusPagamentoEnum.APROVADO);
 
         Pagamento pagamentoSalvo = pagamentoRepository.save(pagamento);
 
-        return new PagamentoResponseDTO(pagamentoSalvo);
+        return toResponseDTO(pagamentoSalvo);
     }
 
     @Transactional
@@ -84,13 +84,13 @@ public class PagamentoService {
         pagamento.setAssinaturaUsuario(assinatura);
         pagamento.setDataPagamento(dto.dataPagamento());
         pagamento.setValor(dto.valor());
-        pagamento.setStatusPagamento(dto.status());
-        pagamento.setMetodoPagamento(dto.metodo());
+        pagamento.setStatus(dto.status());
+        pagamento.setMetodo(dto.metodo());
         pagamento.setProtocolo(dto.protocolo());
 
         Pagamento pagamentoSalvo = pagamentoRepository.save(pagamento);
 
-        return new PagamentoResponseDTO(pagamentoSalvo);
+        return toResponseDTO(pagamentoSalvo);
     }
 
     @Transactional(readOnly = true)
@@ -100,6 +100,19 @@ public class PagamentoService {
         }
 
         Page<Pagamento> pagamentos = pagamentoRepository.findByAssinaturaUsuario_Assinante_IdOrderByDataPagamentoDesc(assinanteId, pageable);
-        return pagamentos.map(PagamentoResponseDTO::new);
+
+        return pagamentos.map(this::toResponseDTO);
+    }
+
+    private PagamentoResponseDTO toResponseDTO(Pagamento pagamento) {
+        return new PagamentoResponseDTO(
+                pagamento.getId(),
+                pagamento.getDataPagamento(),
+                pagamento.getValor(),
+                pagamento.getStatus(),
+                pagamento.getMetodo(),
+                pagamento.getProtocolo(),
+                pagamento.getAssinaturaUsuario().getAssinante().getId()
+        );
     }
 }

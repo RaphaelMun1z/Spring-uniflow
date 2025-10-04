@@ -1,41 +1,26 @@
 package io.github.raphaelmuniz.uniflow.dto.req.grupo;
 
-import io.github.raphaelmuniz.uniflow.dto.req.RequestData;
-import io.github.raphaelmuniz.uniflow.entities.atividade.AtividadeAvaliativa;
-import io.github.raphaelmuniz.uniflow.entities.grupo.Grupo;
 import io.github.raphaelmuniz.uniflow.entities.enums.TipoGrupoEnum;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 
 import java.util.List;
 
-@Data
-@AllArgsConstructor
-public class GrupoRequestDTO implements RequestData<Grupo> {
-    @NotBlank
-    private String titulo;
+public record GrupoRequestDTO(
+        @NotBlank(message = "O título do grupo é obrigatório.")
+        String titulo,
 
-    @NotBlank
-    private String descricao;
+        @NotBlank(message = "A descrição do grupo é obrigatória.")
+        String descricao,
 
-    @NotNull
-    private TipoGrupoEnum tipoGrupo;
+        @NotNull(message = "O tipo do grupo (TURMA ou GRUPO_ESTUDO) é obrigatório.")
+        TipoGrupoEnum tipoGrupo,
 
-    @NotNull
-    private List<AtividadeAvaliativa> atividadesGrupo;
+        @NotEmpty(message = "É necessário fornecer o ID de pelo menos um estudante para inscrever no grupo.")
+        List<String> idsEstudantesInscritos,
 
-    @NotNull
-    private List<String> estudantesInscritosId;
-
-    @NotNull
-    private String criadorId;
-
-    @NotNull
-    private String disciplinaId;
-
-    public Grupo toModel() {
-        return new Grupo(null, titulo, descricao, tipoGrupo, null, null, null, null, null, null, null, null);
-    }
+        @NotBlank(message = "O ID da disciplina é obrigatório.")
+        String disciplinaId
+) {
 }

@@ -1,22 +1,31 @@
 package io.github.raphaelmuniz.uniflow.dto.res.autorizacao;
 
 import io.github.raphaelmuniz.uniflow.entities.autorizacao.Papel;
-import lombok.Getter;
 
+import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Getter
-public class PapelResponseDTO {
-    private final String id;
-    private final String nome;
-    private final Set<PermissaoResponseDTO> permissoes;
+public record PapelResponseDTO(
+        String id,
+        String nome,
+        Set<PermissaoResponseDTO> permissoes
+) {
+    public static PapelResponseDTO fromEntity(Papel papel) {
+        if (papel == null) {
+            return null;
+        }
 
-    public PapelResponseDTO(Papel papel) {
-        this.id = papel.getId();
-        this.nome = papel.getNome();
-        this.permissoes = papel.getPermissoes().stream()
+        Set<PermissaoResponseDTO> permissoesDTO = papel.getPermissoes() != null
+                ? papel.getPermissoes().stream()
                 .map(PermissaoResponseDTO::new)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toSet())
+                : Collections.emptySet();
+
+        return new PapelResponseDTO(
+                papel.getId(),
+                papel.getNome(),
+                permissoesDTO
+        );
     }
 }

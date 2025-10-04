@@ -1,23 +1,26 @@
 package io.github.raphaelmuniz.uniflow.dto.res.notificacao;
 
 import io.github.raphaelmuniz.uniflow.entities.notificacao.NotificacaoAssinante;
-import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-@Getter
-public class NotificacaoResponseDTO {
-    private final String id;
-    private final String mensagem;
-    private final LocalDateTime dataCriacao;
-    private final boolean lida;
-    private final String link;
-
-    public NotificacaoResponseDTO(NotificacaoAssinante notificacaoAssinante) {
-        this.id = notificacaoAssinante.getId();
-        this.mensagem = notificacaoAssinante.getNotificacao().getMensagem();
-        this.dataCriacao = notificacaoAssinante.getNotificacao().getDataCriacao();
-        this.lida = notificacaoAssinante.isLida();
-        this.link = notificacaoAssinante.getNotificacao().getLink();
+public record NotificacaoResponseDTO(
+        String id,
+        String mensagem,
+        LocalDateTime dataCriacao,
+        boolean lida,
+        String link
+) {
+    public static NotificacaoResponseDTO fromEntity(NotificacaoAssinante notificacaoAssinante) {
+        if (notificacaoAssinante == null || notificacaoAssinante.getNotificacao() == null) {
+            return null;
+        }
+        return new NotificacaoResponseDTO(
+                notificacaoAssinante.getId(),
+                notificacaoAssinante.getNotificacao().getMensagem(),
+                notificacaoAssinante.getNotificacao().getDataCriacao(),
+                notificacaoAssinante.isLida(),
+                notificacaoAssinante.getNotificacao().getLink()
+        );
     }
 }

@@ -2,27 +2,29 @@ package io.github.raphaelmuniz.uniflow.dto.res.usuario;
 
 import io.github.raphaelmuniz.uniflow.dto.res.profile.AssinaturaProfileResponseDTO;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Usuario;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.Set;
 
-@Getter
-@Setter
-public class ProfileResponseDTO {
-    private String id;
-    private String nome;
-    private String email;
-    private Set<String> papeis;
-    private AssinaturaProfileResponseDTO assinaturaAtiva;
-    private int notificacoesNaoLidas;
+public record ProfileResponseDTO(
+        String id,
+        String nome,
+        String email,
+        Set<String> papeis,
+        AssinaturaProfileResponseDTO assinaturaAtiva,
+        int notificacoesNaoLidas
+) {
+    public static ProfileResponseDTO fromEntity(Usuario usuario, AssinaturaProfileResponseDTO assinatura, int notificacoesNaoLidas) {
+        if (usuario == null) {
+            return null;
+        }
 
-    public ProfileResponseDTO(Usuario usuario, AssinaturaProfileResponseDTO assinatura, int notificacoesNaoLidas) {
-        this.id = usuario.getId();
-        this.nome = usuario.getNome();
-        this.email = usuario.getEmail();
-        this.papeis = Set.of(usuario.getPapel().getNome());
-        this.assinaturaAtiva = assinatura;
-        this.notificacoesNaoLidas = notificacoesNaoLidas;
+        return new ProfileResponseDTO(
+                usuario.getId(),
+                usuario.getNome(),
+                usuario.getEmail(),
+                usuario.getPapel() != null ? Set.of(usuario.getPapel().getNome()) : Set.of(),
+                assinatura,
+                notificacoesNaoLidas
+        );
     }
 }

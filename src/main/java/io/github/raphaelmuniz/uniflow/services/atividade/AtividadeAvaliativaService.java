@@ -34,7 +34,7 @@ public class AtividadeAvaliativaService {
     private final GrupoRepository grupoRepository;
     private final AssinanteService assinanteService;
 
-    protected AtividadeAvaliativaService(
+    public AtividadeAvaliativaService(
             AtividadeAvaliativaRepository atividadeAvaliativaRepository,
             AtividadeEntregaRepository atividadeEntregaRepository,
             GrupoRepository grupoRepository,
@@ -99,18 +99,17 @@ public class AtividadeAvaliativaService {
                 entrega.setEstudanteDono(estudante);
                 entrega.setAtividadeAvaliativaOrigem(atividadeSalva);
                 entrega.setStatusEntrega(StatusEntregaEnum.PENDENTE);
-                entrega.setDataEnvio(atividadeSalva.getPrazoEntrega());
                 return entrega;
             }).collect(Collectors.toList());
 
             atividadeEntregaRepository.saveAll(entregas);
         }
 
-        return new AtividadeAvaliativaResponseDTO(atividadeSalva);
+        return AtividadeAvaliativaResponseDTO.fromEntity(atividadeSalva);
     }
 
     @Transactional(readOnly = true)
-    public AtividadeAvaliativaDetalhadaResponseDTO findById(String id, Usuario usuarioLogado) {
+    public AtividadeAvaliativaDetalhadaResponseDTO buscarPorId(String id, Usuario usuarioLogado) {
         AtividadeAvaliativa atividade = atividadeAvaliativaRepository.findByIdWithEntregas(id)
                 .orElseThrow(() -> new NotFoundException("Atividade Avaliativa não encontrada."));
 
@@ -122,11 +121,11 @@ public class AtividadeAvaliativaService {
             throw new AccessDeniedException("Você não tem permissão para visualizar esta atividade.");
         }
 
-        return new AtividadeAvaliativaDetalhadaResponseDTO(atividade);
+        return AtividadeAvaliativaDetalhadaResponseDTO.fromEntity(atividade);
     }
 
     @Transactional
-    public AtividadeAvaliativaResponseDTO update(String id, AtividadeAvaliativaUpdateRequestDTO dto, Usuario professorLogado) {
+    public AtividadeAvaliativaResponseDTO atualizar(String id, AtividadeAvaliativaUpdateRequestDTO dto, Usuario professorLogado) {
         AtividadeAvaliativa atividade = atividadeAvaliativaRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Atividade Avaliativa não encontrada."));
 
@@ -143,19 +142,14 @@ public class AtividadeAvaliativaService {
 
         if (dto.prazoEntrega() != null) {
             atividade.setPrazoEntrega(dto.prazoEntrega());
-            atividade.getCopiasDosAssinantes().forEach(entrega -> {
-                if (entrega.getStatusEntrega() == StatusEntregaEnum.PENDENTE) {
-                    entrega.setPrazoEntrega(dto.prazoEntrega());
-                }
-            });
         }
 
         AtividadeAvaliativa atividadeAtualizada = atividadeAvaliativaRepository.save(atividade);
-        return new AtividadeAvaliativaResponseDTO(atividadeAtualizada);
+        return AtividadeAvaliativaResponseDTO.fromEntity(atividadeAtualizada);
     }
 
     @Transactional
-    public void delete(String id, Usuario professorLogado) {
+    public void deletar(String id, Usuario professorLogado) {
         AtividadeAvaliativa atividade = atividadeAvaliativaRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Atividade Avaliativa não encontrada."));
 

@@ -82,6 +82,6 @@ public class AtividadeEntregaService {
         entrega.setStatusEntrega(StatusEntregaEnum.AVALIADO);
         atividadeEntregaRepository.save(entrega);
 
-        return new AvaliacaoAtividadeResponseDTO(avaliacaoSalva);
+        return AvaliacaoAtividadeResponseDTO.fromEntity(avaliacaoSalva);
     }
 }

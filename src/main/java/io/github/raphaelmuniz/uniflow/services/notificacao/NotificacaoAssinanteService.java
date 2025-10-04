@@ -25,7 +25,7 @@ public class NotificacaoAssinanteService {
     public Page<NotificacaoResponseDTO> buscarMinhasNotificacoes(Usuario usuarioLogado, Pageable pageable) {
         Page<NotificacaoAssinante> notificacoes = notificacaoAssinanteRepository
                 .findByDestinatario_IdOrderByNotificacao_DataCriacaoDesc(usuarioLogado.getId(), pageable);
-        return notificacoes.map(NotificacaoResponseDTO::new);
+        return notificacoes.map(NotificacaoResponseDTO::fromEntity);
     }
 
     @Transactional
@@ -34,7 +34,7 @@ public class NotificacaoAssinanteService {
         notificacao.setLida(true);
         notificacao.setDataLeitura(java.time.LocalDateTime.now());
         NotificacaoAssinante notificacaoSalva = notificacaoAssinanteRepository.save(notificacao);
-        return new NotificacaoResponseDTO(notificacaoSalva);
+        return NotificacaoResponseDTO.fromEntity(notificacaoSalva);
     }
 
     @Transactional

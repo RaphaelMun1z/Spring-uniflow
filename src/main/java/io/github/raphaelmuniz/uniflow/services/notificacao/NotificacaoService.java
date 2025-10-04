@@ -57,7 +57,14 @@ public class NotificacaoService {
     @Transactional(readOnly = true)
     public Page<NotificacaoResponseDTO> buscarTodas(Pageable pageable) {
         Page<Notificacao> notificacoes = notificacaoRepository.findAll(pageable);
-        return notificacoes.map(n -> new NotificacaoResponseDTO(Objects.requireNonNull(n.getDestinatarios().stream().findFirst().orElse(null))));
+        return notificacoes.map(n -> {
+            NotificacaoAssinante destinatario = n.getDestinatarios()
+                    .stream()
+                    .findFirst()
+                    .orElse(null);
+
+            return NotificacaoResponseDTO.fromEntity(destinatario);
+        });
     }
 
     private NotificacaoResponseDTO criarEEnviar(String mensagem, CategoriaNotificacaoEnum categoria, String link, Assinante remetente, List<Assinante> destinatarios) {
@@ -79,6 +86,8 @@ public class NotificacaoService {
 
         Notificacao notificacaoSalva = notificacaoRepository.save(notificacao);
 
-        return new NotificacaoResponseDTO(Objects.requireNonNull(notificacaoSalva.getDestinatarios().stream().findFirst().orElse(null)));
+        return NotificacaoResponseDTO.fromEntity(
+                notificacaoSalva.getDestinatarios().stream().findFirst().orElse(null)
+        );
     }
 }
