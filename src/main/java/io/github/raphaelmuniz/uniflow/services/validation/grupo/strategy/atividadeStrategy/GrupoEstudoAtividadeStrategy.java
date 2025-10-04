@@ -50,15 +50,15 @@ public class GrupoEstudoAtividadeStrategy implements AtividadeStrategy {
         AtividadeColaborativa novaAtividade = new AtividadeColaborativa();
         novaAtividade.setTitulo(dto.colaborativa().titulo());
         novaAtividade.setDescricao(dto.colaborativa().descricao());
-        novaAtividade.setGrupoPublicado(grupo);
+        novaAtividade.setGrupo(grupo);
         novaAtividade.setCriador((Estudante) usuarioLogado);
         AtividadeColaborativa atividadeSalva = atividadeColaborativaRepository.save(novaAtividade);
 
         List<TarefaStatusMembro> tarefas = grupo.getInscricoes().stream().map(inscricao -> {
             TarefaStatusMembro tarefa = new TarefaStatusMembro();
             tarefa.setAtividadeColaborativa(atividadeSalva);
-            tarefa.setEstudanteDono((Estudante) inscricao.getMembro());
-            tarefa.setStatusEntrega(StatusEntregaEnum.PENDENTE);
+            tarefa.setMembro(inscricao.getMembro());
+            tarefa.setStatus(StatusEntregaEnum.PENDENTE);
             return tarefa;
         }).toList();
 

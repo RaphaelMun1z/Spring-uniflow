@@ -50,7 +50,7 @@ public class AuthService {
 
     public TokenDTO signin(AccountCredentialsDTO credentials) {
         try {
-            var usernamePassword = new UsernamePasswordAuthenticationToken(credentials.getEmail(), credentials.getPassword());
+            var usernamePassword = new UsernamePasswordAuthenticationToken(credentials.email(), credentials.password());
             var auth = this.authenticationManager.authenticate(usernamePassword);
             var user = (Usuario) auth.getPrincipal();
 
@@ -74,7 +74,7 @@ public class AuthService {
 
     @Transactional
     public AssinanteResponseDTO signup(SignUpRequestDTO dto) {
-        if (usuarioRepository.findByEmail(dto.getEmail()).isPresent()) {
+        if (usuarioRepository.findByEmail(dto.email()).isPresent()) {
             throw new BusinessException("O email informado já está em uso.");
         }
 

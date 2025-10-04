@@ -48,7 +48,7 @@ public class GrupoFactory {
         GrupoValidationContext context = new GrupoValidationContext(usuarioAutenticado, data, plano, contagemDeGrupos);
         validationRules.forEach(rule -> rule.validate(context));
 
-        Disciplina disciplina = disciplinaRepository.findById(data.getDisciplinaId())
+        Disciplina disciplina = disciplinaRepository.findById(data.disciplinaId())
                 .orElseThrow(() -> new NotFoundException("Disciplina não encontrada."));
 
         Grupo novoGrupo = buildGrupo(data, (Assinante) usuarioAutenticado, disciplina);
@@ -67,14 +67,14 @@ public class GrupoFactory {
 
     private Grupo buildGrupo(GrupoRequestDTO data, Assinante criador, Disciplina disciplina) {
         Grupo grupo = new Grupo();
-        grupo.setTitulo(data.getTitulo());
-        grupo.setDescricao(data.getDescricao());
-        grupo.setTipoGrupo(data.getTipoGrupo());
+        grupo.setTitulo(data.titulo());
+        grupo.setDescricao(data.descricao());
+        grupo.setTipoGrupo(data.tipoGrupo());
         grupo.setAssinanteCriadorGrupo(criador);
         grupo.setDisciplina(disciplina);
         grupo.setStatusGrupo(StatusGrupoEnum.ATIVO);
 
-        if (data.getTipoGrupo() == TipoGrupoEnum.TURMA) {
+        if (data.tipoGrupo() == TipoGrupoEnum.TURMA) {
             grupo.setCodigoConvite(Grupo.gerarCodigoConvite());
         }
 

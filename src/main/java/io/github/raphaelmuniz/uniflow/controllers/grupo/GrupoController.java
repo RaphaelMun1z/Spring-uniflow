@@ -32,7 +32,7 @@ public class GrupoController {
     ) {
         GrupoResponseDTO novoGrupo = grupoService.criarGrupo(grupoRequestDTO, usuarioAutenticado);
 
-        URI location = URI.create("/grupos/" + novoGrupo.getId());
+        URI location = URI.create("/grupos/" + novoGrupo.id());
         return ResponseEntity.created(location).body(novoGrupo);
     }
 

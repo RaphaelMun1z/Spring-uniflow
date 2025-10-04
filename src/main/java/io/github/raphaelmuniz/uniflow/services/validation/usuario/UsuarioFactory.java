@@ -22,14 +22,14 @@ public class UsuarioFactory {
     }
 
     public Usuario criarUsuario(SignUpRequestDTO dto) {
-        return switch (dto.getTipo()) {
+        return switch (dto.tipo()) {
             case ESTUDANTE -> buildEstudante(dto);
             case PROFESSOR -> buildProfessor(dto);
         };
     }
 
     private Estudante buildEstudante(SignUpRequestDTO dto) {
-        if (dto.getPeriodo() == null) {
+        if (dto.periodo() == null) {
             throw new BusinessException("O campo 'periodo' é obrigatório para o cadastro de Estudante.");
         }
 
@@ -37,16 +37,16 @@ public class UsuarioFactory {
                 .orElseThrow(() -> new NotFoundException("Papel 'ESTUDANTE' não encontrado. Verifique os dados iniciais do sistema."));
 
         Estudante estudante = new Estudante();
-        estudante.setNome(dto.getNome());
-        estudante.setEmail(dto.getEmail());
-        estudante.setSenha(passwordEncoder.encode(dto.getSenha()));
-        estudante.setPeriodo(dto.getPeriodo());
+        estudante.setNome(dto.nome());
+        estudante.setEmail(dto.email());
+        estudante.setSenha(passwordEncoder.encode(dto.senha()));
+        estudante.setPeriodoDeIngresso(dto.periodo());
         estudante.setPapel(papelEstudante);
         return estudante;
     }
 
     private Professor buildProfessor(SignUpRequestDTO dto) {
-        if (dto.getAreaAtuacao() == null || dto.getAreaAtuacao().isBlank()) {
+        if (dto.areaAtuacao() == null || dto.areaAtuacao().isBlank()) {
             throw new BusinessException("O campo 'areaAtuacao' é obrigatório para o cadastro de Professor.");
         }
 
@@ -54,10 +54,10 @@ public class UsuarioFactory {
                 .orElseThrow(() -> new NotFoundException("Papel 'PROFESSOR' não encontrado. Verifique os dados iniciais do sistema."));
 
         Professor professor = new Professor();
-        professor.setNome(dto.getNome());
-        professor.setEmail(dto.getEmail());
-        professor.setSenha(passwordEncoder.encode(dto.getSenha()));
-        professor.setAreaAtuacao(dto.getAreaAtuacao());
+        professor.setNome(dto.nome());
+        professor.setEmail(dto.email());
+        professor.setSenha(passwordEncoder.encode(dto.senha()));
+        professor.setAreaAtuacao(dto.areaAtuacao());
         professor.setPapel(papelProfessor);
         return professor;
     }

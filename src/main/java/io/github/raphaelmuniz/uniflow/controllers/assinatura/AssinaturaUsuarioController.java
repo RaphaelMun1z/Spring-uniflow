@@ -26,7 +26,7 @@ public class AssinaturaUsuarioController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<AssinaturaUsuarioResponseDTO> criarAssinaturaParaUsuario(@RequestBody @Valid AssinaturaUsuarioRequestDTO dto) {
         AssinaturaUsuarioResponseDTO novaAssinatura = service.criarAssinatura(dto);
-        URI location = URI.create("/api/assinaturas-usuario/" + novaAssinatura.getId());
+        URI location = URI.create("/api/assinaturas-usuario/" + novaAssinatura.id());
         return ResponseEntity.created(location).body(novaAssinatura);
     }
 

@@ -25,7 +25,7 @@ public class AtividadeColaborativaService {
                 .findByAtividadeColaborativa_IdAndEstudanteDono_Id(atividadeId, usuarioLogado.getId())
                 .orElseThrow(() -> new NotFoundException("Sua tarefa para esta atividade não foi encontrada. Verifique se você é membro do grupo."));
 
-        tarefa.setStatusEntrega(dto.novoStatus());
+        tarefa.setStatus(dto.novoStatus());
         tarefa.setDataConclusao(LocalDateTime.now());
 
         tarefaStatusMembroRepository.save(tarefa);

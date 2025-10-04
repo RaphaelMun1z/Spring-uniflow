@@ -38,7 +38,7 @@ public class AssinanteService {
 
     public Page<GruposProfileResponseDTO> obterGruposPorAssinanteId(String assinanteId, Pageable pageable) {
         Page<InscricaoGrupo> inscricoesPage = inscricaoGrupoRepository.findByMembro_Id(assinanteId, pageable);
-        return inscricoesPage.map(GruposProfileResponseDTO::new);
+        return inscricoesPage.map(GruposProfileResponseDTO::fromEntity);
     }
 
     public AssinaturaUsuario obterAssinaturaVigenteEntidade(String assinanteId) {
@@ -61,7 +61,7 @@ public class AssinanteService {
     public AssinantePublicProfileDTO buscarPerfilPublicoPorId(String id) {
         Assinante assinante = (Assinante) usuarioRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Usuário não encontrado."));
-        return new AssinantePublicProfileDTO(assinante);
+        return AssinantePublicProfileDTO.fromEntity(assinante);
     }
 
     @Transactional(readOnly = true)
@@ -76,6 +76,6 @@ public class AssinanteService {
             assinantesPage = usuarioRepository.findAllAssinantes(pageable);
         }
 
-        return assinantesPage.map(AssinantePublicProfileDTO::new);
+        return assinantesPage.map(AssinantePublicProfileDTO::fromEntity);
     }
 }

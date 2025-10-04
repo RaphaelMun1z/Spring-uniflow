@@ -2,7 +2,6 @@ package io.github.raphaelmuniz.uniflow.dto.res.grupo;
 
 import io.github.raphaelmuniz.uniflow.entities.atividade.AtividadeAvaliativa;
 import io.github.raphaelmuniz.uniflow.entities.grupo.Grupo;
-import io.github.raphaelmuniz.uniflow.entities.grupo.InscricaoGrupo;
 
 import java.util.Collections;
 import java.util.List;

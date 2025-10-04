@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 
 @Service
-public class AssinaturaUsuarioService{
+public class AssinaturaUsuarioService {
     private final AssinaturaUsuarioRepository assinaturaUsuarioRepository;
     private final UsuarioRepository usuarioRepository;
     private final AssinaturaModeloRepository assinaturaModeloRepository;
@@ -36,16 +36,16 @@ public class AssinaturaUsuarioService{
     @Transactional
     public AssinaturaUsuarioResponseDTO criarAssinatura(AssinaturaUsuarioRequestDTO dto) {
         assinaturaUsuarioRepository.findFirstVigenteByAssinanteId(
-                dto.getUsuarioId(), StatusAssinaturaUsuarioEnum.getStatusVigentes(), LocalDateTime.now()
+                dto.usuarioId(), StatusAssinaturaUsuarioEnum.getStatusVigentes(), LocalDateTime.now()
         ).ifPresent(s -> {
             throw new BusinessException("Este usuário já possui uma assinatura ativa.");
         });
 
-        Assinante assinante = (Assinante) usuarioRepository.findById(dto.getUsuarioId())
-                .orElseThrow(() -> new NotFoundException("Usuário não encontrado com o ID: " + dto.getUsuarioId()));
+        Assinante assinante = (Assinante) usuarioRepository.findById(dto.usuarioId())
+                .orElseThrow(() -> new NotFoundException("Usuário não encontrado com o ID: " + dto.usuarioId()));
 
-        AssinaturaModelo modelo = assinaturaModeloRepository.findById(dto.getModeloId())
-                .orElseThrow(() -> new NotFoundException("Modelo de assinatura não encontrado com o ID: " + dto.getModeloId()));
+        AssinaturaModelo modelo = assinaturaModeloRepository.findById(dto.modeloId())
+                .orElseThrow(() -> new NotFoundException("Modelo de assinatura não encontrado com o ID: " + dto.modeloId()));
 
         AssinaturaUsuario novaAssinatura = new AssinaturaUsuario();
         novaAssinatura.setAssinante(assinante);
@@ -54,23 +54,23 @@ public class AssinaturaUsuarioService{
         novaAssinatura.setDataInicio(LocalDateTime.now());
 
         long duracaoEmMeses = modelo.getDuracaoEmMeses();
-        novaAssinatura.setDataExpiracao(LocalDateTime.now().plusMonths(duracaoEmMeses));
+        novaAssinatura.setDataFim(LocalDateTime.now().plusMonths(duracaoEmMeses));
 
         AssinaturaUsuario assinaturaSalva = assinaturaUsuarioRepository.save(novaAssinatura);
-        return new AssinaturaUsuarioResponseDTO(assinaturaSalva);
+        return AssinaturaUsuarioResponseDTO.fromEntity(assinaturaSalva);
     }
 
     @Transactional(readOnly = true)
     public Page<AssinaturaUsuarioResponseDTO> buscarTodas(Pageable pageable) {
         Page<AssinaturaUsuario> page = assinaturaUsuarioRepository.findAll(pageable);
-        return page.map(AssinaturaUsuarioResponseDTO::new);
+        return page.map(AssinaturaUsuarioResponseDTO::fromEntity);
     }
 
     @Transactional(readOnly = true)
     public AssinaturaUsuarioResponseDTO buscarPorId(String id) {
         AssinaturaUsuario assinatura = assinaturaUsuarioRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Assinatura não encontrada com o ID: " + id));
-        return new AssinaturaUsuarioResponseDTO(assinatura);
+        return AssinaturaUsuarioResponseDTO.fromEntity(assinatura);
     }
 
     @Transactional
@@ -83,10 +83,10 @@ public class AssinaturaUsuarioService{
         }
 
         assinatura.setStatus(StatusAssinaturaUsuarioEnum.CANCELADA);
-        assinatura.setDataExpiracao(LocalDateTime.now());
+        assinatura.setDataFim(LocalDateTime.now());
 
         AssinaturaUsuario assinaturaCancelada = assinaturaUsuarioRepository.save(assinatura);
-        return new AssinaturaUsuarioResponseDTO(assinaturaCancelada);
+        return AssinaturaUsuarioResponseDTO.fromEntity(assinaturaCancelada);
     }
 
     public Page<AssinaturaUsuario> buscarEntidadesPorAssinanteId(String assinanteId, Pageable pageable) {

@@ -50,7 +50,7 @@ public class AdminController {
     @PostMapping("/planos")
     public ResponseEntity<AssinaturaModeloResponseDTO> criarPlano(@RequestBody @Valid AssinaturaModeloRequestDTO dto) {
         AssinaturaModeloResponseDTO novoPlano = adminService.criarPlano(dto);
-        URI location = URI.create("/api/assinaturas-modelo/" + novoPlano.getId()); // Link para o recurso original
+        URI location = URI.create("/api/assinaturas-modelo/" + novoPlano.id());
         return ResponseEntity.created(location).body(novoPlano);
     }
 
@@ -73,7 +73,7 @@ public class AdminController {
     @PostMapping("/papeis")
     public ResponseEntity<PapelResponseDTO> criarPapel(@RequestBody @Valid PapelRequestDTO dto) {
         PapelResponseDTO novoPapel = adminService.criarPapel(dto);
-        URI location = URI.create("/api/papeis/" + novoPapel.getId());
+        URI location = URI.create("/api/papeis/" + novoPapel.id());
         return ResponseEntity.created(location).body(novoPapel);
     }
 
@@ -94,7 +94,7 @@ public class AdminController {
     @PostMapping("/assinaturas-usuario")
     public ResponseEntity<AssinaturaUsuarioResponseDTO> criarAssinaturaParaUsuario(@RequestBody @Valid AssinaturaUsuarioRequestDTO dto) {
         AssinaturaUsuarioResponseDTO novaAssinatura = adminService.criarAssinaturaParaUsuario(dto);
-        URI location = URI.create("/api/admin/assinaturas-usuario/" + novaAssinatura.getId());
+        URI location = URI.create("/api/admin/assinaturas-usuario/" + novaAssinatura.id());
         return ResponseEntity.created(location).body(novaAssinatura);
     }
 

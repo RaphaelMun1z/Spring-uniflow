@@ -26,7 +26,7 @@ public class AtividadeAvaliativaController {
             @PathVariable String id,
             @AuthenticationPrincipal Usuario usuarioLogado
     ) {
-        AtividadeAvaliativaDetalhadaResponseDTO atividade = atividadeAvaliativaService.findById(id, usuarioLogado);
+        AtividadeAvaliativaDetalhadaResponseDTO atividade = atividadeAvaliativaService.buscarPorId(id, usuarioLogado);
         return ResponseEntity.ok(atividade);
     }
 
@@ -37,7 +37,7 @@ public class AtividadeAvaliativaController {
             @RequestBody @Valid AtividadeAvaliativaUpdateRequestDTO dto,
             @AuthenticationPrincipal Usuario professorLogado
     ) {
-        AtividadeAvaliativaResponseDTO atividadeAtualizada = atividadeAvaliativaService.update(id, dto, professorLogado);
+        AtividadeAvaliativaResponseDTO atividadeAtualizada = atividadeAvaliativaService.atualizar(id, dto, professorLogado);
         return ResponseEntity.ok(atividadeAtualizada);
     }
 
@@ -47,7 +47,7 @@ public class AtividadeAvaliativaController {
             @PathVariable String id,
             @AuthenticationPrincipal Usuario professorLogado
     ) {
-        atividadeAvaliativaService.delete(id, professorLogado);
+        atividadeAvaliativaService.deletar(id, professorLogado);
         return ResponseEntity.noContent().build();
     }
 }

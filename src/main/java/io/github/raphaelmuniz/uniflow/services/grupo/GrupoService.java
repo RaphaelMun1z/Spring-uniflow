@@ -68,7 +68,7 @@ public class GrupoService {
     public GrupoResponseDTO criarGrupo(GrupoRequestDTO data, Usuario usuarioAutenticado) {
         Grupo novoGrupo = grupoFactory.criarGrupo(data, usuarioAutenticado);
         Grupo grupoSalvo = grupoRepository.save(novoGrupo);
-        return new GrupoResponseDTO(grupoSalvo);
+        return GrupoResponseDTO.fromEntity(grupoSalvo);
     }
 
     @Transactional
@@ -202,7 +202,7 @@ public class GrupoService {
         }
 
         Grupo grupoSalvo = grupoRepository.save(grupo);
-        return new GrupoResponseDTO(grupoSalvo);
+        return GrupoResponseDTO.fromEntity(grupoSalvo);
     }
 
     @Transactional
@@ -264,7 +264,7 @@ public class GrupoService {
         }
 
         Grupo subGrupoSalvo = grupoRepository.save(subGrupo);
-        return new GrupoResponseDTO(subGrupoSalvo);
+        return GrupoResponseDTO.fromEntity(subGrupoSalvo);
     }
 
     private void validarMembrosDoSubgrupo(Grupo grupoPai, List<String> idsMembrosRequisitados) {
@@ -308,7 +308,7 @@ public class GrupoService {
         }
 
         return grupo.getInscricoes().stream()
-                .map(MembroGrupoResponseDTO::new)
+                .map(MembroGrupoResponseDTO::fromEntity)
                 .collect(Collectors.toList());
     }
 

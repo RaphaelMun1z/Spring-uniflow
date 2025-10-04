@@ -5,7 +5,6 @@ import io.github.raphaelmuniz.uniflow.entities.atividade.AtividadeAvaliativa;
 import io.github.raphaelmuniz.uniflow.entities.grupo.Grupo;
 import io.github.raphaelmuniz.uniflow.entities.grupo.InscricaoGrupo;
 import io.github.raphaelmuniz.uniflow.entities.notificacao.NotificacaoAssinante;
-import io.github.raphaelmuniz.uniflow.entities.autorizacao.Papel;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -46,13 +46,14 @@ public class ProfileService {
         AssinaturaProfileResponseDTO assinaturaDTO = null;
         try {
             AssinaturaUsuario assinaturaEntidade = assinanteService.obterAssinaturaVigenteEntidade(usuarioLogado.getId());
-            assinaturaDTO = new AssinaturaProfileResponseDTO(assinaturaEntidade);
-            var modelo = assinaturaModeloService.buscarPorId(assinaturaDTO.getAssinaturaModeloId());
-            assinaturaDTO.setAssinaturaModelo(modelo);
+            assinaturaDTO = AssinaturaProfileResponseDTO.fromEntity(assinaturaEntidade);
+            var modelo = assinaturaModeloService.buscarPorId(assinaturaDTO.assinaturaModeloId());
+            assinaturaDTO = assinaturaDTO.withModelo(modelo);
         } catch (BusinessException e) {
         }
+
         int notificacoesNaoLidas = notificacaoAssinanteService.countNotificacoesNaoLidas(usuarioLogado.getId());
-        return new ProfileResponseDTO(usuarioLogado, assinaturaDTO, notificacoesNaoLidas);
+        return ProfileResponseDTO.fromEntity(usuarioLogado, assinaturaDTO, notificacoesNaoLidas);
     }
 
     @Transactional
@@ -75,7 +76,7 @@ public class ProfileService {
     @Transactional(readOnly = true)
     public Page<AssinaturaProfileResponseDTO> buscarMinhasAssinaturas(String usuarioId, Pageable pageable) {
         Page<AssinaturaUsuario> paginaDeAssinaturas = assinaturaUsuarioService.buscarEntidadesPorAssinanteId(usuarioId, pageable);
-        return paginaDeAssinaturas.map(AssinaturaProfileResponseDTO::new);
+        return paginaDeAssinaturas.map(AssinaturaProfileResponseDTO::fromEntity);
     }
 
     @Transactional(readOnly = true)

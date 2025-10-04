@@ -30,7 +30,7 @@ public class PagamentoController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PagamentoResponseDTO> processarNovoPagamento(@RequestBody @Valid PagamentoRequestDTO dto) {
         PagamentoResponseDTO pagamentoProcessado = pagamentoService.processarNovoPagamento(dto);
-        URI location = URI.create("/api/pagamentos/" + pagamentoProcessado.getId());
+        URI location = URI.create("/api/pagamentos/" + pagamentoProcessado.id());
         return ResponseEntity.created(location).body(pagamentoProcessado);
     }
 
@@ -38,7 +38,7 @@ public class PagamentoController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<PagamentoResponseDTO> registrarPagamentoExterno(@RequestBody @Valid RegistrarPagamentoRequestDTO dto) {
         PagamentoResponseDTO pagamentoRegistrado = pagamentoService.registrarPagamentoExterno(dto);
-        URI location = URI.create("/api/pagamentos/" + pagamentoRegistrado.getId());
+        URI location = URI.create("/api/pagamentos/" + pagamentoRegistrado.id());
         return ResponseEntity.status(HttpStatus.CREATED).body(pagamentoRegistrado);
     }
 

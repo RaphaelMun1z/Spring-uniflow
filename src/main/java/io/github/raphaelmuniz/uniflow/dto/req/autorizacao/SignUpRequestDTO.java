@@ -1,5 +1,6 @@
 package io.github.raphaelmuniz.uniflow.dto.req.autorizacao;
 
+import io.github.raphaelmuniz.uniflow.entities.embeddables.PeriodoLetivo;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -21,7 +22,7 @@ public record SignUpRequestDTO(
         @NotNull(message = "O tipo de usuário (ESTUDANTE ou PROFESSOR) é obrigatório.")
         TipoUsuario tipo,
 
-        Integer periodo,
+        PeriodoLetivo periodo,
 
         String areaAtuacao
 ) {

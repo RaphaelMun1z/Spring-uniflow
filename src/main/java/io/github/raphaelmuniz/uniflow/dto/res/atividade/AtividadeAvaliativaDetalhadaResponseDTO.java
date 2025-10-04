@@ -1,7 +1,6 @@
 package io.github.raphaelmuniz.uniflow.dto.res.atividade;
 
 import io.github.raphaelmuniz.uniflow.entities.atividade.AtividadeAvaliativa;
-import io.github.raphaelmuniz.uniflow.entities.atividade.AtividadeEntrega;
 import io.github.raphaelmuniz.uniflow.entities.atividade.AvaliacaoAtividade;
 import io.github.raphaelmuniz.uniflow.entities.enums.DificuldadeEnum;
 import io.github.raphaelmuniz.uniflow.entities.enums.StatusEntregaEnum;

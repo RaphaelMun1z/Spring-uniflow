@@ -13,7 +13,7 @@ import org.springframework.core.annotation.Order;
 public class TipoGrupoPermissaoRule implements GrupoCreationRule {
     @Override
     public void validate(GrupoValidationContext context) {
-        if (context.dto().getTipoGrupo() == TipoGrupoEnum.TURMA) {
+        if (context.dto().tipoGrupo() == TipoGrupoEnum.TURMA) {
             if (!(context.usuario() instanceof Professor)) {
                 throw new BusinessException("Apenas professores podem criar grupos do tipo TURMA.");
             }

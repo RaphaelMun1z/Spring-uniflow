@@ -46,19 +46,19 @@ public class PapelService {
         novoPapel.setPermissoes(permissoes);
 
         Papel papelSalvo = papelRepository.save(novoPapel);
-        return new PapelResponseDTO(papelSalvo);
+        return PapelResponseDTO.fromEntity(papelSalvo);
     }
 
     @Transactional(readOnly = true)
     public List<PapelResponseDTO> buscarTodos() {
-        return papelRepository.findAll().stream().map(PapelResponseDTO::new).collect(Collectors.toList());
+        return papelRepository.findAll().stream().map(PapelResponseDTO::fromEntity).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public PapelResponseDTO buscarPorId(String id) {
         Papel papel = papelRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Papel não encontrado com o ID: " + id));
-        return new PapelResponseDTO(papel);
+        return PapelResponseDTO.fromEntity(papel);
     }
 
     @Transactional
@@ -78,7 +78,7 @@ public class PapelService {
         papelExistente.setPermissoes(permissoes);
 
         Papel papelAtualizado = papelRepository.save(papelExistente);
-        return new PapelResponseDTO(papelAtualizado);
+        return PapelResponseDTO.fromEntity(papelAtualizado);
     }
 
     @Transactional

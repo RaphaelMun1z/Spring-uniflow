@@ -95,7 +95,7 @@ public class DataInitializer implements CommandLineRunner {
         estudante.setEmail("estudante@email.com");
         estudante.setSenha(defaultPassword);
         estudante.setPapel(papelEstudante);
-        estudante.setPeriodo(5);
+        estudante.setPeriodoDeIngresso(new PeriodoLetivo(2020, 1));
 
         usuarioRepository.saveAll(List.of(admin, professor, estudante));
         log.info("Usuários de exemplo criados com sucesso.");

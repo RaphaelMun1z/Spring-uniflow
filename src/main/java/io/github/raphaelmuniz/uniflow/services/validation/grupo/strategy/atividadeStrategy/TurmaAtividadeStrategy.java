@@ -77,7 +77,6 @@ public class TurmaAtividadeStrategy implements AtividadeStrategy {
             entrega.setEstudanteDono(estudante);
             entrega.setAtividadeAvaliativaOrigem(atividade);
             entrega.setStatusEntrega(StatusEntregaEnum.PENDENTE);
-            entrega.setPrazoEntrega(atividade.getPrazoEntrega());
             return entrega;
         }).collect(Collectors.toList());
 

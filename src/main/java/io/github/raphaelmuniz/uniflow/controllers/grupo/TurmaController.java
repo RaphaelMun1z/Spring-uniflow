@@ -37,7 +37,7 @@ public class TurmaController {
             @RequestBody @Valid AtividadeAvaliativaRequestDTO dto,
             @AuthenticationPrincipal Usuario professorLogado) {
         AtividadeAvaliativaResponseDTO novaAtividade = atividadeAvaliativaService.criarEAssociarAtividade(turmaId, dto, professorLogado);
-        URI location = URI.create(String.format("/api/atividades-avaliativas/%s", novaAtividade.getId()));
+        URI location = URI.create(String.format("/api/atividades-avaliativas/%s", novaAtividade.id()));
         return ResponseEntity.status(HttpStatus.CREATED).body(novaAtividade);
     }
 
@@ -47,7 +47,7 @@ public class TurmaController {
             @RequestBody @Valid SubGrupoRequestDTO dto,
             @AuthenticationPrincipal Usuario professorLogado) {
         GrupoResponseDTO novoSubGrupo = grupoService.criarSubGrupo(turmaId, dto, professorLogado);
-        URI location = URI.create("/api/grupos/" + novoSubGrupo.getId());
+        URI location = URI.create("/api/grupos/" + novoSubGrupo.id());
         return ResponseEntity.created(location).body(novoSubGrupo);
     }
 
