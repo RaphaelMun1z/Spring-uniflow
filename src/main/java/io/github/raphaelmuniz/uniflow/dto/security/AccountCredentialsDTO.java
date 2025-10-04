@@ -11,6 +11,6 @@ public record AccountCredentialsDTO(
         String email,
 
         @NotBlank(message = "A senha não pode ser vazia")
-        String password
+        String senha
 ) implements Serializable {
 }

@@ -17,7 +17,7 @@ public interface AssinaturaUsuarioRepository extends JpaRepository<AssinaturaUsu
             "LEFT JOIN FETCH au.assinaturaModelo " +
             "WHERE au.assinante.id = :assinanteId " +
             "AND au.status IN :statusVigentes " +
-            "AND au.dataExpiracao > :agora " +
+            "AND au.dataFim > :agora " +
             "ORDER BY au.dataInicio DESC")
     Optional<AssinaturaUsuario> findFirstVigenteByAssinanteId(
             @Param("assinanteId") String assinanteId,

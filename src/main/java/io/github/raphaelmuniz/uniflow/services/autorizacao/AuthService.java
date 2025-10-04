@@ -12,6 +12,7 @@ import io.github.raphaelmuniz.uniflow.exceptions.models.BusinessException;
 import io.github.raphaelmuniz.uniflow.repositories.usuario.UsuarioRepository;
 import io.github.raphaelmuniz.uniflow.security.jwt.JwtTokenProvider;
 import io.github.raphaelmuniz.uniflow.services.validation.usuario.UsuarioFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -50,8 +51,8 @@ public class AuthService {
 
     public TokenDTO signin(AccountCredentialsDTO credentials) {
         try {
-            var usernamePassword = new UsernamePasswordAuthenticationToken(credentials.email(), credentials.password());
-            var auth = this.authenticationManager.authenticate(usernamePassword);
+            var usernamePassword = new UsernamePasswordAuthenticationToken(credentials.email(), credentials.senha());
+            var auth = authenticationManager.authenticate(usernamePassword);
             var user = (Usuario) auth.getPrincipal();
 
             return tokenProvider.createAccessToken(
@@ -59,6 +60,7 @@ public class AuthService {
                     user.getAuthorities()
             );
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             throw new BadCredentialsException("Invalid username/password supplied!");
         }
     }

@@ -23,10 +23,10 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
         ExceptionResponse exceptionResponse = new ExceptionResponse(
                 LocalDateTime.now(),
-                List.of("Credenciais inválidas"),
+                List.of(authException.getMessage()),
                 request.getRequestURI()
         );
 
-        response.getWriter().write(new ObjectMapper().writeValueAsString(exceptionResponse));
+        new ObjectMapper().writeValue(response.getWriter(), exceptionResponse);
     }
 }

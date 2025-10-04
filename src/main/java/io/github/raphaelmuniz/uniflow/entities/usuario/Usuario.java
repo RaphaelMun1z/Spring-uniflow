@@ -39,7 +39,7 @@ public abstract class Usuario implements UserDetails, Serializable {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @NotBlank(message = "A senha не pode ser vazia ou nula.")
+    @NotBlank(message = "A senha não pode ser vazia ou nula.")
     @Column(nullable = false)
     private String senha;
 

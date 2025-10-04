@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface AtividadeColaborativaRepository extends JpaRepository<AtividadeColaborativa, String> {
-    List<AtividadeColaborativa> findByGrupoPublicado_Id(String id);
+    List<AtividadeColaborativa> findByGrupo_Id(String id);
 }

@@ -22,7 +22,7 @@ public class AtividadeColaborativaService {
     @Transactional
     public void atualizarMeuStatus(String atividadeId, TarefaStatusUpdateRequestDTO dto, Usuario usuarioLogado) {
         TarefaStatusMembro tarefa = tarefaStatusMembroRepository
-                .findByAtividadeColaborativa_IdAndEstudanteDono_Id(atividadeId, usuarioLogado.getId())
+                .findByAtividadeColaborativa_IdAndMembro_Id(atividadeId, usuarioLogado.getId())
                 .orElseThrow(() -> new NotFoundException("Sua tarefa para esta atividade não foi encontrada. Verifique se você é membro do grupo."));
 
         tarefa.setStatus(dto.novoStatus());

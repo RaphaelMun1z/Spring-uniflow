@@ -39,7 +39,7 @@ public class ListarAtividadesGrupoEstudoStrategy implements ListarAtividadesStra
             throw new AccessDeniedException("Você não é membro deste grupo.");
         }
 
-        List<AtividadeColaborativa> atividades = atividadeColaborativaRepository.findByGrupoPublicado_Id(grupo.getId());
+        List<AtividadeColaborativa> atividades = atividadeColaborativaRepository.findByGrupo_Id(grupo.getId());
         if (atividades.isEmpty()) {
             return Collections.emptyList();
         }
@@ -48,7 +48,7 @@ public class ListarAtividadesGrupoEstudoStrategy implements ListarAtividadesStra
 
         return atividades.stream().map(atividade -> {
             int membrosConcluiram = tarefaStatusMembroRepository
-                    .countByAtividadeColaborativa_IdAndStatusEntrega(atividade.getId(), StatusEntregaEnum.ENTREGUE.toString());
+                    .countByAtividadeColaborativa_IdAndStatus(atividade.getId(), StatusEntregaEnum.ENTREGUE.toString());
 
             return AtividadeDoGrupoResponseDTO.builder()
                     .id(atividade.getId())

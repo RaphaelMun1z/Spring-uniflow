@@ -40,7 +40,7 @@ public class Disciplina implements Serializable {
     @Column(nullable = false)
     private DificuldadeEnum dificuldade;
 
-    @NotNull(message = "O período letivo не pode ser nulo.")
+    @NotNull(message = "O período letivo não pode ser nulo.")
     @Embedded
     @AttributeOverrides({
             @AttributeOverride(name = "ano", column = @Column(name = "ano", nullable = false)),

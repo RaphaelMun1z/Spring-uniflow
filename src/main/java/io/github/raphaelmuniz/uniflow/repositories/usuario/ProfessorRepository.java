@@ -1,6 +1,7 @@
 package io.github.raphaelmuniz.uniflow.repositories.usuario;
 
 import io.github.raphaelmuniz.uniflow.entities.usuario.Professor;
+import io.github.raphaelmuniz.uniflow.entities.usuario.Usuario;
 import lombok.NonNull;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,6 +10,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProfessorRepository extends JpaRepository<Professor, String> {
+    Optional<Professor> findByEmail(String email);
+
     @Override
     @NonNull
     @EntityGraph(attributePaths = {"assinaturas"})
