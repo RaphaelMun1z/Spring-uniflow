@@ -1,9 +1,7 @@
 package io.github.raphaelmuniz.uniflow.controllers.atividade;
 
-import io.github.raphaelmuniz.uniflow.controllers.generic.GenericCrudControllerImpl;
 import io.github.raphaelmuniz.uniflow.dto.req.atividade.AtividadeEntregaRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.req.atividade.AvaliacaoRequestDTO;
-import io.github.raphaelmuniz.uniflow.dto.res.atividade.AtividadeEntregaResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.atividade.AvaliacaoAtividadeResponseDTO;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Estudante;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Professor;
@@ -17,11 +15,10 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/atividades-entrega")
-public class AtividadeEntregaController extends GenericCrudControllerImpl<AtividadeEntregaRequestDTO, AtividadeEntregaResponseDTO> {
+public class AtividadeEntregaController {
     private final AtividadeEntregaService atividadeEntregaService;
 
     protected AtividadeEntregaController(AtividadeEntregaService service) {
-        super(service);
         this.atividadeEntregaService = service;
     }
 

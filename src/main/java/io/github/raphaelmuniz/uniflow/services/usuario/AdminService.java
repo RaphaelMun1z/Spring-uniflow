@@ -39,12 +39,12 @@ public class AdminService {
         this.assinaturaUsuarioService = assinaturaUsuarioService;
     }
 
-    public Page<AssinantePublicProfileDTO> listarUsuarios(Pageable pageable) {
-        return assinanteService.listarTodosPerfisPublicos(pageable);
+    public Page<AssinantePublicProfileDTO> listarUsuarios(String tipo, Pageable pageable) {
+        return assinanteService.listarTodosPerfisPublicos(tipo, pageable);
     }
 
     public List<AssinaturaModeloResponseDTO> listarPlanos() {
-        return assinaturaModeloService.findAll();
+        return assinaturaModeloService.buscarTodos();
     }
 
     public AssinaturaModeloResponseDTO criarPlano(AssinaturaModeloRequestDTO dto) {

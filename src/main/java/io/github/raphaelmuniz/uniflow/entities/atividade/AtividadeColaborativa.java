@@ -1,34 +1,39 @@
 package io.github.raphaelmuniz.uniflow.entities.atividade;
 
 import io.github.raphaelmuniz.uniflow.entities.grupo.Grupo;
-import io.github.raphaelmuniz.uniflow.entities.usuario.Estudante;
+import io.github.raphaelmuniz.uniflow.entities.usuario.Assinante;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Data
-@EqualsAndHashCode(callSuper = true)
+@Getter
+@Setter
+@AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "atividade_colaborativa")
+@EqualsAndHashCode(of = "id", callSuper = false)
+@Table(name = "atividade_colaborativa", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"titulo", "grupo_id"})
+})
 public class AtividadeColaborativa extends Atividade implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "grupo_publicado_id", nullable = false)
-    private Grupo grupoPublicado;
+    @JoinColumn(name = "grupo_id", nullable = false)
+    @ToString.Exclude
+    private Grupo grupo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "criador_id", nullable = false)
-    private Estudante criador;
+    @ToString.Exclude
+    private Assinante criador;
 
     @OneToMany(mappedBy = "atividadeColaborativa", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TarefaStatusMembro> statusDosMembros = new ArrayList<>();
+    @ToString.Exclude
+    private List<TarefaStatusMembro> statusMembros = new ArrayList<>();
 }

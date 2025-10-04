@@ -1,21 +1,24 @@
 package io.github.raphaelmuniz.uniflow.entities.embeddables;
 
 import jakarta.persistence.Embeddable;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
 @Embeddable
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class PeriodoLetivo implements Serializable {
-    @NotNull
-    private Integer ano;
+public record PeriodoLetivo(
+        @NotNull(message = "O ano do período letivo é obrigatório.")
+        @Min(value = 2000, message = "O ano deve ser igual ou superior a 2000.")
+        Integer ano,
 
-    @NotNull
-    private Integer semestre;
+        @NotNull(message = "O semestre do período letivo é obrigatório.")
+        @Min(value = 1, message = "O semestre deve ser 1.")
+        @Max(value = 2, message = "O semestre deve ser 2.")
+        Integer semestre
+) implements Serializable {
+    public PeriodoLetivo() {
+        this(null, null);
+    }
 }

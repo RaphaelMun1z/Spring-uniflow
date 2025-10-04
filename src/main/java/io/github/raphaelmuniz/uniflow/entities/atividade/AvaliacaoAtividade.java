@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-@ToString(exclude = {"atividadeAvaliada"})
+@ToString(exclude = {"atividadeAvaliada", "professorAvaliador"})
 @EqualsAndHashCode(of = "id")
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,17 +30,19 @@ public class AvaliacaoAtividade {
     @NotNull(message = "A nota não pode ser nula.")
     @Min(value = 0, message = "A nota não pode ser menor que 0.")
     @Max(value = 100, message = "A nota não pode ser maior que 100.")
+    @Column(nullable = false)
     private Double nota;
 
+    @Column(columnDefinition = "TEXT")
     private String feedback;
 
-    @NotNull(message = "Atividade Avaliada não pode ser nulo")
-    @OneToOne(optional = false)
-    @JoinColumn(name = "atividade_entrega_id", unique = true)
+    @NotNull(message = "A atividade avaliada não pode ser nula.")
+    @OneToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "atividade_entrega_id", unique = true, nullable = false)
     private AtividadeEntrega atividadeAvaliada;
 
-    @NotNull(message = "Professor Avaliador não pode ser nulo")
+    @NotNull(message = "O professor avaliador não pode ser nulo.")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "professor_avaliador_id")
+    @JoinColumn(name = "professor_avaliador_id", nullable = false)
     private Professor professorAvaliador;
 }

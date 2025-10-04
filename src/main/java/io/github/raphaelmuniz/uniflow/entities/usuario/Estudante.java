@@ -1,44 +1,51 @@
 package io.github.raphaelmuniz.uniflow.entities.usuario;
 
-import io.github.raphaelmuniz.uniflow.entities.assinatura.AssinaturaUsuario;
 import io.github.raphaelmuniz.uniflow.entities.atividade.AtividadeEntrega;
-import io.github.raphaelmuniz.uniflow.entities.atividade.AtividadeAvaliativa;
 import io.github.raphaelmuniz.uniflow.entities.atividade.TarefaStatusMembro;
-import io.github.raphaelmuniz.uniflow.entities.grupo.Grupo;
-import io.github.raphaelmuniz.uniflow.entities.notificacao.NotificacaoAssinante;
-import io.github.raphaelmuniz.uniflow.entities.autorizacao.Papel;
+import io.github.raphaelmuniz.uniflow.entities.embeddables.PeriodoLetivo; // <-- Importar
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
-@Data
-@EqualsAndHashCode(callSuper = true)
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@ToString(callSuper = true, exclude = {"atividadesEstudante", "tarefasEstudante"})
+@Table(name = "estudante")
+@PrimaryKeyJoinColumn(name = "usuario_id")
 public class Estudante extends Assinante implements Serializable {
-    public Estudante(String nome, String email, String senha, Set<AssinaturaUsuario> assinaturas, Set<AtividadeEntrega> atividadesEstudante, List<AtividadeAvaliativa> atividadesGrupoPublicadas, Set<NotificacaoAssinante> notificacoes, List<Grupo> gruposCriados, Papel papel, Integer periodo) {
-        super(nome, email, senha, assinaturas, atividadesGrupoPublicadas, notificacoes, gruposCriados, papel);
-        this.periodo = periodo;
-        this.atividadesEstudante = atividadesEstudante;
-    }
+    @NotNull(message = "O período de ingresso não pode ser nulo.")
+    @Embedded
+    private PeriodoLetivo periodoDeIngresso;
 
-    @NotNull(message = "Período não pode ser nulo")
-    private Integer periodo;
-
-    @NotNull(message = "Atividades não pode ser nulo")
-    @OneToMany(mappedBy = "estudanteDono", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "estudanteDono", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<AtividadeEntrega> atividadesEstudante = new HashSet<>();
 
-    @NotNull(message = "Tarefas não pode ser nulo")
-    @OneToMany(mappedBy = "estudanteDono", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "membro", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<TarefaStatusMembro> tarefasEstudante = new HashSet<>();
+
+    @Transient
+    public int getPeriodoAtual() {
+        if (this.periodoDeIngresso == null || this.periodoDeIngresso.ano() == null || this.periodoDeIngresso.semestre() == null) {
+            return 0;
+        }
+
+        LocalDate hoje = LocalDate.now();
+        int anoAtual = hoje.getYear();
+        int semestreAtual = (hoje.getMonthValue() < 7) ? 1 : 2;
+
+        int anosDeDiferenca = anoAtual - this.periodoDeIngresso.ano();
+        int semestresDeDiferenca = semestreAtual - this.periodoDeIngresso.semestre();
+
+        int totalSemestres = (anosDeDiferenca * 2) + semestresDeDiferenca + 1;
+
+        return Math.max(1, totalSemestres);
+    }
 }

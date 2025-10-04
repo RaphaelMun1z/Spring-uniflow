@@ -12,6 +12,9 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, String> {
+    @Query("SELECT u FROM Usuario u JOIN FETCH u.papel p JOIN FETCH p.permissoes WHERE u.email = :email")
+    Optional<Usuario> findByEmailWithRolesAndPermissions(@Param("email") String email);
+
     Optional<Usuario> findByEmail(String email);
 
     @Query("SELECT u FROM Usuario u WHERE TYPE(u) IN (Professor, Estudante)")

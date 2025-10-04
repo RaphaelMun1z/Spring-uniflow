@@ -15,34 +15,35 @@ import java.util.*;
 @Entity
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(of = "id")
 @Table(name = "grupo", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"titulo", "disciplina_id"})
 })
 public class Grupo implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @EqualsAndHashCode.Include
     private String id;
 
-    @NotBlank(message = "Título não pode ser vazio/nulo")
+    @NotBlank(message = "O título não pode ser vazio ou nulo.")
+    @Column(nullable = false)
     private String titulo;
 
-    @NotBlank(message = "Descrição não pode ser vazio/nulo")
+    @NotBlank(message = "A descrição não pode ser vazia ou nula.")
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String descricao;
 
-    @NotNull(message = "Tipo de Grupo não pode ser nulo")
+    @NotNull(message = "O tipo de Grupo não pode ser nulo.")
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private TipoGrupoEnum tipoGrupo;
 
-    @NotNull(message = "Status do Grupo não pode ser nulo")
+    @NotNull(message = "O status do Grupo não pode ser nulo.")
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private StatusGrupoEnum statusGrupo;
 
-    @NotNull(message = "Código Convite não pode ser nulo")
     @Column(unique = true)
     private String codigoConvite;
 
@@ -52,29 +53,25 @@ public class Grupo implements Serializable {
     private Grupo grupoPai;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "grupoPai", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "grupoPai", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Grupo> subGrupos = new ArrayList<>();
 
     @ToString.Exclude
-    @NotNull(message = "Criador do grupo não pode ser nulo")
+    @NotNull(message = "O criador do grupo não pode ser nulo.")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "assinante_criador_id", nullable = false)
     private Assinante assinanteCriadorGrupo;
 
-    @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @NotNull(message = "Inscrições não pode ser nulo")
-    @OneToMany(mappedBy = "grupo", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "grupo", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<InscricaoGrupo> inscricoes = new HashSet<>();
 
-    @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @NotNull(message = "Atividades Publicadas não pode ser nulo")
-    @OneToMany(mappedBy = "grupoPublicado", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "grupoPublicado")
     private Set<AtividadeAvaliativa> atividadesPublicadas = new HashSet<>();
 
     @ToString.Exclude
-    @NotNull(message = "Disciplina não pode ser nula")
+    @NotNull(message = "A disciplina não pode ser nula.")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "disciplina_id", nullable = false)
     private Disciplina disciplina;

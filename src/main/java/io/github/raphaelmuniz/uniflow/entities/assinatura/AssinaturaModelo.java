@@ -1,11 +1,12 @@
 package io.github.raphaelmuniz.uniflow.entities.assinatura;
 
+import io.github.raphaelmuniz.uniflow.entities.enums.StatusPlanoEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -14,49 +15,68 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(of = "id")
 @Table(name = "assinatura_modelo", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"nome", "preco"})
+        @UniqueConstraint(columnNames = {"nome"})
 })
 public class AssinaturaModelo implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @NotBlank(message = "Nome não pode ser vazio/nulo")
+    @NotBlank(message = "O nome do plano é obrigatório.")
+    @Column(nullable = false, unique = true)
     private String nome;
 
-    @NotBlank(message = "Descrição não pode ser vazio/nulo")
+    @NotBlank(message = "A descrição do plano é obrigatória.")
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String descricao;
 
-    @NotNull(message = "Preço não pode ser nulo")
+    @NotNull(message = "O preço não pode ser nulo.")
+    @PositiveOrZero(message = "O preço deve ser R$0.00 ou maior.")
+    @Column(nullable = false)
     private BigDecimal preco;
 
-    @NotNull(message = "Duração em meses não pode ser nulo")
+    @NotNull(message = "A duração em meses é obrigatória.")
+    @Positive(message = "A duração deve ser de no mínimo 1 mês.")
+    @Column(nullable = false)
     private Integer duracaoEmMeses;
 
-    @NotNull(message = "Limite de Grupos não pode ser nulo")
+    @NotNull(message = "O limite de grupos é obrigatório.")
+    @PositiveOrZero(message = "O limite de grupos deve ser 0 ou maior.")
+    @Column(nullable = false)
     private Integer limiteDeGrupos;
 
-    @NotNull(message = "Limite de SubGrupos não pode ser nulo")
+    @NotNull(message = "O limite de subgrupos é obrigatório.")
+    @PositiveOrZero(message = "O limite de subgrupos deve ser 0 ou maior.")
+    @Column(nullable = false)
     private Integer limiteDeSubGrupos;
 
-    @NotNull(message = "Limite de Membros por Grupo não pode ser nulo")
+    @NotNull(message = "O limite de membros por grupo é obrigatório.")
+    @PositiveOrZero(message = "O limite de membros por grupo deve ser 0 ou maior.")
+    @Column(nullable = false)
     private Integer limiteMembrosPorGrupo;
 
-    @NotNull(message = "Permite Analytics não pode ser nulo")
+    @NotNull(message = "É obrigatório definir se permite analytics.")
+    @Column(nullable = false)
     private Boolean permiteAnalytics;
 
-    @NotNull(message = "Permite Templates de Atividade não pode ser nulo")
+    @NotNull(message = "É obrigatório definir se permite templates de atividade.")
+    @Column(nullable = false)
     private Boolean permiteTemplatesDeAtividade;
 
-    @NotNull(message = "Permite Criar Subgrupos não pode ser nulo")
+    @NotNull(message = "É obrigatório definir se permite criar subgrupos.")
+    @Column(nullable = false)
     private Boolean permiteCriarSubgrupos;
 
-    @NotNull(message = "Ativo não pode ser nulo")
-    private Boolean ativo;
+    @NotNull(message = "O status do plano é obrigatório.")
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private StatusPlanoEnum status;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)

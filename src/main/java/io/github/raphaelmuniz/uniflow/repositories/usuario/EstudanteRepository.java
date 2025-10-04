@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EstudanteRepository extends JpaRepository<Estudante, String> {
-    boolean existsByEmail(String email);
-
     @Override
     @NonNull
     @EntityGraph(attributePaths = {"assinaturas", "atividadesEstudante", "inscricoesGrupos"})

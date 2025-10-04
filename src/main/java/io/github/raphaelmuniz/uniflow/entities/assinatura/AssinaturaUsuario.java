@@ -4,10 +4,7 @@ import io.github.raphaelmuniz.uniflow.entities.enums.StatusAssinaturaUsuarioEnum
 import io.github.raphaelmuniz.uniflow.entities.usuario.Assinante;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.io.Serializable;
@@ -16,10 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Data
-@EqualsAndHashCode(exclude = "assinante")
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(of = "id")
+@Table(name = "assinatura_usuario")
 public class AssinaturaUsuario implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -29,26 +28,34 @@ public class AssinaturaUsuario implements Serializable {
     @Column(nullable = false, updatable = false)
     private LocalDateTime dataInicio;
 
-    @NotNull(message = "Data expiração não pode ser nulo")
-    private LocalDateTime dataExpiracao;
+    @NotNull(message = "A data de fim não pode ser nula.")
+    @Column(nullable = false)
+    private LocalDateTime dataFim;
 
-    @NotNull(message = "Status não pode ser nulo")
+    @NotNull(message = "O status não pode ser nulo.")
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private StatusAssinaturaUsuarioEnum status;
 
-    @NotNull(message = "Assinatura Modelo não pode ser nulo")
+    @NotNull(message = "O modelo de assinatura não pode ser nulo.")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "assinatura_modelo_id")
+    @JoinColumn(name = "assinatura_modelo_id", nullable = false)
+    @ToString.Exclude
     private AssinaturaModelo assinaturaModelo;
 
-    @NotNull(message = "Assinante não pode ser nulo")
+    @NotNull(message = "O assinante não pode ser nulo.")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "assinante_id", referencedColumnName = "id")
+    @JoinColumn(name = "assinante_id", nullable = false)
+    @ToString.Exclude
     private Assinante assinante;
 
     @OneToMany(mappedBy = "assinaturaUsuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
     private List<Pagamento> pagamentos = new ArrayList<>();
 
     public boolean isVigente() {
-        return (this.status.equals(StatusAssinaturaUsuarioEnum.ATIVA) || this.status.equals(StatusAssinaturaUsuarioEnum.EM_TESTE)) && this.dataExpiracao.isAfter(LocalDateTime.now());
+        boolean statusValido = (this.status == StatusAssinaturaUsuarioEnum.ATIVA || this.status == StatusAssinaturaUsuarioEnum.EM_TESTE);
+        boolean dentroDaValidade = this.dataFim.isAfter(LocalDateTime.now());
+        return statusValido && dentroDaValidade;
     }
 }

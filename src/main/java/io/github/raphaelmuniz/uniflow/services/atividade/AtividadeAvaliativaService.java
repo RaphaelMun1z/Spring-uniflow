@@ -19,7 +19,6 @@ import io.github.raphaelmuniz.uniflow.exceptions.models.NotFoundException;
 import io.github.raphaelmuniz.uniflow.repositories.atividade.AtividadeAvaliativaRepository;
 import io.github.raphaelmuniz.uniflow.repositories.atividade.AtividadeEntregaRepository;
 import io.github.raphaelmuniz.uniflow.repositories.grupo.GrupoRepository;
-import io.github.raphaelmuniz.uniflow.services.generic.GenericCrudServiceImpl;
 import io.github.raphaelmuniz.uniflow.services.usuario.AssinanteService;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -29,7 +28,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class AtividadeAvaliativaService extends GenericCrudServiceImpl<AtividadeAvaliativaRequestDTO, AtividadeAvaliativaResponseDTO, AtividadeAvaliativa, String> {
+public class AtividadeAvaliativaService {
     private final AtividadeAvaliativaRepository atividadeAvaliativaRepository;
     private final AtividadeEntregaRepository atividadeEntregaRepository;
     private final GrupoRepository grupoRepository;
@@ -40,7 +39,6 @@ public class AtividadeAvaliativaService extends GenericCrudServiceImpl<Atividade
             AtividadeEntregaRepository atividadeEntregaRepository,
             GrupoRepository grupoRepository,
             AssinanteService assinanteService) {
-        super(atividadeAvaliativaRepository, AtividadeAvaliativaResponseDTO::new);
         this.atividadeAvaliativaRepository = atividadeAvaliativaRepository;
         this.atividadeEntregaRepository = atividadeEntregaRepository;
         this.grupoRepository = grupoRepository;

@@ -1,37 +1,44 @@
 package io.github.raphaelmuniz.uniflow.entities.atividade;
 
 import io.github.raphaelmuniz.uniflow.entities.enums.StatusEntregaEnum;
-import io.github.raphaelmuniz.uniflow.entities.usuario.Estudante;
+import io.github.raphaelmuniz.uniflow.entities.usuario.Assinante;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "tarefa_status_membro")
+@EqualsAndHashCode(of = "id")
+@Table(name = "tarefa_status_membro", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"atividade_colaborativa_id", "membro_id"})
+})
 public class TarefaStatusMembro implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @NotNull(message = "A atividade colaborativa não pode ser nula")
+    @NotNull(message = "A atividade colaborativa não pode ser nula.")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "atividade_colaborativa_id")
+    @JoinColumn(name = "atividade_colaborativa_id", nullable = false)
+    @ToString.Exclude
     private AtividadeColaborativa atividadeColaborativa;
 
-    @NotNull(message = "O estudante não pode ser nulo")
+    @NotNull(message = "O membro não pode ser nulo.")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "estudante_dono_id")
-    private Estudante estudanteDono;
+    @JoinColumn(name = "membro_id", nullable = false)
+    @ToString.Exclude
+    private Assinante membro;
 
-    @NotNull(message = "Status não pode ser nulo")
+    @NotNull(message = "O status não pode ser nulo.")
     @Enumerated(EnumType.STRING)
-    private StatusEntregaEnum statusEntrega = StatusEntregaEnum.PENDENTE;
+    @Column(nullable = false)
+    private StatusEntregaEnum status = StatusEntregaEnum.PENDENTE;
 
     private LocalDateTime dataConclusao;
 }

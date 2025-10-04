@@ -1,34 +1,26 @@
 package io.github.raphaelmuniz.uniflow.entities.usuario;
 
-import io.github.raphaelmuniz.uniflow.entities.assinatura.AssinaturaUsuario;
-import io.github.raphaelmuniz.uniflow.entities.atividade.AtividadeAvaliativa;
-import io.github.raphaelmuniz.uniflow.entities.grupo.Grupo;
-import io.github.raphaelmuniz.uniflow.entities.notificacao.NotificacaoAssinante;
-import io.github.raphaelmuniz.uniflow.entities.autorizacao.Papel;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.PrimaryKeyJoinColumn;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
-import java.util.List;
-import java.util.Set;
 
 @Entity
-@Data
-@EqualsAndHashCode(callSuper = true)
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "professor")
+@PrimaryKeyJoinColumn(name = "usuario_id")
 public class Professor extends Assinante implements Serializable {
-    @NotBlank(message = "Área de atuação não pode ser vazio/nulo")
+    @NotBlank(message = "A área de atuação não pode ser vazia ou nula.")
+    @Column(nullable = false)
     private String areaAtuacao;
-
-    public Professor(String nome, String email, String senha, Set<AssinaturaUsuario> assinaturas, List<AtividadeAvaliativa> atividadesGrupoPublicadas, Set<NotificacaoAssinante> notificacoes, List<Grupo> gruposCriados, String areaAtuacao, Papel papel) {
-        super(nome, email, senha, assinaturas, atividadesGrupoPublicadas, notificacoes, gruposCriados, papel);
-        this.areaAtuacao = areaAtuacao;
-    }
-
-
 }

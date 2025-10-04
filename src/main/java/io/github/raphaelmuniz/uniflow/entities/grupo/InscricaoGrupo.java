@@ -11,11 +11,12 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
-@ToString
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString(exclude = {"grupo", "membro"})
+@EqualsAndHashCode(of = "id")
 @Table(name = "inscricao_grupo", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"grupo_id", "membro_id"})
 })
@@ -28,29 +29,18 @@ public class InscricaoGrupo implements Serializable {
     @Column(nullable = false, updatable = false)
     private LocalDateTime dataEntrada;
 
-    @NotNull(message = "Papel no grupo não pode ser vazio/nulo")
+    @NotNull(message = "O papel no grupo não pode ser nulo.")
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private PapelGrupoEnum papelNoGrupo;
 
-    @NotNull(message = "Grupo não pode ser nulo")
-    @ManyToOne
-    @JoinColumn(name = "grupo_id")
+    @NotNull(message = "O grupo não pode ser nulo.")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "grupo_id", nullable = false)
     private Grupo grupo;
 
-    @NotNull(message = "Membro não pode ser nulo")
-    @ManyToOne
-    @JoinColumn(name = "membro_id")
+    @NotNull(message = "O membro não pode ser nulo.")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "membro_id", nullable = false)
     private Assinante membro;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        InscricaoGrupo that = (InscricaoGrupo) o;
-        return id != null && id.equals(that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
 }

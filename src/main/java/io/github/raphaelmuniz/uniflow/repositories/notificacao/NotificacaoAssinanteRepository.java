@@ -14,23 +14,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface NotificacaoAssinanteRepository extends JpaRepository<NotificacaoAssinante, String> {
-    @EntityGraph(attributePaths = {"notificacao"})
-    List<NotificacaoAssinante> findByAssinanteNotificadoId(String assinanteNotificadoId);
-
-    @Modifying
-    @Transactional
-    @Query("UPDATE NotificacaoAssinante na SET na.foiLido = true, na.dataLeitura = :dataAtual " +
-            "WHERE na.id = :notificacaoId " +
-            "AND na.assinanteNotificado.id = :assinanteNotificadoId " +
-            "AND na.foiLido = false")
-    int marcarComoLida(
-            @Param("notificacaoId") String notificacaoId,
-            @Param("assinanteNotificadoId") String assinanteNotificadoId,
-            @Param("dataAtual") LocalDateTime dataAtual
-    );
-
-    long countAllByAssinanteNotificadoId(String assinanteNotificadoId);
-
     Page<NotificacaoAssinante> findByDestinatario_IdOrderByNotificacao_DataCriacaoDesc(String id, Pageable pageable);
 
     List<NotificacaoAssinante> findAllByDestinatario_IdAndLidaIsFalse(String id);

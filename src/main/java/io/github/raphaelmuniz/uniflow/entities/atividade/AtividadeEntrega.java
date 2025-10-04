@@ -1,6 +1,5 @@
 package io.github.raphaelmuniz.uniflow.entities.atividade;
 
-import io.github.raphaelmuniz.uniflow.entities.enums.DificuldadeEnum;
 import io.github.raphaelmuniz.uniflow.entities.enums.StatusEntregaEnum;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Estudante;
 import jakarta.persistence.*;
@@ -15,26 +14,18 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode(of = "id")
 @Table(name = "atividade_entrega")
-public class AtividadeEntrega extends Atividade implements Serializable {
-    public AtividadeEntrega(LocalDateTime dataLancamento, LocalDateTime prazoEntrega, String titulo, String descricao, DificuldadeEnum dificuldade, String id, StatusEntregaEnum statusEntrega, Estudante estudanteDono, AtividadeAvaliativa atividadeAvaliativaOrigem) {
-        super(dataLancamento, prazoEntrega, titulo, descricao, dificuldade);
-        this.id = id;
-        this.statusEntrega = statusEntrega;
-        this.estudanteDono = estudanteDono;
-        this.atividadeAvaliativaOrigem = atividadeAvaliativaOrigem;
-    }
-
+public class AtividadeEntrega implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @NotNull(message = "Status não pode ser nulo")
+    @NotNull(message = "O status da entrega não pode ser nulo.")
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private StatusEntregaEnum statusEntrega = StatusEntregaEnum.PENDENTE;
 
     @Lob
@@ -47,17 +38,19 @@ public class AtividadeEntrega extends Atividade implements Serializable {
 
     private LocalDateTime dataEnvio;
 
-    @OneToOne(mappedBy = "atividadeAvaliada", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "atividadeAvaliada", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @ToString.Exclude
     private AvaliacaoAtividade avaliacaoAtividade;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "estudante_dono_id", nullable = false)
+    @ToString.Exclude
     private Estudante estudanteDono;
 
-    @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "atividade_avaliativa_origem_id")
-    private AtividadeAvaliativa atividadeAvaliativaOrigem = null;
+    @JoinColumn(name = "atividade_avaliativa_origem_id", nullable = false) // MELHORIA
+    @ToString.Exclude
+    private AtividadeAvaliativa atividadeAvaliativaOrigem;
 
     public void setAvaliacao(AvaliacaoAtividade avaliacao) {
         if (avaliacao != null) {

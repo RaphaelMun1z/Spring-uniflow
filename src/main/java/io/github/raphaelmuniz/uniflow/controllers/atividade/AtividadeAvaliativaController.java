@@ -1,6 +1,5 @@
 package io.github.raphaelmuniz.uniflow.controllers.atividade;
 
-import io.github.raphaelmuniz.uniflow.controllers.generic.GenericCrudControllerImpl;
 import io.github.raphaelmuniz.uniflow.dto.req.atividade.AtividadeAvaliativaUpdateRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.atividade.AtividadeAvaliativaDetalhadaResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.atividade.AtividadeAvaliativaResponseDTO;

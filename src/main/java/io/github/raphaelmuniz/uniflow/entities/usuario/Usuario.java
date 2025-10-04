@@ -2,39 +2,45 @@ package io.github.raphaelmuniz.uniflow.entities.usuario;
 
 import io.github.raphaelmuniz.uniflow.entities.autorizacao.Papel;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Set;
 
-import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
 @Entity
 @Getter
 @Setter
-@ToString
-@EqualsAndHashCode
 @NoArgsConstructor
+@AllArgsConstructor
+@ToString(exclude = {"papel"})
+@EqualsAndHashCode(of = "id")
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "usuario", uniqueConstraints = {@UniqueConstraint(columnNames = "email")})
 public abstract class Usuario implements UserDetails, Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @NotBlank(message = "Nome não pode ser vazio/nulo")
+    @NotBlank(message = "O nome não pode ser vazio ou nulo.")
+    @Column(nullable = false)
     private String nome;
 
-    @NotBlank(message = "E-mail não pode ser vazio/nulo")
+    @NotBlank(message = "O e-mail não pode ser vazio ou nulo.")
+    @Email(message = "O formato do e-mail é inválido.")
     @Column(nullable = false, unique = true)
     private String email;
 
-    @NotBlank(message = "Senha não pode ser vazio/nulo")
+    @NotBlank(message = "A senha не pode ser vazia ou nula.")
+    @Column(nullable = false)
     private String senha;
 
     private String passwordResetToken;
@@ -44,32 +50,26 @@ public abstract class Usuario implements UserDetails, Serializable {
     @Column(nullable = false, updatable = false)
     private LocalDateTime dataCadastro;
 
-    @ManyToOne
-    @JoinColumn(name = "papel_id")
+    @NotNull(message = "O papel do usuário não pode ser nulo.")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "papel_id", nullable = false)
     private Papel papel;
 
-    private Boolean isAccountNonExpired = true;
-    private Boolean isAccountNonLocked = true;
-    private Boolean isCredentialsNonExpired = true;
-    private Boolean isEnabled = true;
+    private boolean accountNonExpired = true;
+    private boolean accountNonLocked = true;
+    private boolean credentialsNonExpired = true;
+    private boolean enabled = true;
 
     public Usuario(String nome, String email, String senha, Papel papel) {
         this.nome = nome;
         this.email = email;
         this.senha = senha;
         this.papel = papel;
-        this.isAccountNonExpired = true;
-        this.isAccountNonLocked = true;
-        this.isCredentialsNonExpired = true;
-        this.isEnabled = true;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (this.papel != null) {
-            return this.papel.getPermissoes();
-        }
-        return Set.of();
+        return this.papel != null ? this.papel.getPermissoes() : Set.of();
     }
 
     public boolean hasRole(String nomeDoPapel) {
@@ -91,21 +91,21 @@ public abstract class Usuario implements UserDetails, Serializable {
 
     @Override
     public boolean isAccountNonExpired() {
-        return this.isAccountNonExpired;
+        return this.accountNonExpired;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return this.isAccountNonLocked;
+        return this.accountNonLocked;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return this.isCredentialsNonExpired;
+        return this.credentialsNonExpired;
     }
 
     @Override
     public boolean isEnabled() {
-        return this.isEnabled;
+        return this.enabled;
     }
 }

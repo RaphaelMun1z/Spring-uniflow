@@ -7,7 +7,6 @@ import io.github.raphaelmuniz.uniflow.entities.grupo.InscricaoGrupo;
 import io.github.raphaelmuniz.uniflow.entities.notificacao.NotificacaoAssinante;
 import io.github.raphaelmuniz.uniflow.entities.autorizacao.Papel;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.io.Serializable;
@@ -16,39 +15,32 @@ import java.util.*;
 @Entity
 @Getter
 @Setter
-@ToString(exclude = {"assinaturas", "atividadesGrupoPublicadas", "notificacoes", "gruposCriados"})
-@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
+@AllArgsConstructor
+@ToString(exclude = {"assinaturas", "atividadesCriadas", "notificacoes", "gruposCriados", "inscricoes"}) // Ajustado
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Assinante extends Usuario implements Serializable {
-    public Assinante(String nome, String email, String senha, Set<AssinaturaUsuario> assinaturas, List<AtividadeAvaliativa> atividadesGrupoPublicadas, Set<NotificacaoAssinante> notificacoes, List<Grupo> gruposCriados, Papel papel) {
-        super(nome, email, senha, papel);
-        this.assinaturas = assinaturas;
-        this.atividadesGrupoPublicadas = atividadesGrupoPublicadas;
-        this.notificacoes = notificacoes;
-        this.gruposCriados = gruposCriados;
-    }
 
-    @NotNull(message = "Assinaturas não pode ser nulo")
     @OneToMany(mappedBy = "assinante", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<AssinaturaUsuario> assinaturas = new HashSet<>();
 
-    @NotNull(message = "Atividades Grupo não pode ser nulo")
-    @OneToMany(mappedBy = "assinanteCriadorAtividade", cascade = CascadeType.ALL)
-    private List<AtividadeAvaliativa> atividadesGrupoPublicadas = new ArrayList<>();
+    @OneToMany(mappedBy = "assinanteCriadorAtividade")
+    private List<AtividadeAvaliativa> atividadesCriadas = new ArrayList<>();
 
-    @OneToMany(mappedBy = "assinanteNotificado", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "destinatario", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<NotificacaoAssinante> notificacoes = new HashSet<>();
 
-    @NotNull(message = "Inscrições Grupos não pode ser nulo")
-    @OneToMany(mappedBy = "membro", cascade = CascadeType.ALL)
-    private Set<InscricaoGrupo> inscricoesGrupos = new HashSet<>();
+    @OneToMany(mappedBy = "membro", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<InscricaoGrupo> inscricoes = new HashSet<>();
 
-    @OneToMany(mappedBy = "assinanteCriadorGrupo", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "assinanteCriadorGrupo")
     private List<Grupo> gruposCriados = new ArrayList<>();
 
     @Transient
     public Optional<AssinaturaUsuario> getAssinaturaValida() {
+        if (this.assinaturas == null) {
+            return Optional.empty();
+        }
         return this.assinaturas.stream()
                 .filter(AssinaturaUsuario::isVigente)
                 .findFirst();

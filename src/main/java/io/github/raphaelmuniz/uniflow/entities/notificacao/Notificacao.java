@@ -25,12 +25,13 @@ public class Notificacao implements Serializable {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @NotBlank(message = "A mensagem não pode ser vazia/nula")
-    @Column(length = 500)
+    @NotBlank(message = "A mensagem não pode ser vazia ou nula.")
+    @Column(length = 500, nullable = false)
     private String mensagem;
 
-    @NotNull(message = "A categoria não pode ser nula")
+    @NotNull(message = "A categoria não pode ser nula.")
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private CategoriaNotificacaoEnum categoria;
 
     @CreationTimestamp
@@ -41,9 +42,10 @@ public class Notificacao implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "remetente_id")
+    @ToString.Exclude
     private Assinante remetente;
 
     @OneToMany(mappedBy = "notificacao", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
     private Set<NotificacaoAssinante> destinatarios = new HashSet<>();
-
 }

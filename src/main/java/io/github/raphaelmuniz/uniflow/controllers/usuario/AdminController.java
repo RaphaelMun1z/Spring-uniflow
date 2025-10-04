@@ -31,8 +31,11 @@ public class AdminController {
     }
 
     @GetMapping("/usuarios")
-    public ResponseEntity<PaginatedResponse<AssinantePublicProfileDTO>> listarUsuarios(Pageable pageable) {
-        Page<AssinantePublicProfileDTO> page = adminService.listarUsuarios(pageable);
+    public ResponseEntity<PaginatedResponse<AssinantePublicProfileDTO>> listarUsuarios(
+            @RequestParam(required = false) String tipo,
+            Pageable pageable) {
+        Page<AssinantePublicProfileDTO> page = adminService.listarUsuarios(tipo, pageable);
+
         PaginatedResponse<AssinantePublicProfileDTO> response = new PaginatedResponse<>(
                 page.getContent(), page.getNumber(), page.getTotalPages(), page.getTotalElements()
         );
