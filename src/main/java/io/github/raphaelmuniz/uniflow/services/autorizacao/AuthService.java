@@ -53,7 +53,7 @@ public class AuthService {
             var usernamePassword = new UsernamePasswordAuthenticationToken(credentials.email(), credentials.senha());
             var auth = authenticationManager.authenticate(usernamePassword);
             var user = (Usuario) auth.getPrincipal();
-            return tokenProvider.createTokenDTO(user);
+            return tokenProvider.criarTokenDTO(user);
         } catch (AuthenticationException e) {
             throw new BadCredentialsException("Email ou senha inválidos.");
         }
@@ -62,7 +62,7 @@ public class AuthService {
     public TokenDTO refreshToken(String email, String refreshToken) {
         Usuario usuario = usuarioRepository.findByEmail(email)
             .orElseThrow(() -> new UsernameNotFoundException("E-mail " + email + " não encontrado."));
-        return tokenProvider.refreshToken(refreshToken, usuario);
+        return tokenProvider.atualizarToken(refreshToken, usuario);
     }
 
     @Transactional

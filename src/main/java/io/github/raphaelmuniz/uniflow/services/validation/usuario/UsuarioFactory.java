@@ -33,8 +33,8 @@ public class UsuarioFactory {
             throw new BusinessException("O campo 'periodo' é obrigatório para o cadastro de Estudante.");
         }
 
-        Papel papelEstudante = papelRepository.findByNome("ESTUDANTE")
-                .orElseThrow(() -> new NotFoundException("Papel 'ESTUDANTE' não encontrado. Verifique os dados iniciais do sistema."));
+        Papel papelEstudante = papelRepository.findByNome("ROLE_ESTUDANTE")
+            .orElseThrow(() -> new NotFoundException("Papel 'ROLE_ESTUDANTE' não encontrado. Verifique os dados iniciais do sistema."));
 
         Estudante estudante = new Estudante();
         estudante.setNome(dto.nome());
@@ -50,8 +50,8 @@ public class UsuarioFactory {
             throw new BusinessException("O campo 'areaAtuacao' é obrigatório para o cadastro de Professor.");
         }
 
-        Papel papelProfessor = papelRepository.findByNome("PROFESSOR")
-                .orElseThrow(() -> new NotFoundException("Papel 'PROFESSOR' não encontrado. Verifique os dados iniciais do sistema."));
+        Papel papelProfessor = papelRepository.findByNome("ROLE_PROFESSOR")
+            .orElseThrow(() -> new NotFoundException("Papel 'ROLE_PROFESSOR' não encontrado. Verifique os dados iniciais do sistema."));
 
         Professor professor = new Professor();
         professor.setNome(dto.nome());

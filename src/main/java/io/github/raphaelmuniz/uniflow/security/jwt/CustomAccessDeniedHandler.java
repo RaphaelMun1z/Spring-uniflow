@@ -22,7 +22,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 
         ExceptionResponse exceptionResponse = new ExceptionResponse(
-                LocalDateTime.now(),
+                LocalDateTime.now().toString(),
                 List.of("Acesso negado: você não tem permissão para acessar este recurso."),
                 request.getRequestURI()
         );

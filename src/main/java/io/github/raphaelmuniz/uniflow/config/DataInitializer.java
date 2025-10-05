@@ -3,20 +3,11 @@ package io.github.raphaelmuniz.uniflow.config;
 import io.github.raphaelmuniz.uniflow.entities.autorizacao.Papel;
 import io.github.raphaelmuniz.uniflow.entities.autorizacao.Permissao;
 import io.github.raphaelmuniz.uniflow.entities.embeddables.PeriodoLetivo;
-import io.github.raphaelmuniz.uniflow.entities.enums.DificuldadeEnum;
-import io.github.raphaelmuniz.uniflow.entities.enums.PapelGrupoEnum;
-import io.github.raphaelmuniz.uniflow.entities.enums.StatusGrupoEnum;
-import io.github.raphaelmuniz.uniflow.entities.enums.TipoGrupoEnum;
-import io.github.raphaelmuniz.uniflow.entities.grupo.Disciplina;
-import io.github.raphaelmuniz.uniflow.entities.grupo.Grupo;
-import io.github.raphaelmuniz.uniflow.entities.grupo.InscricaoGrupo;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Admin;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Estudante;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Professor;
 import io.github.raphaelmuniz.uniflow.repositories.autorizacao.PapelRepository;
 import io.github.raphaelmuniz.uniflow.repositories.autorizacao.PermissaoRepository;
-import io.github.raphaelmuniz.uniflow.repositories.grupo.DisciplinaRepository;
-import io.github.raphaelmuniz.uniflow.repositories.grupo.GrupoRepository;
 import io.github.raphaelmuniz.uniflow.repositories.usuario.UsuarioRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -37,16 +28,16 @@ public class DataInitializer implements CommandLineRunner {
     private final PapelRepository papelRepository;
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
-    private final GrupoRepository grupoRepository;
-    private final DisciplinaRepository disciplinaRepository;
 
-    public DataInitializer(PermissaoRepository permissaoRepository, PapelRepository papelRepository, UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder, GrupoRepository grupoRepository, DisciplinaRepository disciplinaRepository) {
+    public DataInitializer(
+        PermissaoRepository permissaoRepository,
+        PapelRepository papelRepository,
+        UsuarioRepository usuarioRepository,
+        PasswordEncoder passwordEncoder) {
         this.permissaoRepository = permissaoRepository;
         this.papelRepository = papelRepository;
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
-        this.grupoRepository = grupoRepository;
-        this.disciplinaRepository = disciplinaRepository;
     }
 
     @Override
@@ -60,16 +51,15 @@ public class DataInitializer implements CommandLineRunner {
         log.info("Iniciando a criação de dados de teste...");
 
         log.info("Criando permissões...");
+        // Crie aqui todas as permissões que seu sistema precisa
         Permissao pAdminGerenciar = new Permissao(null, "ADMIN_GERENCIAR_PAPEIS");
         Permissao pUserLer = new Permissao(null, "USUARIO_LER");
         Permissao pUserEscrever = new Permissao(null, "USUARIO_ESCREVER");
-
         Permissao pAssinaturaUsuarioCriar = new Permissao(null, "ASSINATURA_USUARIO_CRIAR");
         Permissao pAssinaturaUsuarioLer = new Permissao(null, "ASSINATURA_USUARIO_LER");
         Permissao pAssinaturaUsuarioEditar = new Permissao(null, "ASSINATURA_USUARIO_EDITAR");
-
-        permissaoRepository.saveAll(List.of(pAdminGerenciar, pUserLer, pUserEscrever, pAssinaturaUsuarioCriar, pAssinaturaUsuarioLer, pAssinaturaUsuarioEditar // <-- Salvar
-        ));
+        // ... adicione outras permissões que criamos ...
+        permissaoRepository.saveAll(List.of(pAdminGerenciar, pUserLer, pUserEscrever, pAssinaturaUsuarioCriar, pAssinaturaUsuarioLer, pAssinaturaUsuarioEditar));
         log.info("Permissões criadas com sucesso.");
 
         log.info("Criando papéis...");
@@ -100,35 +90,6 @@ public class DataInitializer implements CommandLineRunner {
 
         usuarioRepository.saveAll(List.of(admin, professor, estudante));
         log.info("Usuários de exemplo criados com sucesso.");
-
-        log.info("Criando disciplina de exemplo...");
-        Disciplina disciplinaExemplo = new Disciplina();
-        disciplinaExemplo.setNome("Algoritmos e Estruturas de Dados");
-        disciplinaExemplo.setPeriodo(3);
-        disciplinaExemplo.setDificuldade(DificuldadeEnum.MEDIO);
-        disciplinaExemplo.setPeriodoLetivo(new PeriodoLetivo(2025, 2));
-
-        Disciplina disciplinaSalva = disciplinaRepository.save(disciplinaExemplo);
-        log.info("Disciplina de exemplo criada com sucesso.");
-
-        log.info("Criando grupo de exemplo...");
-        Grupo grupoExemplo = new Grupo();
-        grupoExemplo.setTitulo("Turma de Algoritmos 2025");
-        grupoExemplo.setDescricao("Turma para a disciplina de Algoritmos e Estruturas de Dados.");
-        grupoExemplo.setTipoGrupo(TipoGrupoEnum.TURMA);
-        grupoExemplo.setStatusGrupo(StatusGrupoEnum.ATIVO);
-        grupoExemplo.setCodigoConvite(Grupo.gerarCodigoConvite());
-        grupoExemplo.setAssinanteCriadorGrupo(professor);
-        grupoExemplo.setDisciplina(disciplinaSalva);
-
-        InscricaoGrupo inscricaoEstudante = new InscricaoGrupo();
-        inscricaoEstudante.setMembro(estudante);
-        inscricaoEstudante.setPapelNoGrupo(PapelGrupoEnum.MEMBRO);
-
-        grupoExemplo.addInscricao(inscricaoEstudante);
-
-        grupoRepository.save(grupoExemplo);
-        log.info("Grupo de exemplo criado com o Professor como dono e o Estudante como membro.");
 
         log.info("----------------------------------------------------");
         log.info("Login: admin@email.com | Senha: password");

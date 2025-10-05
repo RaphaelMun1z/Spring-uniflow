@@ -22,7 +22,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
         ExceptionResponse exceptionResponse = new ExceptionResponse(
-                LocalDateTime.now(),
+                LocalDateTime.now().toString(),
                 List.of(authException.getMessage()),
                 request.getRequestURI()
         );

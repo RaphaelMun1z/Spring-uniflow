@@ -17,50 +17,47 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Service
 public class JwtTokenProvider {
+
     @Value("${security.jwt.token.secret-key:secret}")
     private String secretKey = "secret";
 
     @Value("${security.jwt.token.expire-length:3600000}")
-    private final long validityInMilliseconds = 3600000;
+    private long validityInMilliseconds;
 
     @Value("${security.jwt.token.refresh-expire-length:10800000}")
-    private final long refreshValidityInMilliseconds = 10800000;
+    private long refreshValidityInMilliseconds;
 
-    Algorithm algorithm = null;
-
-    private final Set<String> tokenBlocklist = ConcurrentHashMap.newKeySet();
+    private Algorithm algorithm = null;
 
     public JwtTokenProvider() {
     }
 
     @PostConstruct
     protected void init() {
-        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
         algorithm = Algorithm.HMAC256(secretKey.getBytes());
     }
 
-    public TokenDTO createTokenDTO(Usuario usuario) {
-        Date now = new Date();
-        Date accessTokenValidity = new Date(now.getTime() + validityInMilliseconds);
-        Date refreshTokenValidity = new Date(now.getTime() + refreshValidityInMilliseconds);
+    public TokenDTO criarTokenDTO(Usuario usuario) {
+        Date agora = new Date();
+        Date validadeAccessToken = new Date(agora.getTime() + validityInMilliseconds);
+        Date validadeRefreshToken = new Date(agora.getTime() + refreshValidityInMilliseconds);
 
         List<String> authorities = usuario.getAuthorities().stream()
             .map(GrantedAuthority::getAuthority)
             .collect(Collectors.toList());
 
-        String accessToken = createAccessToken(usuario.getEmail(), authorities, now, accessTokenValidity);
-        String refreshToken = createRefreshToken(usuario.getEmail(), now, refreshTokenValidity);
+        String accessToken = criarAccessToken(usuario.getEmail(), authorities, agora, validadeAccessToken);
+        String refreshToken = criarRefreshToken(usuario.getEmail(), agora, validadeRefreshToken);
 
-        return new TokenDTO(usuario.getUsername(), true, now, accessTokenValidity, accessToken, refreshToken);
+        return new TokenDTO(usuario.getUsername(), true, agora, validadeAccessToken, accessToken, refreshToken);
     }
 
-    public TokenDTO refreshToken(String refreshToken, Usuario usuario) {
-        String token = resolveToken(refreshToken);
+    public TokenDTO atualizarToken(String refreshToken, Usuario usuario) {
+        String token = resolverToken(refreshToken);
         if (token == null) {
             throw new InvalidJwtAuthenticationException("Refresh token inválido ou ausente.");
         }
@@ -71,21 +68,25 @@ public class JwtTokenProvider {
             throw new InvalidJwtAuthenticationException("Refresh token não pertence ao usuário informado.");
         }
 
-        Date now = new Date();
-        Date accessTokenValidity = new Date(now.getTime() + validityInMilliseconds);
+        Date agora = new Date();
+        Date validadeAccessToken = new Date(agora.getTime() + validityInMilliseconds);
         List<String> authorities = usuario.getAuthorities().stream()
             .map(GrantedAuthority::getAuthority)
             .collect(Collectors.toList());
 
-        String newAccessToken = createAccessToken(usuario.getEmail(), authorities, now, accessTokenValidity);
+        String novoAccessToken = criarAccessToken(usuario.getEmail(), authorities, agora, validadeAccessToken);
 
-        return new TokenDTO(usuario.getUsername(), true, now, accessTokenValidity, newAccessToken, token);
+        return new TokenDTO(usuario.getUsername(), true, agora, validadeAccessToken, novoAccessToken, token);
     }
 
-    public Authentication getAuthentication(String token) {
+    public Authentication obterAutenticacao(String token) {
         DecodedJWT decodedJWT = decodedToken(token);
         String username = decodedJWT.getSubject();
         List<String> roles = decodedJWT.getClaim("roles").asList(String.class);
+
+        if (roles == null) {
+            roles = new ArrayList<>();
+        }
 
         List<SimpleGrantedAuthority> authorities = roles.stream()
             .map(SimpleGrantedAuthority::new)
@@ -100,30 +101,27 @@ public class JwtTokenProvider {
         return new UsernamePasswordAuthenticationToken(userDetails, "", authorities);
     }
 
-    public String resolveToken(HttpServletRequest request) {
-        return resolveToken(request.getHeader("Authorization"));
+    public String resolverToken(HttpServletRequest request) {
+        return resolverToken(request.getHeader("Authorization"));
     }
 
-    private String resolveToken(String bearerToken) {
+    public boolean validarToken(String token) {
+        try {
+            DecodedJWT decodedJWT = decodedToken(token);
+            return !decodedJWT.getExpiresAt().before(new Date());
+        } catch (Exception e) {
+            throw new InvalidJwtAuthenticationException("Token expirado ou inválido!");
+        }
+    }
+
+    private String resolverToken(String bearerToken) {
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
         return null;
     }
 
-    public boolean validateToken(String token) {
-        if (tokenBlocklist.contains(token)) {
-            throw new InvalidJwtAuthenticationException("Token has been invalidated by logout!");
-        }
-        try {
-            DecodedJWT decodedJWT = decodedToken(token);
-            return !decodedJWT.getExpiresAt().before(new Date());
-        } catch (Exception e) {
-            throw new InvalidJwtAuthenticationException("Expired or invalid JWT token!");
-        }
-    }
-
-    private String createAccessToken(String username, List<String> authorities, Date now, Date validity) {
+    private String criarAccessToken(String username, List<String> authorities, Date now, Date validity) {
         return JWT.create()
             .withClaim("roles", authorities)
             .withIssuedAt(now)
@@ -132,7 +130,7 @@ public class JwtTokenProvider {
             .sign(algorithm);
     }
 
-    private String createRefreshToken(String username, Date now, Date validity) {
+    private String criarRefreshToken(String username, Date now, Date validity) {
         return JWT.create()
             .withIssuedAt(now)
             .withExpiresAt(validity)
@@ -141,8 +139,7 @@ public class JwtTokenProvider {
     }
 
     private DecodedJWT decodedToken(String token) {
-        Algorithm alg = Algorithm.HMAC256(secretKey.getBytes());
-        JWTVerifier verifier = JWT.require(alg).build();
+        JWTVerifier verifier = JWT.require(algorithm).build();
         return verifier.verify(token);
     }
 }

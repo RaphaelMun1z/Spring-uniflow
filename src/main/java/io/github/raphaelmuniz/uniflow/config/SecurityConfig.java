@@ -53,10 +53,10 @@ public class SecurityConfig {
     @Bean
     PasswordEncoder passwordEncoder() {
         PasswordEncoder pbkdf2Encoder = new Pbkdf2PasswordEncoder(
-                encoderSecret,
-                saltLength,
-                encoderIterations,
-                Pbkdf2PasswordEncoder.SecretKeyFactoryAlgorithm.PBKDF2WithHmacSHA256
+            encoderSecret,
+            saltLength,
+            encoderIterations,
+            Pbkdf2PasswordEncoder.SecretKeyFactoryAlgorithm.PBKDF2WithHmacSHA256
         );
 
         Map<String, PasswordEncoder> encoders = new HashMap<>();
@@ -88,8 +88,7 @@ session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .authorizeHttpRequests(
 authorizeHttpRequests -> authorizeHttpRequests
                     .requestMatchers(
-                    "/auth/signin",
-                            "/auth/refresh/**",
+                    "/auth/**",
                             "/swagger-ui/**",
                             "/v3/api-docs/**"
                     ).permitAll()

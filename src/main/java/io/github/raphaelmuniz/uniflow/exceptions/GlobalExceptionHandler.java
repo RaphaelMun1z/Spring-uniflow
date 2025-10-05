@@ -24,35 +24,31 @@ import java.util.*;
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public final ResponseEntity<ExceptionResponse> handleAccessDeniedException(AccessDeniedException ex, WebRequest request) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(
-                LocalDateTime.now(),
-                List.of("Acesso Negado. Você não tem permissão para executar esta ação."),
-                request.getDescription(false)
-        );
+        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now().toString(), List.of("Acesso Negado. Você não tem permissão para executar esta ação."), request.getDescription(false));
         return new ResponseEntity<>(exceptionResponse, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
     public final ResponseEntity<ExceptionResponse> badCredentialsException(Exception ex, WebRequest request) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(), List.of(ex.getMessage()), request.getDescription(false));
+        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now().toString(), List.of(ex.getMessage()), request.getDescription(false));
         return new ResponseEntity<>(exceptionResponse, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(NotFoundException.class)
     public final ResponseEntity<ExceptionResponse> notFoundException(Exception ex, WebRequest request) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(), List.of(ex.getMessage()), request.getDescription(false));
+        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now().toString(), List.of(ex.getMessage()), request.getDescription(false));
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(BusinessException.class)
     public final ResponseEntity<ExceptionResponse> businessException(Exception ex, WebRequest request) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(), List.of(ex.getMessage()), request.getDescription(false));
+        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now().toString(), List.of(ex.getMessage()), request.getDescription(false));
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public final ResponseEntity<ExceptionResponse> illegalArgumentException(Exception ex, WebRequest request) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(), List.of(ex.getMessage()), request.getDescription(false));
+        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now().toString(), List.of(ex.getMessage()), request.getDescription(false));
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
@@ -64,32 +60,27 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         Throwable causaRaiz = ex.getMostSpecificCause();
         String mensagemCausa = causaRaiz.getMessage().toLowerCase();
 
-        if (mensagemCausa.contains("unique constraint") ||
-                mensagemCausa.contains("duplicate entry") ||
-                mensagemCausa.contains("viola a restrição de unicidade")) {
+        if (mensagemCausa.contains("unique constraint") || mensagemCausa.contains("duplicate entry") || mensagemCausa.contains("viola a restrição de unicidade")) {
 
             mensagemAmigavel = "Recurso já existe.";
             status = HttpStatus.CONFLICT;
         }
 
-        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(), List.of(mensagemAmigavel), request.getDescription(false));
+        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now().toString(), List.of(mensagemAmigavel), request.getDescription(false));
         return new ResponseEntity<>(exceptionResponse, status);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
     public final ResponseEntity<ExceptionResponse> constraintViolationException(ConstraintViolationException ex, WebRequest request) {
-        List<String> mensagens = ex.getConstraintViolations()
-                .stream()
-                .map(ConstraintViolation::getMessage)
-                .toList();
+        List<String> mensagens = ex.getConstraintViolations().stream().map(ConstraintViolation::getMessage).toList();
 
-        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(), mensagens, request.getDescription(false));
+        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now().toString(), mensagens, request.getDescription(false));
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(InvalidJwtAuthenticationException.class)
     public final ResponseEntity<ExceptionResponse> invalidJwtAuthenticationException(Exception ex, WebRequest request) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(), List.of(ex.getMessage()), request.getDescription(false));
+        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now().toString(), List.of(ex.getMessage()), request.getDescription(false));
         return new ResponseEntity<>(exceptionResponse, HttpStatus.FORBIDDEN);
     }
 
@@ -97,11 +88,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public final ResponseEntity<ExceptionResponse> handleAllExceptions(Exception ex, WebRequest request) {
         logger.error("Ocorreu uma exceção não tratada", ex);
 
-        ExceptionResponse exceptionResponse = new ExceptionResponse(
-                LocalDateTime.now(),
-                List.of("Ocorreu um erro inesperado no servidor. Por favor, tente novamente mais tarde."),
-                request.getDescription(false)
-        );
+        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now().toString(), List.of("Ocorreu um erro inesperado no servidor. Por favor, tente novamente mais tarde."), request.getDescription(false));
         return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
