@@ -1,5 +1,6 @@
 package io.github.raphaelmuniz.uniflow.controllers.grupo;
 
+import io.github.raphaelmuniz.uniflow.controllers.grupo.docs.DisciplinaControllerDocs;
 import io.github.raphaelmuniz.uniflow.dto.req.grupo.DisciplinaRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.PaginatedResponse;
 import io.github.raphaelmuniz.uniflow.dto.res.grupo.DisciplinaResponseDTO;
@@ -15,7 +16,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/api/disciplinas")
-public class DisciplinaController {
+public class DisciplinaController implements DisciplinaControllerDocs {
 
     private final DisciplinaService disciplinaService;
 
@@ -24,7 +25,8 @@ public class DisciplinaController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR')")
+    @PreAuthorize("hasAuthority('DISCIPLINA_CRIAR')")
+    @Override
     public ResponseEntity<DisciplinaResponseDTO> criar(@RequestBody @Valid DisciplinaRequestDTO dto) {
         DisciplinaResponseDTO novaDisciplina = disciplinaService.criar(dto);
         URI location = URI.create("/api/disciplinas/" + novaDisciplina.id());
@@ -33,28 +35,32 @@ public class DisciplinaController {
 
     @GetMapping
     @PreAuthorize("isAuthenticated()")
+    @Override
     public ResponseEntity<PaginatedResponse<DisciplinaResponseDTO>> buscarTodas(Pageable pageable) {
         Page<DisciplinaResponseDTO> page = disciplinaService.buscarTodas(pageable);
         PaginatedResponse<DisciplinaResponseDTO> response = new PaginatedResponse<>(
-                page.getContent(), page.getNumber(), page.getTotalPages(), page.getTotalElements()
+            page.getContent(), page.getNumber(), page.getTotalPages(), page.getTotalElements()
         );
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
+    @Override
     public ResponseEntity<DisciplinaResponseDTO> buscarPorId(@PathVariable String id) {
         return ResponseEntity.ok(disciplinaService.buscarPorId(id));
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR')")
+    @PreAuthorize("hasAuthority('DISCIPLINA_EDITAR')")
+    @Override
     public ResponseEntity<DisciplinaResponseDTO> atualizar(@PathVariable String id, @RequestBody @Valid DisciplinaRequestDTO dto) {
         return ResponseEntity.ok(disciplinaService.atualizar(id, dto));
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR')")
+    @PreAuthorize("hasAuthority('DISCIPLINA_DELETAR')")
+    @Override
     public ResponseEntity<Void> deletar(@PathVariable String id) {
         disciplinaService.deletar(id);
         return ResponseEntity.noContent().build();

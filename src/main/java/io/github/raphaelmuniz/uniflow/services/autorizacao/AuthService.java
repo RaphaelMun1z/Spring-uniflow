@@ -12,17 +12,16 @@ import io.github.raphaelmuniz.uniflow.exceptions.models.BusinessException;
 import io.github.raphaelmuniz.uniflow.repositories.usuario.UsuarioRepository;
 import io.github.raphaelmuniz.uniflow.security.jwt.JwtTokenProvider;
 import io.github.raphaelmuniz.uniflow.services.validation.usuario.UsuarioFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -35,12 +34,12 @@ public class AuthService {
     private final EmailService emailService;
 
     public AuthService(
-            AuthenticationManager authenticationManager,
-            JwtTokenProvider tokenProvider,
-            UsuarioRepository usuarioRepository,
-            UsuarioFactory usuarioFactory,
-            PasswordEncoder passwordEncoder,
-            EmailService emailService) {
+        AuthenticationManager authenticationManager,
+        JwtTokenProvider tokenProvider,
+        UsuarioRepository usuarioRepository,
+        UsuarioFactory usuarioFactory,
+        PasswordEncoder passwordEncoder,
+        EmailService emailService) {
         this.authenticationManager = authenticationManager;
         this.tokenProvider = tokenProvider;
         this.usuarioRepository = usuarioRepository;
@@ -54,24 +53,16 @@ public class AuthService {
             var usernamePassword = new UsernamePasswordAuthenticationToken(credentials.email(), credentials.senha());
             var auth = authenticationManager.authenticate(usernamePassword);
             var user = (Usuario) auth.getPrincipal();
-
-            return tokenProvider.createAccessToken(
-                    user.getEmail(),
-                    user.getAuthorities()
-            );
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            throw new BadCredentialsException("Invalid username/password supplied!");
+            return tokenProvider.createTokenDTO(user);
+        } catch (AuthenticationException e) {
+            throw new BadCredentialsException("Email ou senha inválidos.");
         }
     }
 
-    public TokenDTO signin(String email, String refreshToken) {
-        Optional<Usuario> usuario = usuarioRepository.findByEmail(email);
-        if (usuario.isEmpty()) {
-            throw new UsernameNotFoundException("E-mail " + email + " não encontrado!");
-        }
-
-        return tokenProvider.refreshToken(refreshToken);
+    public TokenDTO refreshToken(String email, String refreshToken) {
+        Usuario usuario = usuarioRepository.findByEmail(email)
+            .orElseThrow(() -> new UsernameNotFoundException("E-mail " + email + " não encontrado."));
+        return tokenProvider.refreshToken(refreshToken, usuario);
     }
 
     @Transactional
@@ -79,11 +70,8 @@ public class AuthService {
         if (usuarioRepository.findByEmail(dto.email()).isPresent()) {
             throw new BusinessException("O email informado já está em uso.");
         }
-
         Usuario novoUsuario = usuarioFactory.criarUsuario(dto);
-
         Usuario usuarioSalvo = usuarioRepository.save(novoUsuario);
-
         return AssinanteResponseDTO.fromEntity((Assinante) usuarioSalvo);
     }
 
@@ -94,7 +82,6 @@ public class AuthService {
             usuario.setPasswordResetToken(token);
             usuario.setPasswordResetTokenExpiry(LocalDateTime.now().plusHours(1));
             usuarioRepository.save(usuario);
-
             emailService.enviarEmailRedefinicaoSenha(usuario.getEmail(), token);
         });
     }
@@ -102,7 +89,7 @@ public class AuthService {
     @Transactional
     public void redefinirSenha(RedefinirSenhaRequestDTO dto) {
         Usuario usuario = usuarioRepository.findByPasswordResetToken(dto.token())
-                .orElseThrow(() -> new BusinessException("Token de redefinição de senha inválido ou já utilizado."));
+            .orElseThrow(() -> new BusinessException("Token de redefinição de senha inválido ou já utilizado."));
 
         if (usuario.getPasswordResetTokenExpiry().isBefore(LocalDateTime.now())) {
             throw new BusinessException("Token de redefinição de senha expirado.");
@@ -111,7 +98,6 @@ public class AuthService {
         usuario.setSenha(passwordEncoder.encode(dto.novaSenha()));
         usuario.setPasswordResetToken(null);
         usuario.setPasswordResetTokenExpiry(null);
-
         usuarioRepository.save(usuario);
     }
 }

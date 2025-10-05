@@ -2,6 +2,7 @@ package io.github.raphaelmuniz.uniflow.controllers;
 
 import io.github.raphaelmuniz.uniflow.dto.req.usuario.ProfileUpdateRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.PaginatedResponse;
+import io.github.raphaelmuniz.uniflow.dto.res.assinatura.AssinaturaUsuarioResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.assinatura.PagamentoResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.profile.AssinaturaProfileResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.profile.GruposProfileResponseDTO;
@@ -74,5 +75,11 @@ public class ProfileController {
     public ResponseEntity<Void> cancelarMinhaConta(@AuthenticationPrincipal Usuario usuarioLogado) {
         profileService.cancelarConta(usuarioLogado);
         return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/assinatura-ativa")
+    public ResponseEntity<AssinaturaUsuarioResponseDTO> cancelarMinhaAssinatura(@AuthenticationPrincipal Usuario usuarioLogado) {
+        AssinaturaUsuarioResponseDTO assinaturaCancelada = profileService.cancelarMinhaAssinatura(usuarioLogado);
+        return ResponseEntity.ok(assinaturaCancelada);
     }
 }

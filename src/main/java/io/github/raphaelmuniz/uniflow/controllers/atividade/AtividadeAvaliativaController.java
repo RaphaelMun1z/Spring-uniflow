@@ -1,5 +1,6 @@
 package io.github.raphaelmuniz.uniflow.controllers.atividade;
 
+import io.github.raphaelmuniz.uniflow.controllers.atividade.docs.AtividadeAvaliativaControllerDocs;
 import io.github.raphaelmuniz.uniflow.dto.req.atividade.AtividadeAvaliativaUpdateRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.atividade.AtividadeAvaliativaDetalhadaResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.atividade.AtividadeAvaliativaResponseDTO;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/atividades-avaliativas")
-public class AtividadeAvaliativaController {
+public class AtividadeAvaliativaController implements AtividadeAvaliativaControllerDocs {
     private final AtividadeAvaliativaService atividadeAvaliativaService;
 
     public AtividadeAvaliativaController(AtividadeAvaliativaService atividadeAvaliativaService) {
@@ -22,30 +23,33 @@ public class AtividadeAvaliativaController {
 
     @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<AtividadeAvaliativaDetalhadaResponseDTO> getAtividadeById(
-            @PathVariable String id,
-            @AuthenticationPrincipal Usuario usuarioLogado
+    @Override
+    public ResponseEntity<AtividadeAvaliativaDetalhadaResponseDTO> buscarPorId(
+        @PathVariable String id,
+        @AuthenticationPrincipal Usuario usuarioLogado
     ) {
         AtividadeAvaliativaDetalhadaResponseDTO atividade = atividadeAvaliativaService.buscarPorId(id, usuarioLogado);
         return ResponseEntity.ok(atividade);
     }
 
     @PatchMapping("/{id}")
-    @PreAuthorize("hasRole('PROFESSOR')")
-    public ResponseEntity<AtividadeAvaliativaResponseDTO> updateAtividade(
-            @PathVariable String id,
-            @RequestBody @Valid AtividadeAvaliativaUpdateRequestDTO dto,
-            @AuthenticationPrincipal Usuario professorLogado
+    @PreAuthorize("hasRole('PROFESSOR') and hasAuthority('ATIVIDADE_AVALIATIVA_EDITAR')")
+    @Override
+    public ResponseEntity<AtividadeAvaliativaResponseDTO> atualizar(
+        @PathVariable String id,
+        @RequestBody @Valid AtividadeAvaliativaUpdateRequestDTO dto,
+        @AuthenticationPrincipal Usuario professorLogado
     ) {
         AtividadeAvaliativaResponseDTO atividadeAtualizada = atividadeAvaliativaService.atualizar(id, dto, professorLogado);
         return ResponseEntity.ok(atividadeAtualizada);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('PROFESSOR')")
-    public ResponseEntity<Void> deleteAtividade(
-            @PathVariable String id,
-            @AuthenticationPrincipal Usuario professorLogado
+    @PreAuthorize("hasRole('PROFESSOR') and hasAuthority('ATIVIDADE_AVALIATIVA_DELETAR')")
+    @Override
+    public ResponseEntity<Void> deletar(
+        @PathVariable String id,
+        @AuthenticationPrincipal Usuario professorLogado
     ) {
         atividadeAvaliativaService.deletar(id, professorLogado);
         return ResponseEntity.noContent().build();

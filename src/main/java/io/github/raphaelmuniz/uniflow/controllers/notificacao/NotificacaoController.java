@@ -1,5 +1,6 @@
 package io.github.raphaelmuniz.uniflow.controllers.notificacao;
 
+import io.github.raphaelmuniz.uniflow.controllers.notificacao.docs.NotificacaoControllerDocs;
 import io.github.raphaelmuniz.uniflow.dto.req.notificacao.NotificacaoBroadcastRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.req.notificacao.NotificacaoGrupoRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.PaginatedResponse;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/notificacoes")
 @PreAuthorize("hasRole('ADMIN')")
-public class NotificacaoController {
+public class NotificacaoController implements NotificacaoControllerDocs {
     private final NotificacaoService notificacaoService;
 
     public NotificacaoController(NotificacaoService service) {
@@ -26,26 +27,32 @@ public class NotificacaoController {
     }
 
     @PostMapping("/enviar-para-grupo")
+    @PreAuthorize("hasAuthority('NOTIFICACAO_CRIAR')")
+    @Override
     public ResponseEntity<NotificacaoResponseDTO> enviarParaGrupo(
-            @RequestBody @Valid NotificacaoGrupoRequestDTO dto,
-            @AuthenticationPrincipal Usuario remetente) {
+        @RequestBody @Valid NotificacaoGrupoRequestDTO dto,
+        @AuthenticationPrincipal Usuario remetente) {
         NotificacaoResponseDTO notificacao = notificacaoService.criarNotificacaoParaGrupo(dto, remetente);
         return ResponseEntity.status(HttpStatus.CREATED).body(notificacao);
     }
 
     @PostMapping("/enviar-broadcast")
+    @PreAuthorize("hasAuthority('NOTIFICACAO_CRIAR')")
+    @Override
     public ResponseEntity<NotificacaoResponseDTO> enviarBroadcast(
-            @RequestBody @Valid NotificacaoBroadcastRequestDTO dto,
-            @AuthenticationPrincipal Usuario remetente) {
+        @RequestBody @Valid NotificacaoBroadcastRequestDTO dto,
+        @AuthenticationPrincipal Usuario remetente) {
         NotificacaoResponseDTO notificacao = notificacaoService.criarNotificacaoBroadcast(dto, remetente);
         return ResponseEntity.status(HttpStatus.CREATED).body(notificacao);
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('NOTIFICACAO_LER')")
+    @Override
     public ResponseEntity<PaginatedResponse<NotificacaoResponseDTO>> buscarTodas(Pageable pageable) {
         Page<NotificacaoResponseDTO> page = notificacaoService.buscarTodas(pageable);
         PaginatedResponse<NotificacaoResponseDTO> response = new PaginatedResponse<>(
-                page.getContent(), page.getNumber(), page.getTotalPages(), page.getTotalElements()
+            page.getContent(), page.getNumber(), page.getTotalPages(), page.getTotalElements()
         );
         return ResponseEntity.ok(response);
     }

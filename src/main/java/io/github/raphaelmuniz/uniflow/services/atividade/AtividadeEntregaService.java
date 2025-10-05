@@ -2,12 +2,14 @@ package io.github.raphaelmuniz.uniflow.services.atividade;
 
 import io.github.raphaelmuniz.uniflow.dto.req.atividade.AtividadeEntregaRequestDTO;
 import io.github.raphaelmuniz.uniflow.dto.req.atividade.AvaliacaoRequestDTO;
+import io.github.raphaelmuniz.uniflow.dto.res.atividade.AtividadeEntregaDetalhadaResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.atividade.AvaliacaoAtividadeResponseDTO;
 import io.github.raphaelmuniz.uniflow.entities.atividade.AtividadeEntrega;
 import io.github.raphaelmuniz.uniflow.entities.atividade.AvaliacaoAtividade;
 import io.github.raphaelmuniz.uniflow.entities.enums.StatusEntregaEnum;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Estudante;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Professor;
+import io.github.raphaelmuniz.uniflow.entities.usuario.Usuario;
 import io.github.raphaelmuniz.uniflow.exceptions.models.BusinessException;
 import io.github.raphaelmuniz.uniflow.exceptions.models.NotFoundException;
 import io.github.raphaelmuniz.uniflow.repositories.atividade.AtividadeEntregaRepository;
@@ -24,17 +26,32 @@ public class AtividadeEntregaService {
     private final AvaliacaoAtividadeRepository avaliacaoAtividadeRepository;
 
     protected AtividadeEntregaService(
-            AtividadeEntregaRepository atividadeEntregaRepository,
-            AvaliacaoAtividadeRepository avaliacaoAtividadeRepository
+        AtividadeEntregaRepository atividadeEntregaRepository,
+        AvaliacaoAtividadeRepository avaliacaoAtividadeRepository
     ) {
         this.atividadeEntregaRepository = atividadeEntregaRepository;
         this.avaliacaoAtividadeRepository = avaliacaoAtividadeRepository;
     }
 
+    @Transactional(readOnly = true)
+    public AtividadeEntregaDetalhadaResponseDTO buscarPorId(String id, Usuario usuarioLogado) {
+        AtividadeEntrega entrega = atividadeEntregaRepository.findById(id)
+            .orElseThrow(() -> new NotFoundException("Entrega de atividade não encontrada."));
+
+        boolean isDono = entrega.getEstudanteDono().getId().equals(usuarioLogado.getId());
+        boolean isProfessorCriador = entrega.getAtividadeAvaliativaOrigem().getAssinanteCriadorAtividade().getId().equals(usuarioLogado.getId());
+
+        if (!isDono && !isProfessorCriador) {
+            throw new AccessDeniedException("Você não tem permissão para visualizar esta entrega.");
+        }
+
+        return new AtividadeEntregaDetalhadaResponseDTO(entrega);
+    }
+
     @Transactional
     public void entregarAtividade(String entregaId, AtividadeEntregaRequestDTO dto, Estudante estudanteLogado) {
         AtividadeEntrega entrega = atividadeEntregaRepository.findById(entregaId)
-                .orElseThrow(() -> new NotFoundException("Entrega de atividade não encontrada."));
+            .orElseThrow(() -> new NotFoundException("Entrega de atividade não encontrada."));
 
         if (!entrega.getEstudanteDono().getId().equals(estudanteLogado.getId())) {
             throw new AccessDeniedException("Você não tem permissão para modificar esta entrega.");
@@ -59,7 +76,7 @@ public class AtividadeEntregaService {
     @Transactional
     public AvaliacaoAtividadeResponseDTO avaliarEntrega(String entregaId, AvaliacaoRequestDTO dto, Professor professorLogado) {
         AtividadeEntrega entrega = atividadeEntregaRepository.findById(entregaId)
-                .orElseThrow(() -> new NotFoundException("Entrega de atividade não encontrada."));
+            .orElseThrow(() -> new NotFoundException("Entrega de atividade não encontrada."));
 
         String idProfessorCriador = entrega.getAtividadeAvaliativaOrigem().getAssinanteCriadorAtividade().getId();
         if (!idProfessorCriador.equals(professorLogado.getId())) {

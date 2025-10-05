@@ -1,14 +1,17 @@
 package io.github.raphaelmuniz.uniflow.services;
 
 import io.github.raphaelmuniz.uniflow.dto.req.usuario.ProfileUpdateRequestDTO;
+import io.github.raphaelmuniz.uniflow.dto.res.assinatura.AssinaturaUsuarioResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.assinatura.PagamentoResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.profile.AssinaturaProfileResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.profile.GruposProfileResponseDTO;
 import io.github.raphaelmuniz.uniflow.dto.res.usuario.ProfileResponseDTO;
 import io.github.raphaelmuniz.uniflow.entities.assinatura.AssinaturaUsuario;
+import io.github.raphaelmuniz.uniflow.entities.enums.StatusAssinaturaUsuarioEnum;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Professor;
 import io.github.raphaelmuniz.uniflow.entities.usuario.Usuario;
 import io.github.raphaelmuniz.uniflow.exceptions.models.BusinessException;
+import io.github.raphaelmuniz.uniflow.repositories.assinatura.AssinaturaUsuarioRepository;
 import io.github.raphaelmuniz.uniflow.repositories.usuario.UsuarioRepository;
 import io.github.raphaelmuniz.uniflow.services.assinatura.AssinaturaModeloService;
 import io.github.raphaelmuniz.uniflow.services.assinatura.AssinaturaUsuarioService;
@@ -29,17 +32,23 @@ public class ProfileService {
     private final PagamentoService pagamentoService;
     private final AssinaturaModeloService assinaturaModeloService;
     private final NotificacaoAssinanteService notificacaoAssinanteService;
+    private final AssinaturaUsuarioRepository assinaturaUsuarioRepository;
 
     public ProfileService(
-            UsuarioRepository usuarioRepository, AssinanteService assinanteService,
-            AssinaturaUsuarioService assinaturaUsuarioService, PagamentoService pagamentoService,
-            AssinaturaModeloService assinaturaModeloService, NotificacaoAssinanteService notificacaoAssinanteService) {
+        UsuarioRepository usuarioRepository,
+        AssinanteService assinanteService,
+        AssinaturaUsuarioService assinaturaUsuarioService,
+        PagamentoService pagamentoService,
+        AssinaturaModeloService assinaturaModeloService,
+        NotificacaoAssinanteService notificacaoAssinanteService,
+        AssinaturaUsuarioRepository assinaturaUsuarioRepository) {
         this.usuarioRepository = usuarioRepository;
         this.assinanteService = assinanteService;
         this.assinaturaUsuarioService = assinaturaUsuarioService;
         this.pagamentoService = pagamentoService;
         this.assinaturaModeloService = assinaturaModeloService;
         this.notificacaoAssinanteService = notificacaoAssinanteService;
+        this.assinaturaUsuarioRepository = assinaturaUsuarioRepository;
     }
 
     public ProfileResponseDTO buscarPerfilDoUsuarioAutenticado(Usuario usuarioLogado) {
@@ -87,5 +96,13 @@ public class ProfileService {
     @Transactional(readOnly = true)
     public Page<GruposProfileResponseDTO> buscarMeusGrupos(String usuarioId, Pageable pageable) {
         return assinanteService.obterGruposPorAssinanteId(usuarioId, pageable);
+    }
+
+    @Transactional
+    public AssinaturaUsuarioResponseDTO cancelarMinhaAssinatura(Usuario usuarioLogado) {
+        AssinaturaUsuario assinaturaAtiva = assinanteService.obterAssinaturaVigenteEntidade(usuarioLogado.getId());
+        assinaturaAtiva.setStatus(StatusAssinaturaUsuarioEnum.CANCELADA);
+        AssinaturaUsuario assinaturaCancelada = assinaturaUsuarioRepository.save(assinaturaAtiva);
+        return AssinaturaUsuarioResponseDTO.fromEntity(assinaturaCancelada);
     }
 }
